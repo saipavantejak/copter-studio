@@ -2,13 +2,13 @@
   "name": "copter-studio",
   "version": "1.0.0",
   "description": "Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
-  "author": "kunch",
+  "author": "saipavantejak",
   "license": "MIT",
   "type": "module",
   "keywords": ["drone", "simulator", "bicopter", "quadcopter", "reinforcement-learning", "tensorflow", "threejs", "react", "physics-engine"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kunch/copter-studio.git"
+    "url": "https://github.com/saipavantejak/copter-studio.git"
   },
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
