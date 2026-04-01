@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-emerald-50: #f0fdf1;
+  --color-emerald-100: #dcfce1;
+  --color-emerald-200: #bbf7c5;
+  --color-emerald-300: #86ef99;
+  --color-emerald-400: #4ade6d;
+  --color-emerald-500: #237227; /* Copter Studio Green - Primary */
+  --color-emerald-600: #1a561d;
+  --color-emerald-700: #154518;
+  --color-emerald-800: #133a16;
+  --color-emerald-900: #102f12;
+  --color-emerald-950: #081d0a;
+}
+
+/* ── Responsive Layout ─────────────────────────────────────────────────── */
+
+/* Tablet: tab bar scrolls, smaller padding */
+@media (max-width: 1024px) {
+  .responsive-tab-bar {
+    max-width: 350px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .responsive-tab-bar::-webkit-scrollbar {
+    height: 3px;
+  }
+  .responsive-tab-bar::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+}
+
+/* Mobile: full responsive adjustments */
+@media (max-width: 768px) {
+  .responsive-tab-bar {
+    max-width: 220px;
+  }
+
+  /* Ensure touch targets are at least 44px */
+  button, a, select, input[type="checkbox"] {
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  /* Improve readability on small screens */
+  .text-\[9px\] {
+    font-size: 10px !important;
+  }
+  .text-\[10px\] {
+    font-size: 11px !important;
+  }
+
+  /* Stack header elements */
+  header .max-w-\[1800px\] {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    height: auto !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* Smooth scrollbar styling for dark theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 3px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

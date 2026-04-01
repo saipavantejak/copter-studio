@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment (API keys)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test / Coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Generated
+sbom.json
+
+# Python cache (gym bridge)
+__pycache__/
+*.pyc

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target":           "ES2022",
+    "module":           "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib":              ["ES2022"],
+    "skipLibCheck":     true,
+    "allowJs":          true,
+    "resolveJsonModule": true,
+    "strict":           false,
+    "outDir":           "../dist-server",
+    "rootDir":          "..",
+    "esModuleInterop":  true
+  },
+  "include": [
+    "*.ts",
+    "../src/PhysicsEngine.ts",
+    "../src/physics/*.ts",
+    "../src/UniversalMixer.ts",
+    "../src/SensorNoise.ts",
+    "../src/SeededRandom.ts"
+  ],
+  "exclude": [
+    "../src/workers",
+    "../src/*.tsx"
+  ]
+}

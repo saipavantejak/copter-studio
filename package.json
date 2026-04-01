@@ -1,0 +1,62 @@
+{
+  "name": "copter-studio",
+  "version": "1.0.0",
+  "description": "Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
+  "author": "kunch",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["drone", "simulator", "bicopter", "quadcopter", "reinforcement-learning", "tensorflow", "threejs", "react", "physics-engine"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kunch/copter-studio.git"
+  },
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "gym-bridge": "tsx server/gymBridge.ts",
+    "hil-bridge": "tsx server/mavlinkHILBridge.ts",
+    "type-check:server": "tsc --project server/tsconfig.server.json --noEmit",
+    "ci:benchmark": "tsx scripts/ci-benchmark.ts",
+    "ci:benchmark:strict": "tsx scripts/ci-benchmark.ts --episodes=100 --threshold=0.3",
+    "sbom": "npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format JSON"
+  },
+  "dependencies": {
+    "@google/genai": "^1.29.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "recharts": "^3.8.0",
+    "three": "^0.183.2",
+    "vite": "^6.2.0",
+    "ws": "~8.17.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "driver.js": "^1.4.0",
+    "jsdom": "^29.0.1",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^4.1.0"
+  }
+}
