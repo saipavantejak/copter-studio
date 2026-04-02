@@ -8,6 +8,8 @@ Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training,
 ![Three.js](https://img.shields.io/badge/Three.js-0.183-black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+**[Launch Live Demo](https://copter-studio.vercel.app)**
+
 <p align="center">
   <img src="public/logo-light.png" alt="Copter Studio" width="200" />
 </p>
