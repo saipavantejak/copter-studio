@@ -43,7 +43,7 @@ function geminiProxyPlugin(): Plugin {
             try {
               const body  = Buffer.concat(chunks).toString();
               const input = JSON.parse(body);
-              const model = input.model ?? 'gemini-2.0-flash';
+              const model = input.model ?? 'gemini-2.5-flash';
               const url   = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
               const upstream = await fetch(url, {
