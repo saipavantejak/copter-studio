@@ -34,3 +34,4 @@ sbom.json
 # Python cache (gym bridge)
 __pycache__/
 *.pyc
+.claude/

@@ -1,12 +1,18 @@
 # Copter Studio
 
-Browser-based drone flight simulator with reinforcement learning training, real-time 3D visualization, and an AI-powered natural language interface.
+Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training, MAVLink HIL bridge, and Gemini-powered NLP control. Runs entirely in the browser.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)
 ![React](https://img.shields.io/badge/React-19-61dafb)
 ![TensorFlow.js](https://img.shields.io/badge/TF.js-4.22-ff6f00)
 ![Three.js](https://img.shields.io/badge/Three.js-0.183-black)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+<p align="center">
+  <img src="public/logo-light.png" alt="Copter Studio" width="200" />
+</p>
+
+> **3D drone simulator** with real-time physics, RL training panel, Aether AI chat interface, crash forensics, and benchmark dashboards — all in one browser tab. Clone and run `npm run dev` to see it in action.
 
 ## Features
 
@@ -31,7 +37,7 @@ Browser-based drone flight simulator with reinforcement learning training, real-
 ### Installation
 
 ```bash
-git clone https://github.com/kunch/copter-studio.git
+git clone https://github.com/saipavantejak/copter-studio.git
 cd copter-studio
 npm install
 ```
