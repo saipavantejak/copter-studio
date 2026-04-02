@@ -22,7 +22,7 @@ export default async function handler(req: IncomingMessage & { body?: any; metho
   }
 
   try {
-    const { model = 'gemini-2.0-flash', payload } = req.body;
+    const { model = 'gemini-2.5-flash', payload } = req.body;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const upstream = await fetch(url, {
