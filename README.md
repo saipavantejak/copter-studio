@@ -11,7 +11,7 @@ Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training,
 **[Launch Live Demo](https://copter-studio.vercel.app)**
 
 <p align="center">
-  <img src="public/logo-light.png" alt="Copter Studio" width="200" />
+  <img src="public/logo-dark.png" alt="Copter Studio" width="200" />
 </p>
 
 > **3D drone simulator** with real-time physics, RL training panel, Aether AI chat interface, crash forensics, and benchmark dashboards — all in one browser tab. Clone and run `npm run dev` to see it in action.
