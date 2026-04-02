@@ -232,7 +232,7 @@ export const AetherInterface = ({
     chatHistory.current.push({ role: 'user', parts: [{ text: full }] });
     try {
       const text = await geminiClient.chat({
-        model:             'gemini-2.0-flash',
+        model:             'gemini-2.5-flash',
         systemInstruction: SYSTEM_INSTRUCTION,
         history:           chatHistory.current.slice(-12, -1), // exclude last (just pushed)
       }).send(full);
@@ -407,7 +407,7 @@ export const AetherInterface = ({
           <div className="flex-1 min-w-0">
             <div className="text-xs font-bold text-zinc-100">Aether</div>
             <div className="text-[9px] text-zinc-600 font-mono truncate">
-            {geminiOnline ? 'Gemini-2.0-Flash · Sim-Operator · Online' : 'Gemini offline · Local parser only'}
+            {geminiOnline ? 'Gemini-2.5-Flash · Sim-Operator · Online' : 'Gemini offline · Local parser only'}
             </div>
           </div>
           <Activity className={`w-3 h-3 ${isLoading||isParsing?'text-emerald-400 animate-pulse':'text-zinc-700'}`} />
