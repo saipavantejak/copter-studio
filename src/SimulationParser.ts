@@ -100,7 +100,7 @@ Return ONLY valid JSON, no markdown fences:
 async function parseWithGemini(userMsg: string): Promise<SimulationIntent | null> {
   try {
     const text = await geminiClient.chat({
-      model:             'gemini-2.0-flash',
+      model:             'gemini-2.5-flash',
       systemInstruction: PARSE_SYSTEM,
       temperature:       0.05,
     }).send(userMsg);
