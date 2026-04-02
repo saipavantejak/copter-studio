@@ -85,7 +85,7 @@ function isAirGapped(): boolean {
 export function createGeminiClient(): GeminiClient {
   return {
     chat(opts: ChatOptions) {
-      const model = opts.model ?? 'gemini-2.0-flash';
+      const model = opts.model ?? 'gemini-2.5-flash';
       return {
         async send(userMessage: string): Promise<string> {
           if (isAirGapped()) throw new Error('Air-gap mode: external API calls disabled');
@@ -100,7 +100,7 @@ export function createGeminiClient(): GeminiClient {
         const resp = await fetch(PROXY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'gemini-2.0-flash', payload: { contents: [{ role: 'user', parts: [{ text: 'ping' }] }] } }),
+          body: JSON.stringify({ model: 'gemini-2.5-flash', payload: { contents: [{ role: 'user', parts: [{ text: 'ping' }] }] } }),
         });
         // 503 = proxy up but no API key; 200/400 = key present and proxy routing
         return resp.status !== 404;
