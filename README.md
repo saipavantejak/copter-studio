@@ -21,7 +21,7 @@ Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training,
 - **Real-time Physics Engine** — RK4 integration, quaternion attitude, Blade Element Theory thrust, ISA atmosphere, Dryden MIL-HDBK-1797B turbulence, Cheeseman-Bennett ground effect, spring-damper ground contact with Coulomb friction, thermal updrafts
 - **3D Visualization** — Three.js / React Three Fiber drone rendering with real-time telemetry overlay
 - **RL Training** — TensorFlow.js inference in-browser + WebSocket Gym Bridge for Python (stable-baselines3) training
-- **Aether NLP** — Natural language simulation commands powered by Gemini 2.0 Flash with local regex fallback
+- **Aether NLP** — Natural language simulation commands powered by Gemini 2.5 Flash with local regex fallback
 - **Multi-drone Support** — Bicopter, quadcopter, hexacopter, octocopter configurations
 - **Robustness Testing** — Domain randomization, sensor noise (MPU-6050, BMP280, u-blox M8N), motor-out, battery sag, wind stress
 - **Benchmarking** — Deterministic seeded episodes, crash forensics, policy X-Ray explainability
@@ -156,7 +156,7 @@ All Gemini API calls are disabled. Aether uses the local parser exclusively.
 | Animation | Motion (Framer Motion) |
 | Build | Vite 6 |
 | Test | Vitest, Testing Library |
-| AI | Gemini 2.0 Flash (server-side proxy) |
+| AI | Gemini 2.5 Flash (server-side proxy) |
 | Backend | Express, WebSocket |
 
 ## License
