@@ -43,7 +43,7 @@ async function handleGeminiProxy(req: IncomingMessage, res: ServerResponse): Pro
     return;
   }
 
-  const model   = parsed.model ?? 'gemini-2.0-flash';
+  const model   = parsed.model ?? 'gemini-2.5-flash';
   const apiUrl  = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   // Forward to Gemini REST API
