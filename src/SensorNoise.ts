@@ -18,16 +18,16 @@ export interface NoisyObservation {
 }
 
 export class SensorNoise {
-  // ── IMU specs (MPU-6050 datasheet) ──────────────────────────────
-  private static readonly GYRO_NOISE_DENSITY = 0.005; // rad/s / sqrt(Hz)
-  private static readonly GYRO_BIAS_STABILITY  = 0.001; // rad/s — in-run bias
-  private static readonly ACCEL_NOISE_DENSITY  = 0.002; // m/s²  / sqrt(Hz)
-  // ── Barometer (BMP280) ──────────────────────────────────────────
-  private static readonly BARO_NOISE_STD       = 0.025; // m RMS
-  private static readonly BARO_DRIFT_RATE      = 0.0005;// m/s drift rate
-  // ── GPS (u-blox M8N) ────────────────────────────────────────────
-  private static readonly GPS_POS_NOISE_STD    = 0.4;   // m CEP50
-  private static readonly GPS_VEL_NOISE_STD    = 0.05;  // m/s
+  // ── IMU specs (MPU-6050 datasheet: InvenSense RM-MPU-6050A-00) ──
+  private static readonly GYRO_NOISE_DENSITY = 0.005; // rad/s / √Hz (datasheet typ: 0.005)
+  private static readonly GYRO_BIAS_STABILITY  = 0.001; // rad/s — in-run bias instability
+  private static readonly ACCEL_NOISE_DENSITY  = 0.002; // m/s² / √Hz (datasheet typ: 400 µg/√Hz)
+  // ── Barometer (BMP280 datasheet: Bosch BST-BMP280-DS001) ───────
+  private static readonly BARO_NOISE_STD       = 0.025; // m RMS (±0.12 hPa = ~1m @ sea level)
+  private static readonly BARO_DRIFT_RATE      = 0.001; // m/s drift rate (thermal: ~1 Pa/°C)
+  // ── GPS (u-blox M8N datasheet: UBX-13003221) ──────────────────
+  private static readonly GPS_POS_NOISE_STD    = 0.4;   // m CEP50 (datasheet: 2.5m, improved w/ SBAS)
+  private static readonly GPS_VEL_NOISE_STD    = 0.05;  // m/s (datasheet typ: 0.05 m/s)
 
   // Persistent bias states (random-walk)
   private gyroBias = [0, 0, 0];

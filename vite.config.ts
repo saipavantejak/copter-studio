@@ -23,7 +23,12 @@ function geminiProxyPlugin(): Plugin {
         '/api/gemini',
         async (req: IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
           if (req.method === 'OPTIONS') {
-            res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' });
+            const origin = req.headers.origin || 'http://localhost:3000';
+            res.writeHead(204, {
+              'Access-Control-Allow-Origin': origin,
+              'Access-Control-Allow-Headers': 'Content-Type',
+              'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            });
             res.end();
             return;
           }
@@ -52,9 +57,10 @@ function geminiProxyPlugin(): Plugin {
                 body:    JSON.stringify(input.payload),
               });
               const text = await upstream.text();
+              const respOrigin = req.headers.origin || 'http://localhost:3000';
               res.writeHead(upstream.status, {
                 'Content-Type':                'application/json',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin':  respOrigin,
               });
               res.end(text);
             } catch (err: any) {

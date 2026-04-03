@@ -5,10 +5,15 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 
 export default async function handler(req: IncomingMessage & { body?: any; method?: string }, res: ServerResponse & { status: (code: number) => any; json: (data: any) => void; setHeader: (name: string, value: string) => void; send: (body: string) => void; end: () => void }) {
-  // CORS preflight
+  // CORS preflight — restrict to app domain
+  const allowedOrigins = ['https://copter-studio.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
+  const origin = (req.headers as Record<string, string | undefined>)?.origin || '';
+  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     return res.status(204).end();
   }
 
@@ -32,7 +37,7 @@ export default async function handler(req: IncomingMessage & { body?: any; metho
     });
 
     const text = await upstream.text();
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader('Content-Type', 'application/json');
     return res.status(upstream.status).send(text);
   } catch (err: any) {

@@ -21,7 +21,12 @@ export type Vec = number[];
 /** Normalise quaternion in-place. Resets to identity if degenerate. */
 export function qNorm(q: Vec): void {
   const n = Math.sqrt(q[0]**2 + q[1]**2 + q[2]**2 + q[3]**2);
-  if (n < 1e-10) { q[0]=1; q[1]=q[2]=q[3]=0; return; }
+  if (n < 1e-12) {
+    // Degenerate quaternion — likely upstream NaN or corruption
+    console.warn('[qNorm] Degenerate quaternion detected (norm < 1e-12); resetting to identity');
+    q[0]=1; q[1]=q[2]=q[3]=0;
+    return;
+  }
   for (let i=0; i<4; i++) q[i] /= n;
 }
 
@@ -142,6 +147,10 @@ export function rigidBodyDerivatives(
 /**
  * Full RK4 step: integrate rigid-body state by dt.
  * Returns the new state vector.
+ *
+ * NOTE: Forces and wind are held constant across all four RK4 stages.
+ * This is valid when dt (16ms) << τ_wind (~50ms). For higher-frequency
+ * force variations, re-evaluate forces at each stage.
  */
 export function rk4Step(
   sv0: Vec,
@@ -178,14 +187,17 @@ export function applyGroundContact(sv: Vec): Vec {
     const Fn = Math.max(0, Kn * penetration - Dn * out[5]); // normal force (upward)
 
     // Apply normal correction: clamp at ground, apply spring impulse to z_dot
+    // Use dt=DT and assume 5kg reference mass for standalone ground contact
+    const dtGc = 0.016; // simulation timestep
+    const massGc = 5.0; // reference mass for standalone function
     out[2] = 0;
-    out[5] = Math.max(0, out[5] + Fn * 0.001); // impulse integration (1ms effective)
+    out[5] = Math.max(0, out[5] + Fn * dtGc / massGc);
 
     // Coulomb friction opposing horizontal velocity
     const vHoriz = Math.sqrt(out[3] ** 2 + out[4] ** 2);
     if (vHoriz > 1e-6) {
       const frictionForce = mu * Fn;
-      const frictionDecel = Math.min(frictionForce * 0.001, vHoriz); // clamp to prevent reversal
+      const frictionDecel = Math.min(frictionForce * dtGc / massGc, vHoriz); // clamp to prevent reversal
       out[3] -= (out[3] / vHoriz) * frictionDecel;
       out[4] -= (out[4] / vHoriz) * frictionDecel;
     }

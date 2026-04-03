@@ -13,7 +13,7 @@
  * Zero DOM dependencies — browser / Node / Worker safe.
  */
 
-import { AIR_DENSITY, INCHES_TO_METRES } from './constants';
+import { AIR_DENSITY, INCHES_TO_METRES, BET_THETA_MIN_DEG, BET_THETA_MAX_DEG } from './constants';
 
 // ── Table breakpoints ─────────────────────────────────────────────────────────
 
@@ -128,14 +128,16 @@ export function propTableLookup(
   const D = propDiamIn * INCHES_TO_METRES;  // diameter (m)
   const n = omegaRadS / (2 * Math.PI);      // rev/s
 
-  // Map collective [-1, 1] → pitch angle [degrees], matching BET range
-  const BET_THETA_MIN_DEG = -5;
-  const BET_THETA_MAX_DEG = 18;
+  // Map collective [-1, 1] → pitch angle [degrees], using shared BET constants
   const pitchDeg = BET_THETA_MIN_DEG +
     ((clamp(collective, -1, 1) + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
 
-  // RPM for table lookup (clamp to table range)
-  const rpm = clamp(Math.abs(omegaRadS) * 60 / (2 * Math.PI), RPM_BP[0], RPM_BP[RPM_BP.length - 1]);
+  // RPM for table lookup (clamp to table range, warn if extrapolating)
+  const rawRpm = Math.abs(omegaRadS) * 60 / (2 * Math.PI);
+  if (rawRpm > RPM_BP[RPM_BP.length - 1] * 1.1) {
+    console.warn(`[propTable] RPM ${rawRpm.toFixed(0)} exceeds table max ${RPM_BP[RPM_BP.length - 1]}; clamping`);
+  }
+  const rpm = clamp(rawRpm, RPM_BP[0], RPM_BP[RPM_BP.length - 1]);
   const pitchClamped = clamp(pitchDeg, PITCH_BP[0], PITCH_BP[PITCH_BP.length - 1]);
 
   const CT = bilinearInterp(CT_TABLE, RPM_BP, PITCH_BP, rpm, pitchClamped);
@@ -147,8 +149,9 @@ export function propTableLookup(
   const n2D4  = n * n * D * D * D * D;
   const n3D5  = n2D4 * n * D;
 
-  const thrust = Math.max(0, CT * airDensity * n2D4);
-  const power  = Math.max(0, CP * airDensity * n3D5);
+  // Cap thrust/power to physically reasonable maxima (prevents Infinity/NaN)
+  const thrust = Math.max(0, Math.min(500, CT * airDensity * n2D4));   // 500N per rotor max
+  const power  = Math.max(0, Math.min(10000, CP * airDensity * n3D5)); // 10kW per rotor max
   const torque = n > 1e-3 ? power / (2 * Math.PI * n) : 0;
 
   return { thrust, power, torque };

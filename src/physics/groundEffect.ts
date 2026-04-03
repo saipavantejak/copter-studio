@@ -113,11 +113,12 @@ export function groundEffectFactor(altitudeM: number, rotorRadius: number): numb
   if (z_over_R > 10) return 1.0;
 
   // Cheeseman-Bennett formula — avoid singularity at z = 0
-  const inner = 1.0 / (4.0 * Math.max(0.25, z_over_R));
+  // Clamp z/R to 0.1 (below this blade stall limits the effect)
+  const inner = 1.0 / (4.0 * Math.max(0.1, z_over_R));
   const factor = 1.0 / (1.0 - inner * inner);
 
-  // Physical cap: ground effect can't more than double thrust
-  return Math.min(1.5, Math.max(1.0, factor));
+  // Empirical cap: real rotors peak at ~1.35× near ground (blade stall limits)
+  return Math.min(1.35, Math.max(1.0, factor));
 }
 
 /**

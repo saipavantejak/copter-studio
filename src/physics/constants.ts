@@ -8,14 +8,17 @@ export const GRAVITY      = 9.81;   // m/s²
 export const AIR_DENSITY  = 1.225;  // kg/m³ at sea level 15°C
 
 // ── Blade Element Theory (BET) ────────────────────────────────────────────────
+// Source: APC 15x4.5 MR propeller at Re ≈ 100k–400k
+// Reference: UIUC Propeller Database, Brandt & Selig (2011)
 export const BET_NB    = 2;      // number of blades
-export const BET_LIFT  = 5.7;    // 2D lift curve slope (1/rad)
-export const BET_CHORD = 0.025;  // blade chord width (m)
+export const BET_LIFT  = 5.7;    // 2D lift curve slope (1/rad) — thin airfoil theory ≈ 2π
+export const BET_CHORD = 0.025;  // blade chord width (m) — APC 15" measured at 75% span
 // Collective pitch mapping: cmd ∈ [-1,1] → θ ∈ [-5°, 18°]
-export const BET_THETA_MIN_DEG = -5;
-export const BET_THETA_MAX_DEG = 18;
+export const BET_THETA_MIN_DEG = -5;   // reverse pitch limit (braking)
+export const BET_THETA_MAX_DEG = 18;   // max pitch before stall at operating Re
 
 // ── Motor / ESC dynamics ──────────────────────────────────────────────────────
+// Typical ranges: cheap ESC τ=0.08–0.15s, DJI-class τ=0.02–0.03s, hobby τ=0.04–0.06s
 export const MOTOR_TAU  = 0.05;  // s — first-order ESC + motor lag (50 ms typical)
 export const OMEGA_IDLE = 100;   // rad/s — minimum rotor speed at zero throttle
 export const OMEGA_MAX  = 1200;  // rad/s — maximum rotor speed at full throttle

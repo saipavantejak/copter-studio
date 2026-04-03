@@ -87,6 +87,8 @@ export class PhysicsEngine {
   public totalDistance = 0;
   public totalEnergyConsumed = 0;
   private sensorNoise = new SensorNoise();
+  // Pre-allocated array for motor failure state — avoids GC pressure in hot loop
+  private readonly failedMotors: boolean[] = [false, false, false, false, false, false];
   public motorTauOverride: number = MOTOR_TAU;
   public dragCoeffOverride: number = 0.47;
   public rng: SeededRandom = new SeededRandom(42);
@@ -109,6 +111,8 @@ export class PhysicsEngine {
     this.windPhaseY=this.rng.next()*Math.PI*2;
     this.totalDistance=0;
     this.totalEnergyConsumed=0;
+    this.motorTauOverride = MOTOR_TAU;
+    this.dragCoeffOverride = 0.47;
     this.sensorNoise.reset();
     this.dryden.reset();
   }
@@ -128,7 +132,9 @@ export class PhysicsEngine {
     const numMotors = this.config.droneType==='quadcopter' ? 4
       : this.config.droneType==='hexacopter' ? 6 : 2;
 
-    const failed = new Array(6).fill(false);
+    // Reuse pre-allocated array to avoid GC pressure at 60 Hz
+    const failed = this.failedMotors;
+    failed[0]=false; failed[1]=false; failed[2]=false; failed[3]=false; failed[4]=false; failed[5]=false;
     if (this.tests.motorOutEnabled) {
       failed[this.config.droneType==='bicopter' ? 1 : 0] = true;
     }
@@ -145,7 +151,8 @@ export class PhysicsEngine {
     }
 
     const avgCmd = action.reduce((s,b)=>s+Math.abs(b),0)/action.length;
-    let vf = this.config.batteryVoltage / 22.2;
+    // Thrust ∝ RPM² ∝ V² — quadratic voltage scaling
+    let vf = Math.pow(this.config.batteryVoltage / 22.2, 2);
     if (this.tests.batterySagEnabled) {
       this.currentBattery = Math.max(0, this.currentBattery - avgCmd*50*dt);
       const pct = this.currentBattery/this.batteryCapacity;
@@ -155,12 +162,15 @@ export class PhysicsEngine {
     }
     this.totalEnergyConsumed += avgCmd*666*numMotors*dt;
 
-    const pf = Math.pow(this.config.propDiameter/15, 2);
+    // Thrust ∝ D⁴ (dimensional analysis: T = CT·ρ·n²·D⁴)
+    // Guard against zero propDiameter (would cause NaN in thrust calc)
+    const safePropDiam = Math.max(1, this.config.propDiameter);
+    const pf = Math.pow(safePropDiam/15, 4);
     const hifi = this.config.useHighFidelityAero === true;
 
     // ── Air density correction (ISA) ─────────────────────────────────────
-    // At sea level this is 1.225 kg/m³; at 100m AGL it's ~1.211 kg/m³ (1% drop).
-    const airDensity = hifi ? isaAtmosphere(Math.max(0, this.z)).density : 1.225;
+    // Always use ISA model for altitude-dependent air density (1.225 at sea level).
+    const airDensity = isaAtmosphere(Math.max(0, this.z)).density;
 
     // ── Thrust calculation ────────────────────────────────────────────────
     let Fz = 0;
@@ -243,6 +253,10 @@ export class PhysicsEngine {
       Fz += this.config.mass * wThermal * 0.5;
     }
 
+    // Saturate thrust: cannot exceed physical max or go negative
+    const maxPhysicalThrust = 60 * numMotors * vf * pf; // conservative upper bound
+    Fz = Math.max(0, Math.min(maxPhysicalThrust, Fz));
+
     // ── Aerodynamic drag ──────────────────────────────────────────────────
     let extraFx = wfx, extraFy = wfy;
     if (hifi) {
@@ -257,6 +271,8 @@ export class PhysicsEngine {
       Fz = Math.max(0, Fz + dfz);
     }
 
+    // Normalize quaternion before RK4 to prevent drift accumulation
+    qNorm(this.quat);
     const sv0 = [this.x,this.y,this.z, this.x_dot,this.y_dot,this.z_dot, ...this.quat, this.p,this.q,this.r];
     const { Ixx, Iyy, Izz } = this.config.inertiaOverride ?? computeInertia(this.config.propDiameter, this.config.mass, this.config.armLength);
     const sv1 = rk4Step(sv0, {Fz,L,M,N}, {fx:extraFx,fy:extraFy}, this.config.mass, Ixx, Iyy, Izz, dt);
@@ -274,11 +290,11 @@ export class PhysicsEngine {
       const penetration = -this.z;
       const Fn = Math.max(0, Kn * penetration - Dn * this.z_dot);
       this.z = 0;
-      this.z_dot = Math.max(0, this.z_dot + Fn * 0.001);
+      this.z_dot = Math.max(0, this.z_dot + Fn * dt / this.config.mass);
       // Coulomb friction
       const vH = Math.sqrt(this.x_dot**2 + this.y_dot**2);
       if (vH > 1e-6) {
-        const fd = Math.min(mu * Fn * 0.001, vH);
+        const fd = Math.min(mu * Fn * dt / this.config.mass, vH);
         this.x_dot -= (this.x_dot / vH) * fd;
         this.y_dot -= (this.y_dot / vH) * fd;
       }

@@ -66,20 +66,20 @@ export class RLAgent {
   }
 
   /** Predict action from noisy OR clean observation array */
-  public predictAction(state: number[], droneType: DroneType = 'bicopter', missionPreset = 'none', mass = 5.0): number[] {
+  public predictAction(state: number[], droneType: DroneType = 'bicopter', missionPreset = 'none', mass = 5.0, armLength = 0.5): number[] {
     if (this.isUsingUserModel && this.userModel) {
       return tf.tidy(() => {
         const t = tf.tensor2d([state]);
         const a = this.userModel!.predict(t) as tf.Tensor;
         const arr = Array.from(a.dataSync());
         if (arr.length < 6) {
-          console.warn(`[RLAgent] Model output ${arr.length} dims, padding to 6. Check model output shape.`);
+          console.error(`[RLAgent] Model output ${arr.length} dims, expected 6. Padding with zeros — yaw/roll/pitch may be uncontrolled!`);
           while (arr.length < 6) arr.push(0);
         }
         return arr;
       });
     }
-    return this.heuristicActionArray(state, droneType, missionPreset, mass);
+    return this.heuristicActionArray(state, droneType, missionPreset, mass, armLength);
   }
 
   // ── Worker serialization ────────────────────────────────────────────────────
@@ -136,13 +136,13 @@ export class RLAgent {
     this.isUsingUserModel = true;
   }
 
-  private heuristicActionArray(stateArr: number[], droneType: DroneType, missionPreset: string, mass = 5.0): number[] {
+  private heuristicActionArray(stateArr: number[], droneType: DroneType, missionPreset: string, mass = 5.0, armLength = 0.5): number[] {
     return this.heuristicAction({
       x:stateArr[0],y:stateArr[1],z:stateArr[2],
       x_dot:stateArr[3],y_dot:stateArr[4],z_dot:stateArr[5],
       phi:stateArr[6],theta:stateArr[7],psi:stateArr[8],
       p:stateArr[9],q:stateArr[10],r:stateArr[11]
-    }, droneType, missionPreset, mass);
+    }, droneType, missionPreset, mass, armLength);
   }
 
   // ── Altitude integral accumulator for steady-state error elimination ──────
@@ -162,22 +162,28 @@ export class RLAgent {
     this.isUsingUserModel = false;
   }
 
-  public heuristicAction(state: Partial<DroneState>, droneType: DroneType, missionPreset: string, mass = 5.0): number[] {
+  public heuristicAction(state: Partial<DroneState>, droneType: DroneType, missionPreset: string, mass = 5.0, armLength = 0.5): number[] {
     const {x=0,y=0,z=0,x_dot:xd=0,y_dot:yd=0,z_dot:zd=0,phi=0,theta=0,psi=0,p=0,q=0,r=0}=state;
     let xt=0, yt=0, zt=1.0;
     if (missionPreset==='long-range') xt=10000;
     else if (missionPreset==='high-speed') xt=1000;
 
     // ── Mass-adaptive gain scheduling ─────────────────────────────────────
-    // Base gains tuned for 5kg. Scale proportionally to mass for heavier drones.
+    // Base gains tuned for 5kg bicopter. Scale for mass, arm length, and drone type.
     const massRatio = mass / 5.0;
-    const Kp_alt  = 0.5  * massRatio;          // altitude P-gain
-    const Kd_alt  = 0.2  * Math.sqrt(massRatio); // altitude D-gain
-    const Ki_alt  = 0.08 * massRatio;           // altitude I-gain (new)
-    const Kp_att  = 0.1  * Math.sqrt(massRatio); // roll/pitch P-gain
-    const Kd_att  = 0.05 * Math.sqrt(massRatio); // roll/pitch D-gain
-    const Kp_yaw  = 0.1;
-    const Kd_yaw  = 0.05;
+    const armRatio = armLength / 0.5;
+    // Inertia scales as mass·arm² → attitude gains must decrease for larger/heavier drones
+    const inertiaRatio = massRatio * (armRatio ** 2);
+    // More rotors = more control authority → scale attitude gains up for multi-rotors
+    const motorScale = droneType === 'hexacopter' ? 1.4 : (droneType === 'quadcopter' ? 1.2 : 1.0);
+
+    const Kp_alt  = 0.5  * massRatio;              // altitude P-gain
+    const Kd_alt  = 0.2  * Math.sqrt(massRatio);   // altitude D-gain
+    const Ki_alt  = 0.08 * massRatio;               // altitude I-gain
+    const Kp_att  = 0.1  * Math.sqrt(massRatio) * motorScale / Math.sqrt(inertiaRatio); // roll/pitch P-gain
+    const Kd_att  = 0.05 * Math.sqrt(massRatio) * motorScale / Math.sqrt(inertiaRatio); // roll/pitch D-gain
+    const Kp_yaw  = 0.1  * motorScale;
+    const Kd_yaw  = 0.05 * motorScale;
 
     // ── Altitude integral accumulator ─────────────────────────────────────
     const altError = zt - z;

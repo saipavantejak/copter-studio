@@ -3,6 +3,7 @@
 // All state management → AppContext.tsx
 // All tab rendering → individual tab components in src/tabs/
 
+import React from 'react';
 import { AppProvider, useAppContext, type AppTab } from './context/AppContext';
 import { SimulationTab } from './tabs/SimulationTab';
 import { BenchmarkTab } from './tabs/BenchmarkTab';
@@ -16,7 +17,7 @@ import { CrashReplay } from './CrashReplay';
 import { OnboardingTour } from './OnboardingTour';
 import { Activity, Wind, Trophy, BarChart2, Eye, Settings, Terminal } from 'lucide-react';
 
-const TABS: { id: AppTab; label: string; icon: any }[] = [
+const TABS: { id: AppTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'simulation',   label: 'Simulation',   icon: Wind      },
   { id: 'benchmark',    label: 'Benchmark',    icon: BarChart2 },
   { id: 'policy-xray',  label: 'Policy X-Ray', icon: Eye       },
@@ -47,12 +48,15 @@ function AppContent() {
                 <p className="text-[9px] text-zinc-400 font-mono">The Premier Digital Twin for Autonomous Flight &amp; RL Research</p>
               </div>
             </div>
-            {/* Tabs */}
-            <div id="tab-bar" className="flex items-center gap-0.5 bg-zinc-900 border border-zinc-800 rounded-lg p-1 overflow-x-auto responsive-tab-bar">
+            {/* Tabs — with ARIA roles for accessibility */}
+            <div id="tab-bar" role="tablist" aria-label="Main navigation"
+              className="flex items-center gap-0.5 bg-zinc-900 border border-zinc-800 rounded-lg p-1 overflow-x-auto responsive-tab-bar">
               {TABS.map(t => (
-                <button key={t.id} onClick={() => setActiveTab(t.id)}
-                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[11px] font-medium whitespace-nowrap transition-colors ${activeTab === t.id ? 'bg-zinc-700 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'}`}>
-                  <t.icon className="w-3 h-3" /> {t.label}
+                <button key={t.id} role="tab" aria-selected={activeTab === t.id}
+                  aria-controls={`tabpanel-${t.id}`} id={`tab-${t.id}`}
+                  onClick={() => setActiveTab(t.id)}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[11px] font-medium whitespace-nowrap transition-colors focus:outline-2 focus:outline-emerald-400 focus:outline-offset-1 ${activeTab === t.id ? 'bg-zinc-700 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'}`}>
+                  <t.icon className="w-3 h-3" aria-hidden="true" /> {t.label}
                 </button>
               ))}
             </div>
@@ -65,21 +69,24 @@ function AppContent() {
                 </div>
               )}
               <span className="hidden md:inline">CTRL: <span className={controllerStatus === 'Loaded RL Agent' ? 'text-emerald-400' : 'text-amber-400'}>{controllerStatus}</span></span>
-              <div className="flex items-center gap-1" title={crashData ? 'System Fault — the drone has crashed or exceeded safe flight limits' : 'System Nominal — all sensors and motors are functioning normally'}>
-                <Activity className={`w-3 h-3 ${crashData ? 'text-red-500' : 'text-emerald-500 animate-pulse'}`} />
-                <span className={crashData ? 'text-red-400 font-bold' : 'text-emerald-400'}>{crashData ? 'SYS_FAULT' : 'SYS_NOMINAL'}</span>
+              <div className="flex items-center gap-1" role="status" aria-live="polite"
+                title={crashData ? 'System Fault — the drone has crashed or exceeded safe flight limits' : 'System Nominal — all sensors and motors are functioning normally'}>
+                <Activity className={`w-3 h-3 ${crashData ? 'text-red-400' : 'text-emerald-300 animate-pulse'}`} aria-hidden="true" />
+                <span className={crashData ? 'text-red-300 font-bold' : 'text-emerald-300'}>{crashData ? 'SYS_FAULT' : 'SYS_NOMINAL'}</span>
               </div>
             </div>
           </div>
         </header>
 
         {/* ── Tab Content ────────────────────────────────────────────── */}
-        {activeTab === 'simulation'   && <SimulationTab />}
-        {activeTab === 'benchmark'    && <BenchmarkTab />}
-        {activeTab === 'policy-xray'  && <PolicyXRayTab />}
-        {activeTab === 'digital-twin' && <DigitalTwinTab />}
-        {activeTab === 'gym-bridge'   && <GymBridgeTab />}
-        {activeTab === 'leaderboard'  && <LeaderboardTab />}
+        <div role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
+          {activeTab === 'simulation'   && <SimulationTab />}
+          {activeTab === 'benchmark'    && <BenchmarkTab />}
+          {activeTab === 'policy-xray'  && <PolicyXRayTab />}
+          {activeTab === 'digital-twin' && <DigitalTwinTab />}
+          {activeTab === 'gym-bridge'   && <GymBridgeTab />}
+          {activeTab === 'leaderboard'  && <LeaderboardTab />}
+        </div>
 
         {/* Modals */}
         {showForensics && <CrashForensics crashData={crashData} fullHistory={fullHistory} onClose={() => setShowForensics(false)} />}
