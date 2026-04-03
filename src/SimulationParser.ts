@@ -74,10 +74,17 @@ KEYWORD RULES:
 - "sensor noise"/"noisy"/"realistic" → enableSensorNoise:true
 - "domain rand"/"robust"/"sim-to-real" → domainRandEnabled:true
 
+PHYSICS RULES (for feasibility checking):
+- Max thrust per motor ≈ 40N × (V/22.2)² × (D/15)⁴ where V=voltage, D=propDiameter(inches)
+- Hover requires: totalThrust > mass × 9.81. Stable hover needs >1.5× margin.
+- A 15kg bicopter with 15" props and 22V → maxThrust = 40×2 = 80N, needs 147N → CANNOT hover
+- A 15kg hexacopter with 15" props and 22V → maxThrust = 40×6 = 240N, needs 147N → CAN hover (1.63:1)
+- Do NOT assume a configuration "cannot fly" unless you compute thrust-to-weight < 1.0
+
 AMBIGUITY RULES:
 - level:"info" → defaulted something minor, non-blocking
-- level:"warning" → made a significant assumption (e.g. inferred mass from adjective)
-- level:"error" → contradiction or physics-impossible value
+- level:"warning" → made a significant assumption (e.g. inferred mass from adjective), or thrust margin < 1.5
+- level:"error" → contradiction or physics-impossible value (e.g. thrust-to-weight < 1.0)
 - Always output at least one ambiguity noting what was defaulted.
 
 Return ONLY valid JSON, no markdown fences:
@@ -234,14 +241,31 @@ function localParse(msg: string): SimulationIntent {
   const seedMatch = msg.match(/\bseed\s*[=:]?\s*(\d+)/i);
   if (seedMatch) masterSeed = parseInt(seedMatch[1]);
 
-  // Physics sanity check
-  if (mass > 15 && propDiameter <= 10 && droneType === 'bicopter') {
-    ambiguities.push({
-      level: 'warning', field: 'thrust_margin',
-      issue: `${mass}kg mass with ${propDiameter}" props on a bicopter likely cannot hover`,
-      assumed: 'Config accepted as-is — expect immediate crash',
-      suggestion: 'Increase propDiameter to ≥18" or reduce mass below 8kg'
-    });
+  // Physics sanity check — uses actual thrust formula matching PhysicsEngine
+  // Thrust ∝ D⁴, voltage ∝ V²: maxThrust = 40 N/motor × (V/22.2)² × (D/15)⁴ × numMotors
+  {
+    const numMotors = droneType === 'quadcopter' ? 4 : droneType === 'hexacopter' ? 6 : 2;
+    const propFactor = Math.pow(propDiameter / 15, 4);
+    const voltageFactor = Math.pow(batteryVoltage / 22.2, 2);
+    const maxThrust = 40 * voltageFactor * propFactor * numMotors;
+    const hoverThrust = mass * 9.81;
+    const thrustMargin = maxThrust / hoverThrust;
+
+    if (thrustMargin < 1.0) {
+      ambiguities.push({
+        level: 'warning', field: 'thrust_margin',
+        issue: `Thrust-to-weight ratio ${thrustMargin.toFixed(2)} < 1.0 — ${mass}kg ${droneType} with ${propDiameter}" props cannot hover (need ${hoverThrust.toFixed(0)}N, have ${maxThrust.toFixed(0)}N)`,
+        assumed: 'Config accepted — expect immediate crash',
+        suggestion: `Increase propDiameter to ≥${Math.ceil(15 * Math.pow(hoverThrust / (40 * voltageFactor * numMotors), 0.25))}" or reduce mass below ${(maxThrust / 9.81).toFixed(1)}kg`
+      });
+    } else if (thrustMargin < 1.5) {
+      ambiguities.push({
+        level: 'info', field: 'thrust_margin',
+        issue: `Thrust margin ${thrustMargin.toFixed(2)}:1 — marginal for stable hover (recommend >1.5:1)`,
+        assumed: 'Running simulation — may be unstable',
+        suggestion: 'Consider reducing mass or increasing prop diameter for better stability'
+      });
+    }
   }
 
   // Suggested prompt

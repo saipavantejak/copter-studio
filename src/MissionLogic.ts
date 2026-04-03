@@ -55,9 +55,11 @@ export class MissionLogic {
       }
     }
 
-    const propFactor = Math.pow(config.propDiameter / 15, 2);
+    // Thrust ∝ D⁴ (dimensional analysis: T = CT·ρ·n²·D⁴), voltage ∝ V² (RPM² ∝ V²)
+    const propFactor = Math.pow(config.propDiameter / 15, 4);
+    const voltageFactor = Math.pow(config.batteryVoltage / 22.2, 2);
     const numMotors = config.droneType === 'quadcopter' ? 4 : config.droneType === 'hexacopter' ? 6 : 2;
-    const maxThrust = 40 * (config.batteryVoltage / 22.2) * propFactor * numMotors;
+    const maxThrust = 40 * voltageFactor * propFactor * numMotors;
     const optimalTotalMass = (maxThrust * 0.6) / this.GRAVITY;
     const optimalCargoWeight = Math.max(0, optimalTotalMass - 2.0);
 

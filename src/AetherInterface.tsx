@@ -50,7 +50,14 @@ Specialisations:
 5. SIMULATION OPERATOR: When user asks to run/simulate/fly/test, confirm you are parsing the request and opening the approval dialog. Never fabricate simulation results.
 
 Rules: cite actual telemetry values. Reward functions show full def compute_reward(). Keep responses concise and technical. Use markdown code blocks.
-When a benchmark shows high crash rates (>50%), proactively suggest generating a Colab training notebook to train a better RL policy.`;
+When a benchmark shows high crash rates (>50%), proactively suggest generating a Colab training notebook to train a better RL policy.
+
+PHYSICS (for feasibility checks):
+- Max thrust per motor ≈ 40N × (V/22.2)² × (D/15)⁴
+- Hover requires: numMotors × thrustPerMotor > mass × 9.81
+- Bicopter = 2 motors, quadcopter = 4, hexacopter = 6
+- Do NOT claim a config "cannot fly" unless thrust-to-weight < 1.0 by this formula
+- If the user runs a sim and it works, trust the simulation result over heuristic estimates`;
 
 
 function buildContext(
