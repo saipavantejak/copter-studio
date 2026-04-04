@@ -12,6 +12,22 @@ import { defineConfig, loadEnv } from 'vite';
 import type { Plugin, Connect } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'http';
 
+// ── Simple rate limiter (per-IP, 30 requests per minute) ─────────────────────
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 30;        // max requests per window
+const RATE_WINDOW_MS = 60000; // 1 minute
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  let entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 0, resetAt: now + RATE_WINDOW_MS };
+    rateLimitMap.set(ip, entry);
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
+
 // ── Gemini proxy plugin ───────────────────────────────────────────────────────
 // Runs only in the Vite dev server — GEMINI_API_KEY is never sent to the browser.
 
@@ -23,16 +39,20 @@ function geminiProxyPlugin(): Plugin {
         '/api/gemini',
         async (req: IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
           if (req.method === 'OPTIONS') {
-            const origin = req.headers.origin || 'http://localhost:3000';
-            res.writeHead(204, {
-              'Access-Control-Allow-Origin': origin,
-              'Access-Control-Allow-Headers': 'Content-Type',
-              'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            });
+            res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' });
             res.end();
             return;
           }
           if (req.method !== 'POST') { next(); return; }
+
+          // Rate limiting
+          const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
+            || req.socket.remoteAddress || 'unknown';
+          if (isRateLimited(clientIp)) {
+            res.writeHead(429, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Rate limit exceeded. Max 30 requests per minute.' }));
+            return;
+          }
 
           const apiKey = process.env.GEMINI_API_KEY;
           if (!apiKey) {
@@ -57,10 +77,9 @@ function geminiProxyPlugin(): Plugin {
                 body:    JSON.stringify(input.payload),
               });
               const text = await upstream.text();
-              const respOrigin = req.headers.origin || 'http://localhost:3000';
               res.writeHead(upstream.status, {
                 'Content-Type':                'application/json',
-                'Access-Control-Allow-Origin':  respOrigin,
+                'Access-Control-Allow-Origin': '*',
               });
               res.end(text);
             } catch (err: any) {

@@ -55,11 +55,9 @@ export class MissionLogic {
       }
     }
 
-    // Thrust ∝ D⁴ (dimensional analysis: T = CT·ρ·n²·D⁴), voltage ∝ V² (RPM² ∝ V²)
     const propFactor = Math.pow(config.propDiameter / 15, 4);
-    const voltageFactor = Math.pow(config.batteryVoltage / 22.2, 2);
     const numMotors = config.droneType === 'quadcopter' ? 4 : config.droneType === 'hexacopter' ? 6 : 2;
-    const maxThrust = 40 * voltageFactor * propFactor * numMotors;
+    const maxThrust = 40 * (config.batteryVoltage / 22.2) * propFactor * numMotors;
     const optimalTotalMass = (maxThrust * 0.6) / this.GRAVITY;
     const optimalCargoWeight = Math.max(0, optimalTotalMass - 2.0);
 
@@ -69,24 +67,24 @@ export class MissionLogic {
       const recentTime = (history[history.length - 1].time - history[history.length - 10].time) || 1;
       const powerRate = recentEnergy / recentTime;
       const currentVelocity = Math.sqrt(telemetry.x_dot**2 + telemetry.y_dot**2 + telemetry.z_dot**2);
-      if (powerRate > 0 && currentVelocity > 0.1) {
+      if (powerRate > 0.1 && currentVelocity > 0.1) {
         // Unit chain: battery (0–1 fraction) × 10000 (mAh capacity assumed)
         //           × batteryVoltage (V) × 3.6 (conversion: 1 mAh·V × 3.6 = 1 J)
         //           = remaining energy in Joules
-        const remainingEnergy = telemetry.battery * 10000 * config.batteryVoltage * 3.6;
+        const remainingEnergy = telemetry.battery * (config.batteryCapacity ?? 10000) * config.batteryVoltage * 3.6;
         const timeRemaining = remainingEnergy / powerRate;
-        pointOfNoReturn = (timeRemaining * currentVelocity) / 2 / 1000;
+        pointOfNoReturn = Math.min(500, (timeRemaining * currentVelocity) / 2 / 1000);
       }
     }
 
-    const targetDeviation = Math.sqrt(telemetry.x**2 + telemetry.y**2) * 100;
+    const targetDeviation = Math.min(100000, Math.sqrt(telemetry.x**2 + telemetry.y**2) * 100);
 
     // Fix 6: use config.armLength (was hardcoded 0.5m)
     const velocitySq = telemetry.x_dot**2 + telemetry.y_dot**2 + telemetry.z_dot**2;
     const dragForce = 0.5 * this.AIR_DENSITY * velocitySq * 1.2 * 0.05;
     const armLength = config.armLength ?? 0.5;
     const bendingMoment = dragForce * armLength;
-    const structuralStress = bendingMoment * 0.1;
+    const structuralStress = Math.min(500, bendingMoment * 0.1);
 
     return {
       sec,

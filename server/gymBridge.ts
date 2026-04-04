@@ -21,13 +21,6 @@ import type { PhysicsConfig, TestModules } from '../src/PhysicsEngine';
 
 const PORT = 8765;
 
-// ── CORS allowed origins ─────────────────────────────────────────────────────
-const ALLOWED_ORIGINS = ['https://copter-studio.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
-function getCorsOrigin(req: IncomingMessage): string {
-  const origin = req.headers.origin || '';
-  return ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-}
-
 // ── Gemini proxy ──────────────────────────────────────────────────────────────
 
 async function handleGeminiProxy(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -63,7 +56,7 @@ async function handleGeminiProxy(req: IncomingMessage, res: ServerResponse): Pro
     const upstreamBody = await upstream.text();
     res.writeHead(upstream.status, {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': getCorsOrigin(req),
+      'Access-Control-Allow-Origin': '*',
     });
     res.end(upstreamBody);
   } catch (err: any) {
@@ -135,11 +128,9 @@ class GymSim {
 // ── HTTP + WebSocket server ───────────────────────────────────────────────────
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-  // CORS preflight — restrict to known origins
-  const corsOrigin = getCorsOrigin(req);
-
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, { 'Access-Control-Allow-Origin': corsOrigin, 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' });
+    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' });
     res.end();
     return;
   }

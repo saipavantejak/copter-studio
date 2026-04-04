@@ -330,6 +330,12 @@ export const DroneSim = ({
   }, [config, tests, sensorCfg]);
 
   const handleReset = () => {
+    physicsRef.current.config         = config;
+    physicsRef.current.tests          = tests;
+    physicsRef.current.sensorCfg      = sensorCfg;
+    ghostPhysicsRef.current.config    = config;
+    ghostPhysicsRef.current.tests     = tests;
+    ghostPhysicsRef.current.sensorCfg = sensorCfg;
     physicsRef.current.reset();
     ghostPhysicsRef.current.reset();
     isRunningRef.current = true;

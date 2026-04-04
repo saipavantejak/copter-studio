@@ -55,6 +55,23 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
               {config.droneType === 'hexacopter' && '6 motors for redundancy — can survive a single motor failure. Best for: heavy-lift, inspection.'}
             </div>
           </div>
+          {/* Quick Presets */}
+          <div>
+            <label className="block text-xs text-zinc-500 mb-1.5">Quick Presets</label>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: 'Micro Racer', cfg: { droneType: 'quadcopter' as DroneType, mass: 2.5, propDiameter: 8, batteryVoltage: 14.8, armLength: 0.15 } },
+                { label: 'Research Bi', cfg: { droneType: 'bicopter' as DroneType, mass: 5.0, propDiameter: 15, batteryVoltage: 22.2, armLength: 0.5 } },
+                { label: 'Cargo Quad', cfg: { droneType: 'quadcopter' as DroneType, mass: 8.0, propDiameter: 18, batteryVoltage: 22.2, armLength: 0.6 } },
+                { label: 'Heavy Hex', cfg: { droneType: 'hexacopter' as DroneType, mass: 15.0, propDiameter: 22, batteryVoltage: 44.4, armLength: 0.8 } },
+              ].map(p => (
+                <button key={p.label} onClick={() => setConfig(c => ({ ...c, ...p.cfg }))}
+                  className="px-2 py-1 text-[10px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-zinc-400 hover:text-zinc-200 transition-colors">
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
           {[
             ['mass','Mass (kg)',1,20,0.5,'Typical: 2-5kg (small), 5-10kg (cargo), 10-20kg (heavy-lift)'] as const,
             ['propDiameter','Prop Ø (in)',5,30,1,'Typical: 8-10" (racing), 12-15" (general), 18-30" (heavy-lift)'] as const,

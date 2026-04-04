@@ -155,12 +155,12 @@ export const CrashForensics: React.FC<CrashForensicsProps> = ({
                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest px-1">Impact Telemetry</h3>
                <div className="grid grid-cols-1 gap-2">
                 {[
-                  ['Altitude',  t?.z?.toFixed(3) + ' m',                  <Activity className="w-3.5 h-3.5" />],
-                  ['Roll',      (t?.phi  * 180 / Math.PI).toFixed(1) + '°', null],
-                  ['Pitch',     (t?.theta * 180 / Math.PI).toFixed(1) + '°', null],
-                  ['Battery',   (t?.battery * 100).toFixed(1) + '%',       <Zap className="w-3.5 h-3.5" />],
-                  ['Z velocity', t?.z_dot?.toFixed(2) + ' m/s',            null],
-                  ['Flight time', t?.time?.toFixed(2) + ' s',              null],
+                  ['Altitude',  (t?.z != null ? t.z.toFixed(3) : '—') + ' m',                  <Activity className="w-3.5 h-3.5" />],
+                  ['Roll',      (t?.phi != null ? (t.phi * 180 / Math.PI).toFixed(1) : '—') + '°', null],
+                  ['Pitch',     (t?.theta != null ? (t.theta * 180 / Math.PI).toFixed(1) : '—') + '°', null],
+                  ['Battery',   (t?.battery != null ? (t.battery * 100).toFixed(1) : '—') + '%',       <Zap className="w-3.5 h-3.5" />],
+                  ['Z velocity', (t?.z_dot != null ? t.z_dot.toFixed(2) : '—') + ' m/s',            null],
+                  ['Flight time', (t?.time != null ? t.time.toFixed(2) : '—') + ' s',              null],
                 ].map(([label, value, icon]) => (
                   <div key={label as string}
                     className="bg-zinc-950 border border-zinc-800 rounded-lg p-3 flex flex-col gap-0.5">

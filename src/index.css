@@ -32,22 +32,34 @@
   border-radius: 3px;
 }
 
-/* Tablet: slightly smaller max-width */
+/* Tablet: tab bar scrolls, smaller padding */
 @media (max-width: 1024px) {
   .responsive-tab-bar {
-    max-width: 480px;
+    max-width: 350px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .responsive-tab-bar::-webkit-scrollbar {
+    height: 3px;
+  }
+  .responsive-tab-bar::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+  .responsive-tab-bar button {
+    gap: 2px;
+    font-size: 10px;
   }
 }
 
 /* Mobile: full responsive adjustments */
 @media (max-width: 768px) {
   .responsive-tab-bar {
-    max-width: 100%;
-    flex: 1 1 100%;
-    order: 3;
+    max-width: 220px;
   }
 
-  /* Ensure touch targets meet WCAG 2.5.8 (44×44px) */
+  /* Ensure touch targets are at least 44px */
   button, a, select, input[type="checkbox"] {
     min-height: 36px;
     min-width: 36px;
@@ -68,27 +80,6 @@
     height: auto !important;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-  }
-}
-
-/* ── Focus indicators for keyboard navigation (WCAG 2.4.7) ────────────── */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-a:focus-visible,
-textarea:focus-visible,
-[role="tab"]:focus-visible {
-  outline: 2px solid #4ade6d;
-  outline-offset: 2px;
-}
-
-/* ── Reduced motion support (WCAG 2.3.3) ──────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
 

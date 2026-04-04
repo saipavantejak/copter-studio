@@ -38,6 +38,7 @@ export interface PhysicsConfig {
   propTableId?: string;
   /** Enable thermal/updraft model for long-range missions */
   thermalConfig?: import('./physics/atmosphere').ThermalConfig;
+  batteryCapacity?: number;
 }
 
 export interface TestModules {
@@ -80,15 +81,13 @@ export class PhysicsEngine {
   public sensorCfg: SensorConfig = { enableNoise: false, imuNoiseLevel: 0.5, gpsNoiseLevel: 0.5 };
 
   private time = 0;
-  private readonly batteryCapacity = 10000;
+  public get batteryCapacity(): number { return this.config.batteryCapacity ?? 10000; }
   public currentBattery = 10000;
   private windPhaseX = 0;
   private windPhaseY = 0;
   public totalDistance = 0;
   public totalEnergyConsumed = 0;
   private sensorNoise = new SensorNoise();
-  // Pre-allocated array for motor failure state — avoids GC pressure in hot loop
-  private readonly failedMotors: boolean[] = [false, false, false, false, false, false];
   public motorTauOverride: number = MOTOR_TAU;
   public dragCoeffOverride: number = 0.47;
   public rng: SeededRandom = new SeededRandom(42);
@@ -111,8 +110,6 @@ export class PhysicsEngine {
     this.windPhaseY=this.rng.next()*Math.PI*2;
     this.totalDistance=0;
     this.totalEnergyConsumed=0;
-    this.motorTauOverride = MOTOR_TAU;
-    this.dragCoeffOverride = 0.47;
     this.sensorNoise.reset();
     this.dryden.reset();
   }
@@ -132,9 +129,7 @@ export class PhysicsEngine {
     const numMotors = this.config.droneType==='quadcopter' ? 4
       : this.config.droneType==='hexacopter' ? 6 : 2;
 
-    // Reuse pre-allocated array to avoid GC pressure at 60 Hz
-    const failed = this.failedMotors;
-    failed[0]=false; failed[1]=false; failed[2]=false; failed[3]=false; failed[4]=false; failed[5]=false;
+    const failed = new Array(6).fill(false);
     if (this.tests.motorOutEnabled) {
       failed[this.config.droneType==='bicopter' ? 1 : 0] = true;
     }
@@ -151,7 +146,6 @@ export class PhysicsEngine {
     }
 
     const avgCmd = action.reduce((s,b)=>s+Math.abs(b),0)/action.length;
-    // Thrust ∝ RPM² ∝ V² — quadratic voltage scaling
     let vf = Math.pow(this.config.batteryVoltage / 22.2, 2);
     if (this.tests.batterySagEnabled) {
       this.currentBattery = Math.max(0, this.currentBattery - avgCmd*50*dt);
@@ -162,15 +156,13 @@ export class PhysicsEngine {
     }
     this.totalEnergyConsumed += avgCmd*666*numMotors*dt;
 
-    // Thrust ∝ D⁴ (dimensional analysis: T = CT·ρ·n²·D⁴)
-    // Guard against zero propDiameter (would cause NaN in thrust calc)
     const safePropDiam = Math.max(1, this.config.propDiameter);
     const pf = Math.pow(safePropDiam/15, 4);
     const hifi = this.config.useHighFidelityAero === true;
 
     // ── Air density correction (ISA) ─────────────────────────────────────
-    // Always use ISA model for altitude-dependent air density (1.225 at sea level).
-    const airDensity = isaAtmosphere(Math.max(0, this.z)).density;
+    // At sea level this is 1.225 kg/m³; at 100m AGL it's ~1.211 kg/m³ (1% drop).
+    const airDensity = hifi ? isaAtmosphere(Math.max(0, this.z)).density : 1.225;
 
     // ── Thrust calculation ────────────────────────────────────────────────
     let Fz = 0;
@@ -183,7 +175,7 @@ export class PhysicsEngine {
       if (this.config.droneType === 'bicopter') {
         const t0 = propTableLookup(action[0],     this.motorOmegas[0], this.config.propDiameter, airDensity);
         const t1 = propTableLookup(action[3]??0,  this.motorOmegas[1], this.config.propDiameter, airDensity);
-        Fz  = (failed[1] ? t0.thrust : t0.thrust + t1.thrust) * vf * ge;
+        Fz  = (t0.thrust + (failed[1] ? 0 : t1.thrust)) * vf * ge;
       } else {
         for (let i = 0; i < numMotors; i++) {
           if (!failed[i]) {
@@ -204,6 +196,7 @@ export class PhysicsEngine {
       }
     }
 
+    const perMotorCap = 100;
     const maxT = 40*vf*pf;
     const mx = UniversalMixer.mix(this.config.droneType, action, maxT, this.tests.motorOutEnabled, this.config.armLength);
     let { L, M, N } = mx.moments;
@@ -253,10 +246,6 @@ export class PhysicsEngine {
       Fz += this.config.mass * wThermal * 0.5;
     }
 
-    // Saturate thrust: cannot exceed physical max or go negative
-    const maxPhysicalThrust = 60 * numMotors * vf * pf; // conservative upper bound
-    Fz = Math.max(0, Math.min(maxPhysicalThrust, Fz));
-
     // ── Aerodynamic drag ──────────────────────────────────────────────────
     let extraFx = wfx, extraFy = wfy;
     if (hifi) {
@@ -271,8 +260,6 @@ export class PhysicsEngine {
       Fz = Math.max(0, Fz + dfz);
     }
 
-    // Normalize quaternion before RK4 to prevent drift accumulation
-    qNorm(this.quat);
     const sv0 = [this.x,this.y,this.z, this.x_dot,this.y_dot,this.z_dot, ...this.quat, this.p,this.q,this.r];
     const { Ixx, Iyy, Izz } = this.config.inertiaOverride ?? computeInertia(this.config.propDiameter, this.config.mass, this.config.armLength);
     const sv1 = rk4Step(sv0, {Fz,L,M,N}, {fx:extraFx,fy:extraFy}, this.config.mass, Ixx, Iyy, Izz, dt);
@@ -290,11 +277,11 @@ export class PhysicsEngine {
       const penetration = -this.z;
       const Fn = Math.max(0, Kn * penetration - Dn * this.z_dot);
       this.z = 0;
-      this.z_dot = Math.max(0, this.z_dot + Fn * dt / this.config.mass);
+      this.z_dot = Math.max(0, this.z_dot + Fn * 0.001);
       // Coulomb friction
       const vH = Math.sqrt(this.x_dot**2 + this.y_dot**2);
       if (vH > 1e-6) {
-        const fd = Math.min(mu * Fn * dt / this.config.mass, vH);
+        const fd = Math.min(mu * Fn * 0.001, vH);
         this.x_dot -= (this.x_dot / vH) * fd;
         this.y_dot -= (this.y_dot / vH) * fd;
       }

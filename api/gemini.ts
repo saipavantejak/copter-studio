@@ -4,21 +4,40 @@
 
 import type { IncomingMessage, ServerResponse } from 'http';
 
-export default async function handler(req: IncomingMessage & { body?: any; method?: string }, res: ServerResponse & { status: (code: number) => any; json: (data: any) => void; setHeader: (name: string, value: string) => void; send: (body: string) => void; end: () => void }) {
-  // CORS preflight — restrict to app domain
-  const allowedOrigins = ['https://copter-studio.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
-  const origin = (req.headers as Record<string, string | undefined>)?.origin || '';
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+// ── Simple rate limiter (per-IP, 30 requests per minute) ─────────────────────
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 30;        // max requests per window
+const RATE_WINDOW_MS = 60000; // 1 minute
 
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  let entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 0, resetAt: now + RATE_WINDOW_MS };
+    rateLimitMap.set(ip, entry);
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
+
+export default async function handler(req: IncomingMessage & { body?: any; method?: string }, res: ServerResponse & { status: (code: number) => any; json: (data: any) => void; setHeader: (name: string, value: string) => void; send: (body: string) => void; end: () => void }) {
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     return res.status(204).end();
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limiting
+  const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
+    || req.socket.remoteAddress || 'unknown';
+  if (isRateLimited(clientIp)) {
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(429).json({ error: 'Rate limit exceeded. Max 30 requests per minute.' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
@@ -37,7 +56,7 @@ export default async function handler(req: IncomingMessage & { body?: any; metho
     });
 
     const text = await upstream.text();
-    res.setHeader('Access-Control-Allow-Origin', corsOrigin);
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
     return res.status(upstream.status).send(text);
   } catch (err: any) {

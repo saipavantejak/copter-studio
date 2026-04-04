@@ -267,7 +267,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (intent.type === 'live') {
       setActiveTab('simulation');
       setSimStarted(true);
-      setTimeout(() => setSimResetTrigger(t => t + 1), 50);
+      setTimeout(() => setSimResetTrigger(t => t + 1), 150);
     } else {
       if (intent.numEpisodes) epNumEpisodes.current = intent.numEpisodes;
       if (intent.masterSeed !== undefined) setMasterSeed(intent.masterSeed);

@@ -50,7 +50,7 @@ export function SimulationTab() {
             onActionUpdate={setLastAction} onNoisyStateUpdate={setNoisyState}
             config={config} tests={tests} sensorCfg={sensorCfg}
             comparisonMode={comparisonMode} resetTrigger={simResetTrigger}
-            paused={!simStarted} />
+            paused={!simStarted || activeTab !== 'simulation'} />
         </PanelErrorBoundary>
       </div>
       {!simStarted && (
