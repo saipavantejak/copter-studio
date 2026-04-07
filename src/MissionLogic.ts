@@ -2,7 +2,9 @@ import { DroneState, PhysicsConfig } from './PhysicsEngine';
 
 export interface MissionMetrics {
   sec: number;
+  hoverPowerW: number;
   spt: number;
+  sptGrade: string;
   optimalCargoWeight: number;
   pointOfNoReturn: number;
   targetDeviation: number;
@@ -32,7 +34,19 @@ export class MissionLogic {
     const distanceKm = totalDistance / 1000;
 
     let sec = 0;
-    if (payloadMassGrams > 0 && distanceKm > 0.001) {
+    let hoverPowerW = 0;
+    if (distanceKm < 0.01) {
+      // During hover (distance < 10m), SEC is meaningless (denominator ~0).
+      // Report instantaneous power draw instead.
+      sec = 0;
+      if (history.length >= 2) {
+        const last = history[history.length - 1];
+        const prev = history[history.length - 2];
+        const dt = (last.time - prev.time) || 1;
+        const dE = totalEnergyConsumed - (prev.energyConsumed ?? 0);
+        hoverPowerW = dE / dt; // Watts = Joules / second
+      }
+    } else if (payloadMassGrams > 0) {
       sec = totalEnergyConsumed / (payloadMassGrams * distanceKm);
     }
 
@@ -55,11 +69,24 @@ export class MissionLogic {
       }
     }
 
+    const sptGrade = spt < 5 ? 'excellent' : spt < 20 ? 'good' : spt < 50 ? 'fair' : 'poor';
+
     const propFactor = Math.pow(config.propDiameter / 15, 4);
     const numMotors = config.droneType === 'quadcopter' ? 4 : config.droneType === 'hexacopter' ? 6 : 2;
     const maxThrust = 40 * (config.batteryVoltage / 22.2) * propFactor * numMotors;
     const optimalTotalMass = (maxThrust * 0.6) / this.GRAVITY;
-    const optimalCargoWeight = Math.max(0, optimalTotalMass - 2.0);
+    const computedCargo = Math.max(0, optimalTotalMass - 2.0);
+
+    // Cap by disc loading limit (typical multirotor max ~50 kg/m^2)
+    const discLoadingMax = 50; // kg/m^2
+    const propDiameterM = config.propDiameter * 0.0254; // propDiameter is in inches
+    const discArea = numMotors * Math.PI * Math.pow(propDiameterM / 2, 2);
+    const discLoadingCap = Math.max(0, discLoadingMax * discArea - config.mass);
+
+    // Also cap payload ratio at 3:1 (cargo : airframe mass)
+    const payloadRatioCap = config.mass * 3;
+
+    const optimalCargoWeight = Math.min(computedCargo, discLoadingCap, payloadRatioCap);
 
     let pointOfNoReturn = 0;
     if (history.length > 10) {
@@ -88,7 +115,9 @@ export class MissionLogic {
 
     return {
       sec,
+      hoverPowerW,
       spt,
+      sptGrade,
       optimalCargoWeight,
       pointOfNoReturn,
       targetDeviation,

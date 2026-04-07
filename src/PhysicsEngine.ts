@@ -292,6 +292,33 @@ export class PhysicsEngine {
       this.quat=[Math.cos(yaw/2), 0, 0, Math.sin(yaw/2)];
     }
 
+    // ── Numerical integration stability guards ────────────────────────────
+
+    // NaN divergence detection — reset to last known good state
+    if (!Number.isFinite(this.x_dot) || !Number.isFinite(this.z_dot) ||
+        !Number.isFinite(this.p) || !Number.isFinite(this.phi)) {
+      this.x_dot = this.y_dot = this.z_dot = 0;
+      this.p = this.q = this.r = 0;
+    }
+
+    // State divergence guard — clamp velocities to physical limits
+    const V_MAX = 50; // m/s — well above any multirotor's capability
+    this.x_dot = Math.max(-V_MAX, Math.min(V_MAX, this.x_dot));
+    this.y_dot = Math.max(-V_MAX, Math.min(V_MAX, this.y_dot));
+    this.z_dot = Math.max(-V_MAX, Math.min(V_MAX, this.z_dot));
+
+    // Clamp angular rates to physical limits
+    const W_MAX = 30; // rad/s — physical limit for multirotor angular rates
+    this.p = Math.max(-W_MAX, Math.min(W_MAX, this.p));
+    this.q = Math.max(-W_MAX, Math.min(W_MAX, this.q));
+    this.r = Math.max(-W_MAX, Math.min(W_MAX, this.r));
+
+    // Clamp position to reasonable range
+    const POS_MAX = 5000; // meters
+    this.x = Math.max(-POS_MAX, Math.min(POS_MAX, this.x));
+    this.y = Math.max(-POS_MAX, Math.min(POS_MAX, this.y));
+    this.z = Math.max(-500, Math.min(POS_MAX, this.z)); // z can't go below -500 (deep underground)
+
     this.totalDistance+=Math.sqrt(this.x_dot**2+this.y_dot**2+this.z_dot**2)*dt;
     return this.getState();
   }

@@ -60,7 +60,7 @@ function buildContext(
   const parts: string[] = [];
   if (config)    parts.push(`Config: ${config.droneType} | mass=${config.mass}kg | prop=${config.propDiameter}in | ${config.batteryVoltage}V | arm=${config.armLength}m`);
   if (telemetry) parts.push(`Telemetry: alt=${telemetry.z.toFixed(3)}m | roll=${(telemetry.phi*180/Math.PI).toFixed(1)}° | pitch=${(telemetry.theta*180/Math.PI).toFixed(1)}° | bat=${(telemetry.battery*100).toFixed(1)}% | t=${telemetry.time.toFixed(2)}s`);
-  if (metrics)   parts.push(`Metrics: SEC=${metrics.sec.toFixed(5)} | SPT=${metrics.spt.toFixed(5)} | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
+  if (metrics)   parts.push(`Metrics: SEC=${metrics.sec === 0 && metrics.hoverPowerW > 0 ? `Hover:${metrics.hoverPowerW.toFixed(0)}W` : metrics.sec.toFixed(5)} | SPT=${metrics.spt.toFixed(5)} (${metrics.sptGrade}) | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
   if (crashData) parts.push(`CRASH: ${crashData.reason ?? 'unknown'}`);
   if (episodeStats) parts.push(`Batch: ${episodeStats.numEpisodes}eps | crashRate=${(episodeStats.crashRate*100).toFixed(1)}% | meanSEC=${episodeStats.meanSEC?.toFixed(4)} | meanSPT=${episodeStats.meanSPT?.toFixed(4)}`);
   const mods = Object.entries(activeTests).filter(([k,v])=>k!=='missionPreset'&&v===true).map(([k])=>k).join(', ');

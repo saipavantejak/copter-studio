@@ -169,28 +169,77 @@ export class RLAgent {
     if (missionPreset==='long-range') xt=10000;
     else if (missionPreset==='high-speed') xt=1000;
 
+    const hasMissionTarget = (missionPreset !== 'none' && (xt !== 0 || yt !== 0));
+
     // ── Mass-adaptive gain scheduling ─────────────────────────────────────
     // Base gains tuned for 5kg. Scale proportionally to mass for heavier drones.
     const massRatio = mass / 5.0;
     const Kp_alt  = 0.5  * massRatio;          // altitude P-gain
     const Kd_alt  = 0.2  * Math.sqrt(massRatio); // altitude D-gain
-    const Ki_alt  = 0.08 * massRatio;           // altitude I-gain (new)
+    const Ki_alt  = 0.08 * massRatio;           // altitude I-gain
     const Kp_att  = 0.1  * Math.sqrt(massRatio); // roll/pitch P-gain
     const Kd_att  = 0.05 * Math.sqrt(massRatio); // roll/pitch D-gain
     const Kp_yaw  = 0.1;
     const Kd_yaw  = 0.05;
 
-    // ── Altitude integral accumulator ─────────────────────────────────────
+    // ── Altitude PID with anti-overshoot clamping ─────────────────────────
     const altError = zt - z;
     const dt = DT;
     this.altIntegral = Math.max(-2, Math.min(2, this.altIntegral + altError * dt));
 
+    // Reduce altitude gain when error is very large to prevent runaway overshoot
+    const altGainScale = Math.abs(altError) > 50 ? 50 / Math.abs(altError) : 1.0;
     const clamp = (v:number) => Math.max(-1, Math.min(1,v));
-    const tc = clamp(altError * Kp_alt + (-zd) * Kd_alt + this.altIntegral * Ki_alt);
-    const rc = clamp((yt-y-phi) * Kp_att - p * Kd_att);
-    let pe = xt-x-theta;
-    if (missionPreset==='high-speed') pe = Math.max(-0.5,Math.min(0.5,pe));
-    const pc = clamp(pe * Kp_att - q * Kd_att);
+    let tc = clamp((altError * Kp_alt * altGainScale) + (-zd) * Kd_alt + this.altIntegral * Ki_alt);
+
+    // Clamp thrust to max 2x hover (hover ~ 0.5 in normalised units)
+    tc = Math.max(-1, Math.min(1, tc));
+
+    // Anti-windup: vertical velocity braking
+    const vBrake = 0.5;
+    if (Math.abs(zd) > 10) tc -= clamp(vBrake * zd);
+    tc = Math.max(-1, Math.min(1, tc));
+
+    // ── Horizontal position PD (when mission target exists) ───────────────
+    let pitchTarget = 0;   // desired pitch angle for forward (x) motion
+    let rollTarget  = 0;   // desired roll angle for lateral (y) motion
+
+    if (hasMissionTarget) {
+      const posKp = 0.3;   // position proportional gain
+      const posKd = 0.8;   // position derivative (velocity damping) gain
+      const maxVCmd = 5;    // max commanded velocity m/s
+      const maxAttCmd = 0.3; // max attitude command radians (~17 deg)
+
+      // Outer loop: position error -> commanded velocity, clamped
+      const vx_cmd = Math.max(-maxVCmd, Math.min(maxVCmd, posKp * (xt - x)));
+      const vy_cmd = Math.max(-maxVCmd, Math.min(maxVCmd, posKp * (yt - y)));
+
+      // Inner loop: velocity error -> attitude command (pitch for x, roll for y)
+      pitchTarget = Math.max(-maxAttCmd, Math.min(maxAttCmd, posKd * (vx_cmd - xd)));
+      rollTarget  = Math.max(-maxAttCmd, Math.min(maxAttCmd, posKd * (vy_cmd - yd)));
+
+      // Anti-windup: horizontal velocity braking when exceeding 10 m/s
+      if (Math.abs(xd) > 10) pitchTarget -= Math.max(-maxAttCmd, Math.min(maxAttCmd, vBrake * xd));
+      if (Math.abs(yd) > 10) rollTarget  -= Math.max(-maxAttCmd, Math.min(maxAttCmd, vBrake * yd));
+
+      pitchTarget = Math.max(-maxAttCmd, Math.min(maxAttCmd, pitchTarget));
+      rollTarget  = Math.max(-maxAttCmd, Math.min(maxAttCmd, rollTarget));
+    }
+
+    // ── Attitude stabilization ────────────────────────────────────────────
+    // When a mission target exists, track the commanded attitude from the
+    // horizontal position controller instead of raw position error.
+    let rc: number, pc: number;
+    if (hasMissionTarget) {
+      rc = clamp((rollTarget - phi) * Kp_att - p * Kd_att);
+      pc = clamp((pitchTarget - theta) * Kp_att - q * Kd_att);
+    } else {
+      rc = clamp((yt - y - phi) * Kp_att - p * Kd_att);
+      let pe = xt - x - theta;
+      if (missionPreset === 'high-speed') pe = Math.max(-0.5, Math.min(0.5, pe));
+      pc = clamp(pe * Kp_att - q * Kd_att);
+    }
+
     const yc = clamp((-psi) * Kp_yaw - r * Kd_yaw);
 
     if (droneType==='bicopter')

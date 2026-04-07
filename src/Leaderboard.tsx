@@ -99,7 +99,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                   <div className="text-right">
                     <div className={`text-base font-mono font-bold ${
                       i===0 ? 'text-amber-300' : 'text-zinc-300'
-                    }`}>{s.metrics.sec.toFixed(3)}</div>
+                    }`}>{s.metrics.sec === 0 && s.metrics.hoverPowerW > 0
+                      ? `Hover: ${s.metrics.hoverPowerW.toFixed(0)} W`
+                      : s.metrics.sec.toFixed(3)}</div>
                     <div className="text-xs text-zinc-600">{fmtTime(s.timestamp)}</div>
                   </div>
                 </div>
@@ -133,7 +135,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                         <Clock className="w-2.5 h-2.5" />{s.duration.toFixed(1)}s
                       </span>
                       <span className="flex items-center gap-1 text-zinc-400">
-                        <Zap className="w-2.5 h-2.5" />SEC: {s.metrics.sec > 0 ? s.metrics.sec.toFixed(3) : '—'}
+                        <Zap className="w-2.5 h-2.5" />SEC: {s.metrics.sec === 0 && s.metrics.hoverPowerW > 0
+                          ? `Hover: ${s.metrics.hoverPowerW.toFixed(0)} W`
+                          : s.metrics.sec > 0 ? s.metrics.sec.toFixed(3) : '—'}
                       </span>
                       <span className="flex items-center gap-1 text-zinc-400">
                         <Target className="w-2.5 h-2.5" />{s.metrics.targetDeviation.toFixed(1)}cm

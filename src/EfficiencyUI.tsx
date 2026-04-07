@@ -18,8 +18,10 @@ export const EfficiencyUI = ({ metrics, historyData }: EfficiencyUIProps) => {
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         <MetricCard
           label="Specific Energy (SEC)"
-          value={metrics.sec.toFixed(2)}
-          unit="J/g·km"
+          value={metrics.sec === 0 && metrics.hoverPowerW > 0
+            ? `Hover: ${metrics.hoverPowerW.toFixed(0)} W`
+            : metrics.sec.toFixed(2)}
+          unit={metrics.sec === 0 && metrics.hoverPowerW > 0 ? '' : 'J/g·km'}
           icon={<Zap className="w-3 h-3 text-amber-400" />}
           tooltip="Energy consumed per gram of drone per kilometer flown. Lower = more efficient. Typical range: 5-15 J/g·km."
         />
@@ -29,6 +31,7 @@ export const EfficiencyUI = ({ metrics, historyData }: EfficiencyUIProps) => {
           unit="Ratio"
           icon={<Activity className="w-3 h-3 text-blue-400" />}
           tooltip="Ratio of attitude stability to power consumption. Higher = better stability per watt. Values near 1.0 indicate efficient hover."
+          badge={metrics.sptGrade}
         />
         <MetricCard 
           label="Optimal Cargo" 
@@ -76,7 +79,14 @@ export const EfficiencyUI = ({ metrics, historyData }: EfficiencyUIProps) => {
   );
 };
 
-const MetricCard = ({ label, value, unit, icon, tooltip }: { label: string, value: string | number, unit: string, icon: React.ReactNode, tooltip?: string }) => (
+const sptGradeColor: Record<string, string> = {
+  excellent: 'text-emerald-400 bg-emerald-500/20',
+  good:      'text-green-400 bg-green-500/20',
+  fair:      'text-yellow-400 bg-yellow-500/20',
+  poor:      'text-red-400 bg-red-500/20',
+};
+
+const MetricCard = ({ label, value, unit, icon, tooltip, badge }: { label: string, value: string | number, unit: string, icon: React.ReactNode, tooltip?: string, badge?: string }) => (
   <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-3 flex flex-col justify-between" title={tooltip}>
     <div className="flex items-center gap-1.5 text-zinc-500 mb-1">
       {icon}
@@ -85,6 +95,11 @@ const MetricCard = ({ label, value, unit, icon, tooltip }: { label: string, valu
     <div className="flex items-baseline gap-1">
       <span className="text-lg font-mono text-zinc-100">{value}</span>
       <span className="text-xs text-zinc-500">{unit}</span>
+      {badge && (
+        <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ml-1 ${sptGradeColor[badge] || 'text-zinc-400 bg-zinc-700/50'}`}>
+          {badge}
+        </span>
+      )}
     </div>
   </div>
 );
