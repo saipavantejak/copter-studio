@@ -270,6 +270,21 @@ const DroneModel = ({
         isRunningRef.current = false;
         onCrash({ reason: 'Crash: high roll/pitch near ground.', telemetry: entry });
       }
+      // Altitude runaway detection
+      if (ns.z > 500 && !isCrashed) {
+        setIsCrashed(true);
+        onCrash?.({ reason: 'Altitude runaway: drone exceeded 500m.', telemetry: entry });
+      }
+      // Velocity divergence detection
+      if ((Math.abs(ns.z_dot) > 45 || Math.abs(ns.x_dot) > 45 || Math.abs(ns.y_dot) > 45) && !isCrashed) {
+        setIsCrashed(true);
+        onCrash?.({ reason: 'Velocity divergence: speed exceeded 45 m/s.', telemetry: entry });
+      }
+      // Attitude divergence at altitude (inverted flight)
+      if ((Math.abs(ns.phi) > Math.PI / 3 || Math.abs(ns.theta) > Math.PI / 3) && ns.z > 0.5 && !isCrashed) {
+        setIsCrashed(true);
+        onCrash?.({ reason: `Attitude divergence: roll=${(ns.phi*180/Math.PI).toFixed(1)}° pitch=${(ns.theta*180/Math.PI).toFixed(1)}°`, telemetry: entry });
+      }
 
       frameErrCount.current = 0;
     } catch (err: any) {

@@ -174,11 +174,18 @@ export class RLAgent {
     // ── Mass-adaptive gain scheduling ─────────────────────────────────────
     // Base gains tuned for 5kg. Scale proportionally to mass for heavier drones.
     const massRatio = mass / 5.0;
+    // Estimate moment of inertia ratio: I ~ m * L^2
+    // Reference: 5kg drone at 0.5m arm
+    const refInertia = 5.0 * 0.5 * 0.5; // = 1.25 for reference 5kg
+    const estArmLength = droneType === 'hexacopter' ? 0.8 : droneType === 'quadcopter' ? 0.5 : 0.5;
+    const estInertia = mass * estArmLength * estArmLength;
+    const inertiaRatio = estInertia / refInertia;
+
     const Kp_alt  = 0.5  * massRatio;          // altitude P-gain
     const Kd_alt  = 0.2  * Math.sqrt(massRatio); // altitude D-gain
     const Ki_alt  = 0.08 * massRatio;           // altitude I-gain
-    const Kp_att  = 0.1  * Math.sqrt(massRatio); // roll/pitch P-gain
-    const Kd_att  = 0.05 * Math.sqrt(massRatio); // roll/pitch D-gain
+    const Kp_att  = 0.1  * inertiaRatio;  // scale with inertia, not sqrt(mass)
+    const Kd_att  = 0.05 * inertiaRatio;  // scale with inertia for proper damping
     const Kp_yaw  = 0.1;
     const Kd_yaw  = 0.05;
 

@@ -132,7 +132,18 @@ export class EpisodeRunner {
         maxRoll  = Math.max(maxRoll,  Math.abs(ns.phi));
         maxPitch = Math.max(maxPitch, Math.abs(ns.theta));
 
+        // Ground crash: low altitude + bad attitude
         if (ns.z < 0.1 && (Math.abs(ns.phi) > 0.5 || Math.abs(ns.theta) > 0.5)) {
+          crashed = true;
+          break;
+        }
+        // Attitude divergence: drone inverted or tumbling at ANY altitude (> 60° roll or pitch)
+        if (Math.abs(ns.phi) > Math.PI / 3 || Math.abs(ns.theta) > Math.PI / 3) {
+          crashed = true;
+          break;
+        }
+        // Altitude runaway: uncontrolled climb beyond reasonable bounds
+        if (ns.z > 500) {
           crashed = true;
           break;
         }

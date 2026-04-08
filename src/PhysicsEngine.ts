@@ -145,16 +145,46 @@ export class PhysicsEngine {
       }
     }
 
-    const avgCmd = action.reduce((s,b)=>s+Math.abs(b),0)/action.length;
     let vf = Math.pow(this.config.batteryVoltage / 22.2, 2);
+
+    // Actuator disk theory: P = T * v_i where v_i = sqrt(T / (2 * rho * A))
+    // Per motor: P_motor = T_motor^(3/2) / sqrt(2 * rho * A_disk)
+    // With Figure of Merit FM ≈ 0.7: P_real = P_ideal / FM
+    const propRadiusM = (this.config.propDiameter * 0.0254) / 2;
+    const diskArea = Math.PI * propRadiusM * propRadiusM;
+    const FM = 0.7; // Figure of Merit for typical multirotors
+    const rho = 1.225; // sea-level air density
+    let instantPower = 0;
+    for (let i = 0; i < numMotors; i++) {
+      // Thrust per motor from omega (already computed in this.motorOmegas)
+      const omega = Math.abs(this.motorOmegas[i] ?? 0);
+      // Thrust ~ CT * rho * n^2 * D^4, approximate from omega
+      const n_rps = omega / (2 * Math.PI);
+      const D_m = this.config.propDiameter * 0.0254;
+      const CT = 0.012; // typical thrust coefficient
+      const T_motor = CT * rho * n_rps * n_rps * Math.pow(D_m, 4);
+      if (T_motor > 0.01) {
+        // P_ideal = T^(3/2) / sqrt(2 * rho * A)
+        const P_ideal = Math.pow(T_motor, 1.5) / Math.sqrt(2 * rho * diskArea);
+        instantPower += P_ideal / FM;
+      }
+    }
+    this.totalEnergyConsumed += instantPower * dt;
+
     if (this.tests.batterySagEnabled) {
-      this.currentBattery = Math.max(0, this.currentBattery - avgCmd*50*dt);
+      // Battery drain based on actual power: P = V * I, energy = P * dt
+      // currentBattery is in mAh-equivalent units (batteryCapacity default = 10000)
+      // Convert: batteryCapacity mAh at nominal voltage = capacity in Wh
+      const nominalVoltage = this.config.batteryVoltage;
+      const capacityWh = (this.batteryCapacity / 1000) * nominalVoltage; // e.g. 10000mAh * 22.2V = 222 Wh
+      const energyUsedWh = (instantPower * dt) / 3600; // Joules to Wh
+      const drainFraction = energyUsedWh / capacityWh;
+      this.currentBattery = Math.max(0, this.currentBattery - drainFraction * this.batteryCapacity);
       const pct = this.currentBattery/this.batteryCapacity;
       vf *= pct>0.2 ? 1.0 : (pct/0.2)*0.3+0.7;
     } else {
       this.currentBattery = this.batteryCapacity;
     }
-    this.totalEnergyConsumed += avgCmd*666*numMotors*dt;
 
     const safePropDiam = Math.max(1, this.config.propDiameter);
     const pf = Math.pow(safePropDiam/15, 4);
@@ -218,9 +248,13 @@ export class PhysicsEngine {
         const gust = this.dryden.step(
           Math.max(0.5, this.z), tas, intensity, () => this.rng.next()
         );
+        // Altitude-dependent wind ramp: logarithmic wind profile (ABL theory)
+        // At z=0: factor=0, at z=2m: factor≈0.5, at z=10m: factor≈0.83, at z=30m+: factor=1.0
+        const z_agl_hi = Math.max(0, this.z);
+        const windRampHi = Math.min(1.0, Math.log(1 + z_agl_hi) / Math.log(31));
         // Gust forces in world frame (mass * acceleration from gust)
-        wfx = this.config.mass * gust.u * 0.5;
-        wfy = this.config.mass * gust.v * 0.5;
+        wfx = this.config.mass * gust.u * 0.5 * windRampHi;
+        wfy = this.config.mass * gust.v * 0.5 * windRampHi;
         // Vertical gust contributes to Fz modulation
         Fz  = Math.max(0, Fz + this.config.mass * gust.w * 0.3);
         // Angular gust disturbs rates
@@ -230,10 +264,16 @@ export class PhysicsEngine {
         // Add steady headwind for long-range
         if (this.tests.missionPreset==='long-range') wfx += 15 * this.dragCoeffOverride;
       } else {
-        // v11 sinusoidal gust model (unchanged)
+        // v11 sinusoidal gust model with altitude-dependent wind ramp
         this.windPhaseX+=0.5*dt; this.windPhaseY+=0.7*dt;
         let gx=Math.sin(this.windPhaseX)*10+Math.sin(this.windPhaseX*2.3)*5;
         let gy=Math.sin(this.windPhaseY)*10+Math.sin(this.windPhaseY*1.7)*5;
+        // Altitude-dependent wind ramp: logarithmic wind profile (ABL theory)
+        // At z=0: factor=0, at z=2m: factor≈0.5, at z=10m: factor≈0.83, at z=30m+: factor=1.0
+        const z_agl = Math.max(0, this.z);
+        const windRamp = Math.min(1.0, Math.log(1 + z_agl) / Math.log(31));
+        gx *= windRamp;
+        gy *= windRamp;
         if (this.tests.missionPreset==='long-range') gx+=15;
         wfx = this.dragCoeffOverride * gx * Math.abs(gx);
         wfy = this.dragCoeffOverride * gy * Math.abs(gy);
