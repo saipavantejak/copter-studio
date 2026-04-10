@@ -6,7 +6,11 @@
 import * as tf from '@tensorflow/tfjs';
 import { DroneType } from './UniversalMixer';
 import { DroneState } from './PhysicsEngine';
-import { DT } from './physics/constants';
+import {
+  DT, GRAVITY, AIR_DENSITY, BET_NB, BET_LIFT, BET_CHORD,
+  BET_THETA_MIN_DEG, BET_THETA_MAX_DEG, OMEGA_IDLE, OMEGA_MAX,
+  INCHES_TO_METRES,
+} from './physics/constants';
 
 // ── Serialized model payload (structured-clone-safe) ─────────────────────────
 
@@ -149,6 +153,7 @@ export class RLAgent {
   // ── Altitude integral accumulator for steady-state error elimination ──────
   private altIntegral = 0;
   private lastHeuristicTime = 0;
+  private cachedHoverTc: Map<string, number> = new Map();
 
   /** Reset integral state (call on sim reset) */
   public resetIntegral(): void {
@@ -163,6 +168,36 @@ export class RLAgent {
     this.isUsingUserModel = false;
   }
 
+  /**
+   * Compute the collective command tc ∈ [-1,1] where total rotor thrust = mg.
+   * Uses binary search over the actual BET thrust model — cached per config key.
+   */
+  private computeHoverTc(numMotors: number, propDiamIn: number, mass: number): number {
+    const key = `${numMotors}_${propDiamIn}_${mass}`;
+    const cached = this.cachedHoverTc.get(key);
+    if (cached !== undefined) return cached;
+
+    const mg = mass * GRAVITY;
+    let lo = -1, hi = 1;
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2;
+      // Compute total thrust at tc=mid
+      const omega = OMEGA_IDLE + Math.max(0, (mid + 1) / 2) * (OMEGA_MAX - OMEGA_IDLE);
+      const R  = (propDiamIn * INCHES_TO_METRES) / 2;
+      const A  = Math.PI * R * R;
+      const thetaDeg = BET_THETA_MIN_DEG + ((mid + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
+      const theta = thetaDeg * Math.PI / 180;
+      const CT = Math.max(0, (BET_NB * BET_CHORD * BET_LIFT * theta * R) / (4 * A));
+      const vTip = omega * R;
+      const thrustPerMotor = CT * AIR_DENSITY * A * vTip * vTip;
+      const totalThrust = numMotors * thrustPerMotor;
+      if (totalThrust > mg) hi = mid; else lo = mid;
+    }
+    const hoverTc = (lo + hi) / 2;
+    this.cachedHoverTc.set(key, hoverTc);
+    return hoverTc;
+  }
+
   public heuristicAction(state: Partial<DroneState>, droneType: DroneType, missionPreset: string, mass = 5.0): number[] {
     const {x=0,y=0,z=0,x_dot:xd=0,y_dot:yd=0,z_dot:zd=0,phi=0,theta=0,psi=0,p=0,q=0,r=0}=state;
     let xt=0, yt=0, zt=1.0;
@@ -171,41 +206,46 @@ export class RLAgent {
 
     const hasMissionTarget = (missionPreset !== 'none' && (xt !== 0 || yt !== 0));
 
-    // ── Mass-adaptive gain scheduling ─────────────────────────────────────
-    // Base gains tuned for 5kg. Scale proportionally to mass for heavier drones.
+    // ── Config-dependent parameters ──────────────────────────────────────
+    const numMotors = droneType === 'hexacopter' ? 6 : droneType === 'quadcopter' ? 4 : 2;
+    const estPropDiam = droneType === 'hexacopter' ? 22 : droneType === 'quadcopter' ? 18 : 15;
+
+    // ── Gain scheduling ─────────────────────────────────────────────────
+    // Thrust authority varies hugely across configs (betThrust ∝ N_motors × D^4).
+    // Scale altitude gains inversely with thrust authority so all drones have
+    // similar closed-loop altitude response.
+    const thrustAuthority = (numMotors / 2) * Math.pow(estPropDiam / 15, 4);
     const massRatio = mass / 5.0;
-    // Estimate moment of inertia ratio: I ~ m * L^2
-    // Reference: 5kg drone at 0.5m arm
-    const refInertia = 5.0 * 0.5 * 0.5; // = 1.25 for reference 5kg
+    // altScale: heavier → need more tc, more thrust authority → need less tc
+    const altScale = massRatio / thrustAuthority;
+
+    const refInertia = 5.0 * 0.5 * 0.5;
     const estArmLength = droneType === 'hexacopter' ? 0.8 : droneType === 'quadcopter' ? 0.5 : 0.5;
     const estInertia = mass * estArmLength * estArmLength;
     const inertiaRatio = estInertia / refInertia;
 
-    const Kp_alt  = 0.5  * massRatio;          // altitude P-gain
-    const Kd_alt  = 0.2  * Math.sqrt(massRatio); // altitude D-gain
-    const Ki_alt  = 0.08 * massRatio;           // altitude I-gain
-    const Kp_att  = 0.1  * inertiaRatio;  // scale with inertia, not sqrt(mass)
-    const Kd_att  = 0.05 * inertiaRatio;  // scale with inertia for proper damping
+    // PD gains scaled so all configs have similar closed-loop response
+    const Kp_alt  = 0.4  * altScale;
+    const Kd_alt  = 0.25 * Math.sqrt(altScale);
+    const Ki_alt  = 0.06 * altScale;
+    const Kp_att  = 0.15 * inertiaRatio;
+    const Kd_att  = 0.08 * inertiaRatio;
     const Kp_yaw  = 0.1;
     const Kd_yaw  = 0.05;
 
-    // ── Altitude PID with anti-overshoot clamping ─────────────────────────
+    // ── Altitude PID with hover bias ──────────────────────────────────────
+    // Compute exact hover collective from BET thrust model via binary search.
+    // PD corrections are applied around this equilibrium point.
+    const hoverBias = this.computeHoverTc(numMotors, estPropDiam, mass);
+
     const altError = zt - z;
     const dt = DT;
     this.altIntegral = Math.max(-2, Math.min(2, this.altIntegral + altError * dt));
 
-    // Reduce altitude gain when error is very large to prevent runaway overshoot
-    const altGainScale = Math.abs(altError) > 50 ? 50 / Math.abs(altError) : 1.0;
     const clamp = (v:number) => Math.max(-1, Math.min(1,v));
-    let tc = clamp((altError * Kp_alt * altGainScale) + (-zd) * Kd_alt + this.altIntegral * Ki_alt);
-
-    // Clamp thrust to max 2x hover (hover ~ 0.5 in normalised units)
-    tc = Math.max(-1, Math.min(1, tc));
-
-    // Anti-windup: vertical velocity braking
-    const vBrake = 0.5;
-    if (Math.abs(zd) > 10) tc -= clamp(vBrake * zd);
-    tc = Math.max(-1, Math.min(1, tc));
+    // PD correction around hover bias
+    const correction = clamp(altError * Kp_alt + (-zd) * Kd_alt + this.altIntegral * Ki_alt);
+    let tc = Math.max(-1, Math.min(1, hoverBias + correction));
 
     // ── Horizontal position PD (when mission target exists) ───────────────
     let pitchTarget = 0;   // desired pitch angle for forward (x) motion
@@ -216,6 +256,7 @@ export class RLAgent {
       const posKd = 0.8;   // position derivative (velocity damping) gain
       const maxVCmd = 5;    // max commanded velocity m/s
       const maxAttCmd = 0.3; // max attitude command radians (~17 deg)
+      const vBrake = 0.05;  // velocity braking gain
 
       // Outer loop: position error -> commanded velocity, clamped
       const vx_cmd = Math.max(-maxVCmd, Math.min(maxVCmd, posKp * (xt - x)));
@@ -241,19 +282,51 @@ export class RLAgent {
       rc = clamp((rollTarget - phi) * Kp_att - p * Kd_att);
       pc = clamp((pitchTarget - theta) * Kp_att - q * Kd_att);
     } else {
-      rc = clamp((yt - y - phi) * Kp_att - p * Kd_att);
-      let pe = xt - x - theta;
-      if (missionPreset === 'high-speed') pe = Math.max(-0.5, Math.min(0.5, pe));
-      pc = clamp(pe * Kp_att - q * Kd_att);
+      // Cascaded position → attitude control (same structure as mission mode)
+      // Outer loop: position error → attitude target, clamped to prevent tip-over
+      const posKpFree  = 0.2;   // softer than mission mode
+      const posKdFree  = 0.5;
+      const maxAttFree = 0.25;  // ~14° max lean for station-keeping
+
+      const rollCmd  = Math.max(-maxAttFree, Math.min(maxAttFree, posKpFree * (yt - y) - posKdFree * yd));
+      const pitchCmd = Math.max(-maxAttFree, Math.min(maxAttFree, posKpFree * (xt - x) - posKdFree * xd));
+
+      // Inner loop: track commanded attitude
+      rc = clamp((rollCmd - phi) * Kp_att - p * Kd_att);
+      pc = clamp((pitchCmd - theta) * Kp_att - q * Kd_att);
     }
 
     const yc = clamp((-psi) * Kp_yaw - r * Kd_yaw);
 
     if (droneType==='bicopter')
       return [tc+yc, rc, pc, tc-yc, rc, pc];
-    if (droneType==='quadcopter')
-      return [tc-rc+pc+yc, tc+rc+pc-yc, tc-rc-pc-yc, tc+rc-pc+yc, 0, 0];
-    // hexacopter
-    return [tc-rc+pc+yc, tc+rc+pc-yc, tc+rc-yc, tc+rc-pc+yc, tc-rc-pc-yc, tc-rc+yc];
+
+    if (droneType==='quadcopter') {
+      // X-config quad mixer — must match UniversalMixer moment equations:
+      //   L = (t0+t3-t1-t2)*d*0.707  →  needs t0,t3 ∝ +rc, t1,t2 ∝ -rc
+      //   M = (t1+t3-t0-t2)*d*0.707  →  needs t1,t3 ∝ +pc, t0,t2 ∝ -pc
+      //   N = (t0+t1-t2-t3)*0.05     →  needs t0,t1 ∝ +yc, t2,t3 ∝ -yc
+      return [
+        tc + rc - pc + yc,  // motor 0
+        tc - rc + pc + yc,  // motor 1
+        tc - rc - pc - yc,  // motor 2
+        tc + rc + pc - yc,  // motor 3
+        0, 0,
+      ];
+    }
+
+    // Hexacopter — motors at [30°, 90°, 150°, 210°, 270°, 330°], dirs [CW,CCW,CW,CCW,CW,CCW]
+    //   L = Σ t_i * d * sin(θ_i)  →  motor_i needs sin(θ_i) coefficient for rc
+    //   M = Σ t_i * d * cos(θ_i)  →  motor_i needs cos(θ_i) coefficient for pc
+    //   N = Σ t_i * dir_i * 0.05  →  motor_i needs dir_i coefficient for yc
+    const s30 = 0.5, c30 = 0.866;
+    return [
+      tc + s30*rc + c30*pc + yc,    // motor 0: 30°, CW
+      tc +     rc          - yc,    // motor 1: 90°, CCW
+      tc + s30*rc - c30*pc + yc,    // motor 2: 150°, CW
+      tc - s30*rc - c30*pc - yc,    // motor 3: 210°, CCW
+      tc -     rc          + yc,    // motor 4: 270°, CW
+      tc - s30*rc + c30*pc - yc,    // motor 5: 330°, CCW
+    ];
   }
 }
