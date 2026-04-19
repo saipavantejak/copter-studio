@@ -1,4 +1,4 @@
-// AppContext.tsx — Centralized state management for Copter Studio
+// AppContext.tsx — Centralized state management for Copter Studios
 // Extracted from App.tsx to enable tab-level component decomposition.
 
 import { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';

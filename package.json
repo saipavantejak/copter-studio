@@ -1,7 +1,7 @@
 {
-  "name": "copter-studio",
+  "name": "copter-studios",
   "version": "1.0.0",
-  "description": "Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
+  "description": "Copter Studios — Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
   "author": "saipavantejak",
   "license": "MIT",
   "type": "module",

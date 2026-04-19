@@ -1,6 +1,6 @@
 """
 gym_client.py — DroneSimEnv
-OpenAI Gymnasium-compatible environment wrapping the Copter Studio browser simulator.
+OpenAI Gymnasium-compatible environment wrapping the Copter Studios browser simulator.
 
 Usage:
     # 1. Start the bridge server:
@@ -35,7 +35,7 @@ except ImportError:
 
 class DroneSimEnv(gym.Env):
     """
-    Gymnasium wrapper for the Copter Studio WebSocket Gym Bridge.
+    Gymnasium wrapper for the Copter Studios WebSocket Gym Bridge.
 
     Observation space: Box(12,) — [x, y, z, xd, yd, zd, phi, theta, psi, p, q, r]
     Action space:      Box(6,)  — [col_L, lat_L, lon_L, col_R, lat_R, lon_R] in [-1, 1]

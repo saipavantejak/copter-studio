@@ -195,7 +195,7 @@ server.listen(PORT, () => {
   const geminiStatus = process.env.GEMINI_API_KEY ? '✓ Gemini proxy active' : '✗ No GEMINI_API_KEY';
   console.log(`
 ╔══════════════════════════════════════════════╗
-║  Copter Studio  Gym Bridge                 ║
+║  Copter Studios  Gym Bridge                 ║
 ║  ws://localhost:${PORT}  (WebSocket)             ║
 ║  http://localhost:${PORT}/api/gemini  (Proxy)    ║
 ╠══════════════════════════════════════════════╣

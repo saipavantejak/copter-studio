@@ -24,7 +24,7 @@ const userRequests = [
 
 async function runTests() {
   console.log("🚀 Starting 15-User Aether Testing Simulation...");
-  const reportLines: string[] = ["# Copter Studio Aether 15-User Simulation Report\n"];
+  const reportLines: string[] = ["# Copter Studios Aether 15-User Simulation Report\n"];
   
   for (let i = 0; i < userRequests.length; i++) {
     const prompt = userRequests[i];

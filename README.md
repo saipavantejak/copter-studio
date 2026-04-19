@@ -1,4 +1,4 @@
-# Copter Studio
+# Copter Studios
 
 Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training, MAVLink HIL bridge, and Gemini-powered NLP control. Runs entirely in the browser.
 
@@ -11,7 +11,7 @@ Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training,
 **[Launch Live Demo](https://copter-studio.vercel.app)**
 
 <p align="center">
-  <img src="public/logo-dark.png" alt="Copter Studio" width="200" />
+  <img src="public/logo-dark.png" alt="Copter Studios" width="200" />
 </p>
 
 > **3D drone simulator** with real-time physics, RL training panel, Aether AI chat interface, crash forensics, and benchmark dashboards — all in one browser tab. Clone and run `npm run dev` to see it in action.
@@ -130,7 +130,7 @@ import gymnasium as gym
 from stable_baselines3 import PPO
 
 # Connect to the WebSocket gym bridge
-env = gym.make("CopterStudio-v1", ws_url="ws://localhost:8765")
+env = gym.make("CopterStudios-v1", ws_url="ws://localhost:8765")
 model = PPO("MlpPolicy", env)
 model.learn(total_timesteps=100_000)
 ```

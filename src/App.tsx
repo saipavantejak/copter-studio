@@ -41,7 +41,7 @@ function AppContent() {
         <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-xl sticky top-0 z-50">
           <div className="max-w-[1800px] mx-auto px-4 h-14 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 shrink-0">
-              <img src="/logo-dark.png" className="h-8 w-auto object-contain" alt="Copter Studio" />
+              <img src="/logo-dark.png" className="h-8 w-auto object-contain" alt="Copter Studios" />
               <div>
                 <h1 className="font-bold text-sm tracking-tight text-white">COPTER STUDIO</h1>
                 <p className="text-[9px] text-zinc-400 font-mono">The Premier Digital Twin for Autonomous Flight &amp; RL Research</p>

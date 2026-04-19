@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 
-const STORAGE_KEY = 'copter-studio-onboarding-v1';
+const STORAGE_KEY = 'copter-studios-onboarding-v1';
 
 // Custom dark theme CSS is injected once
 const CUSTOM_CSS = `
@@ -81,7 +81,7 @@ export function OnboardingTour() {
         steps: [
           {
             popover: {
-              title: '🚀 Welcome to Copter Studio!',
+              title: '🚀 Welcome to Copter Studios!',
               description: 'Quick start in 3 steps: (1) Configure your drone below, (2) Click "Start Simulation" to fly, (3) Use Aether AI to run advanced scenarios. Let\'s walk through each panel.',
             },
           },

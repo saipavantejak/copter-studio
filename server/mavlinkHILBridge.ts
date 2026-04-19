@@ -1,15 +1,15 @@
 /**
  * server/mavlinkHILBridge.ts — Hardware-in-the-Loop MAVLink v2 bridge
  *
- * Exposes Copter Studio's physics engine as a MAVLink HIL sensor provider.
+ * Exposes Copter Studios's physics engine as a MAVLink HIL sensor provider.
  * A real PX4 or ArduPilot flight controller (or SITL) drives this simulator
  * the same way it drives physical hardware.
  *
  * ┌──────────────────────────────────────────────────────────┐
  * │                  HIL Data Flow                           │
  * │                                                          │
- * │  Copter Studio physics ──HIL_SENSOR──▶ PX4 / ArduPilot    │
- * │  Copter Studio physics ──HIL_GPS─────▶ (real firmware)    │
+ * │  Copter Studios physics ──HIL_SENSOR──▶ PX4 / ArduPilot    │
+ * │  Copter Studios physics ──HIL_GPS─────▶ (real firmware)    │
  * │  PX4 actuator mixer ──HIL_ACT_CTRL─▶ Physics Engine     │
  * └──────────────────────────────────────────────────────────┘
  *
