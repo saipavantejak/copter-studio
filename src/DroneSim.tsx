@@ -188,6 +188,9 @@ const DroneModel = ({
   const histRef       = useRef<TelemetryHistory[]>([]);
   const cachedM       = useRef<MissionMetrics | null>(null);
   const frameErrCount = useRef(0);
+  // Local crash latch — prevents repeated onCrash() within the same episode.
+  // Parent DroneSim holds its own isCrashed state for HUD + reset.
+  const crashedRef    = useRef(false);
 
   // Always allocate 6 rotor refs (max for hexacopter); only first N are used
   // Individual useRef calls to comply with Rules of Hooks (no hooks in loops)
@@ -210,6 +213,8 @@ const DroneModel = ({
       const ghost = ghostPhysicsRef.current;
 
       if (phys.getState().time < 0.02 && histRef.current.length > 0) histRef.current = [];
+      // Reset the local crash latch on episode reset (physics time goes back to 0)
+      if (phys.getState().time < 0.02) crashedRef.current = false;
 
       const obs      = phys.getObservation();
       const stateArr = [obs.x,obs.y,obs.z,obs.x_dot,obs.y_dot,obs.z_dot,obs.phi,obs.theta,obs.psi,obs.p,obs.q,obs.r];
@@ -266,23 +271,24 @@ const DroneModel = ({
       histRef.current.push(entry);
       if (histRef.current.length > 500) histRef.current.shift();
 
-      if (ns.z < 0.1 && (Math.abs(ns.phi) > 0.5 || Math.abs(ns.theta) > 0.5)) {
+      if (ns.z < 0.1 && (Math.abs(ns.phi) > 0.5 || Math.abs(ns.theta) > 0.5) && !crashedRef.current) {
+        crashedRef.current = true;
         isRunningRef.current = false;
         onCrash({ reason: 'Crash: high roll/pitch near ground.', telemetry: entry });
       }
       // Altitude runaway detection
-      if (ns.z > 500 && !isCrashed) {
-        setIsCrashed(true);
+      if (ns.z > 500 && !crashedRef.current) {
+        crashedRef.current = true;
         onCrash?.({ reason: 'Altitude runaway: drone exceeded 500m.', telemetry: entry });
       }
       // Velocity divergence detection
-      if ((Math.abs(ns.z_dot) > 45 || Math.abs(ns.x_dot) > 45 || Math.abs(ns.y_dot) > 45) && !isCrashed) {
-        setIsCrashed(true);
+      if ((Math.abs(ns.z_dot) > 45 || Math.abs(ns.x_dot) > 45 || Math.abs(ns.y_dot) > 45) && !crashedRef.current) {
+        crashedRef.current = true;
         onCrash?.({ reason: 'Velocity divergence: speed exceeded 45 m/s.', telemetry: entry });
       }
       // Attitude divergence at altitude (inverted flight)
-      if ((Math.abs(ns.phi) > Math.PI / 3 || Math.abs(ns.theta) > Math.PI / 3) && ns.z > 0.5 && !isCrashed) {
-        setIsCrashed(true);
+      if ((Math.abs(ns.phi) > Math.PI / 3 || Math.abs(ns.theta) > Math.PI / 3) && ns.z > 0.5 && !crashedRef.current) {
+        crashedRef.current = true;
         onCrash?.({ reason: `Attitude divergence: roll=${(ns.phi*180/Math.PI).toFixed(1)}° pitch=${(ns.theta*180/Math.PI).toFixed(1)}°`, telemetry: entry });
       }
 

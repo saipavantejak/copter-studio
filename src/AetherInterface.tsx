@@ -240,7 +240,7 @@ export const AetherInterface = ({
       return text;
     } catch (e: any) {
       if (e?.message?.includes('GEMINI_API_KEY not configured')) {
-        return '⚠️ Gemini key not set. Add `GEMINI_API_KEY=your_key` to `.env.local` and restart `npm run dev`. The simulation parser still works locally.';
+        return 'The cloud AI assistant is temporarily unavailable in this build. Natural-language commands for the simulator still work — try "hover at 2 meters", "fly forward 5 m/s for 10 seconds", or "run wind disturbance test".';
       }
       throw e;
     }
