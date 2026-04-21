@@ -43,7 +43,7 @@ function AppContent() {
             <div className="flex items-center gap-3 shrink-0">
               <img src="/logo-dark.png" className="h-8 w-auto object-contain" alt="Copter Studios" />
               <div>
-                <h1 className="font-bold text-sm tracking-tight text-white">COPTER STUDIO</h1>
+                <h1 className="font-bold text-sm tracking-tight text-white">COPTER STUDIOS</h1>
                 <p className="text-[9px] text-zinc-400 font-mono">The Premier Digital Twin for Autonomous Flight &amp; RL Research</p>
               </div>
             </div>
