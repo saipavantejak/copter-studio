@@ -96,7 +96,7 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
               transition={{ duration: 1.6, delay: 0.35, ease: smoothOut }}
               className="text-7xl font-black text-white text-center"
             >
-              COPTER <span className="text-emerald-500">STUDIO</span>
+              COPTER <span className="text-emerald-500">STUDIOS</span>
             </motion.h1>
 
             <motion.p
