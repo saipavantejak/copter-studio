@@ -29,6 +29,19 @@ export const DT = 0.016;         // s ≈ 62.5 Hz (one animation frame at 60 fps
 // ── Unit conversion ───────────────────────────────────────────────────────────
 export const INCHES_TO_METRES = 0.0254;
 
+// ── Actuator-disk power model ────────────────────────────────────────────────
+// Induced hover power from momentum theory:
+//     P_ideal = (m·g)^1.5 / sqrt(2·ρ·A_total)
+// Real drones are less efficient than an ideal disk — Figure of Merit folds
+// in tip losses, profile drag on the blade, and swirl.
+//   • Good carbon-fibre large multirotor: FoM ≈ 0.70
+//   • Typical APC plastic MR prop:        FoM ≈ 0.55
+//   • Small coreless nano-prop:           FoM ≈ 0.40
+// The motor + ESC then adds electrical losses.
+export const FIGURE_OF_MERIT  = 0.55;   // shaft power = P_ideal / FoM
+export const MOTOR_ESC_EFF    = 0.82;   // electrical → shaft efficiency (ESC · motor)
+export const IDLE_POWER_W     = 0.05;   // avionics / flight-controller baseline draw
+
 // ── High-fidelity aerodynamics (v12) ─────────────────────────────────────────
 // Scalar drag coefficient used when high-fidelity drag tensor is disabled.
 export const DRAG_SCALAR     = 0.47;   // dimensionless Cd (body-averaged)

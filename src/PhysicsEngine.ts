@@ -16,7 +16,9 @@ import {
   betThrust, stepMotor, rk4Step, computeInertia,
   rigidBodyDerivatives,
 } from './physics/core';
-import { MOTOR_TAU, OMEGA_IDLE, DT } from './physics/constants';
+import { MOTOR_TAU, OMEGA_IDLE, DT, GRAVITY, AIR_DENSITY, FIGURE_OF_MERIT, MOTOR_ESC_EFF, IDLE_POWER_W } from './physics/constants';
+import { maxThrustPerMotor, maxYawTorquePerMotor, saturateMotorThrusts, betCalibration } from './physics/thrustLimits';
+import { OMEGA_MAX as OMEGA_MAX_CONST } from './physics/constants';
 import { DrydenTurbulence, TurbulenceIntensity, isaAtmosphere, thermalUpdraft, DEFAULT_THERMAL } from './physics/atmosphere';
 import { propTableLookup } from './physics/propTables';
 import { computeDragForces, multiRotorGroundEffect, DEFAULT_DRAG_TENSOR, scaleDragTensorForMass } from './physics/groundEffect';
@@ -91,6 +93,10 @@ export class PhysicsEngine {
   public motorTauOverride: number = MOTOR_TAU;
   public dragCoeffOverride: number = 0.47;
   public rng: SeededRandom = new SeededRandom(42);
+  /** True when ANY per-motor thrust was clipped last step (actuator saturation). */
+  public lastSaturated: boolean = false;
+  /** Instantaneous electrical draw (Watts) from last step. */
+  public lastPowerW: number = 0;
 
   // ── v12 high-fidelity subsystems ─────────────────────────────────────────
   private dryden = new DrydenTurbulence(DT);
@@ -145,31 +151,15 @@ export class PhysicsEngine {
       }
     }
 
-    let vf = Math.pow(this.config.batteryVoltage / 22.2, 2);
-
-    // Actuator disk theory: P = T * v_i where v_i = sqrt(T / (2 * rho * A))
-    // Per motor: P_motor = T_motor^(3/2) / sqrt(2 * rho * A_disk)
-    // With Figure of Merit FM ≈ 0.7: P_real = P_ideal / FM
-    const propRadiusM = (this.config.propDiameter * 0.0254) / 2;
-    const diskArea = Math.PI * propRadiusM * propRadiusM;
-    const FM = 0.7; // Figure of Merit for typical multirotors
-    const rho = 1.225; // sea-level air density
+    // vf = battery-SAG factor only (1.0 when pack is healthy). The baseline
+    // voltage→thrust scaling moved into maxThrustPerMotor() via sqrt(V/14.8),
+    // so vf here starts at unity and only drops below 1 under sag.
+    let vf = 1.0;
+    // instantPower is computed AFTER the thrust calculation below — we need
+    // the actual total thrust Fz (commanded by the controller and clipped by
+    // actuator saturation) to apply momentum theory correctly. Declared here
+    // and written once Fz is finalised.
     let instantPower = 0;
-    for (let i = 0; i < numMotors; i++) {
-      // Thrust per motor from omega (already computed in this.motorOmegas)
-      const omega = Math.abs(this.motorOmegas[i] ?? 0);
-      // Thrust ~ CT * rho * n^2 * D^4, approximate from omega
-      const n_rps = omega / (2 * Math.PI);
-      const D_m = this.config.propDiameter * 0.0254;
-      const CT = 0.012; // typical thrust coefficient
-      const T_motor = CT * rho * n_rps * n_rps * Math.pow(D_m, 4);
-      if (T_motor > 0.01) {
-        // P_ideal = T^(3/2) / sqrt(2 * rho * A)
-        const P_ideal = Math.pow(T_motor, 1.5) / Math.sqrt(2 * rho * diskArea);
-        instantPower += P_ideal / FM;
-      }
-    }
-    this.totalEnergyConsumed += instantPower * dt;
 
     if (this.tests.batterySagEnabled) {
       // Battery drain based on actual power: P = V * I, energy = P * dt
@@ -194,42 +184,53 @@ export class PhysicsEngine {
     // At sea level this is 1.225 kg/m³; at 100m AGL it's ~1.211 kg/m³ (1% drop).
     const airDensity = hifi ? isaAtmosphere(Math.max(0, this.z)).density : 1.225;
 
-    // ── Thrust calculation ────────────────────────────────────────────────
-    let Fz = 0;
-    if (hifi) {
-      // Prop tables with ISA density + ground effect
-      const rotorRadius  = (this.config.propDiameter * 0.0254) / 2;
-      const ge = multiRotorGroundEffect(
-        Math.max(0.01, this.z), rotorRadius, this.config.armLength, this.phi
-      );
-      if (this.config.droneType === 'bicopter') {
-        const t0 = propTableLookup(action[0],     this.motorOmegas[0], this.config.propDiameter, airDensity);
-        const t1 = propTableLookup(action[3]??0,  this.motorOmegas[1], this.config.propDiameter, airDensity);
-        Fz  = (t0.thrust + (failed[1] ? 0 : t1.thrust)) * vf * ge;
-      } else {
-        for (let i = 0; i < numMotors; i++) {
-          if (!failed[i]) {
-            Fz += propTableLookup(action[i]??0, this.motorOmegas[i], this.config.propDiameter, airDensity).thrust * vf;
-          }
-        }
-        Fz *= ge;
-      }
-    } else {
-      // v11 BET model (unchanged)
-      if (this.config.droneType==='bicopter') {
-        Fz = betThrust(action[0], this.motorOmegas[0], this.config.propDiameter) * vf;
-        if (!failed[1]) Fz += betThrust(action[3]??0, this.motorOmegas[1], this.config.propDiameter) * vf;
-      } else {
-        for (let i=0;i<numMotors;i++) {
-          if (!failed[i]) Fz += betThrust(action[i], this.motorOmegas[i], this.config.propDiameter)*pf*vf;
-        }
-      }
-    }
+    // ── Per-motor thrust (raw BET or prop-table), then saturate ──────────
+    // Physical ceiling derived from battery voltage + prop diameter. Once
+    // this is applied, domain-randomisation of wind/mass CAN overwhelm the
+    // controller — restoring the expected non-zero crash rate.
+    const T_max = maxThrustPerMotor(this.config.propDiameter, this.config.batteryVoltage);
+    const rotorRadius_m = (this.config.propDiameter * 0.0254) / 2;
+    const ge = hifi
+      ? multiRotorGroundEffect(Math.max(0.01, this.z), rotorRadius_m, this.config.armLength, this.phi)
+      : 1.0;
 
-    const perMotorCap = 100;
-    const maxT = 40*vf*pf;
-    const mx = UniversalMixer.mix(this.config.droneType, action, maxT, this.tests.motorOutEnabled, this.config.armLength);
+    // Calibrate BET output so max-throttle thrust matches the motor's real
+    // static ceiling. Solves the nano-drone thrust-starvation issue: a 1.5"
+    // prop at OMEGA_MAX=1200 rad/s only produces 0.027 N in raw BET, but a
+    // real Crazyflie motor delivers ~0.4 N at peak (via 2300 rad/s tip speed).
+    // The calibration multiplies BET output so calibrated(tc=+1) == T_max.
+    const betCal = betCalibration(
+      betThrust(1, OMEGA_MAX_CONST, this.config.propDiameter),
+      this.config.propDiameter,
+      this.config.batteryVoltage,
+    );
+
+    const rawThrusts: number[] = new Array(numMotors).fill(0);
+    const thrustIdx = (i: number) => (this.config.droneType === 'bicopter' && i === 1) ? 3 : i;
+    for (let i = 0; i < numMotors; i++) {
+      if (failed[i]) continue;
+      const cmd = action[thrustIdx(i)] ?? 0;
+      const t = hifi
+        ? propTableLookup(cmd, this.motorOmegas[i], this.config.propDiameter, airDensity).thrust
+        : betThrust(cmd, this.motorOmegas[i], this.config.propDiameter) * betCal;
+      rawThrusts[i] = t * vf * ge;
+    }
+    const { thrusts: satThrusts, saturated } = saturateMotorThrusts(rawThrusts, T_max);
+    this.lastSaturated = saturated;
+    let Fz = satThrusts.reduce((s, t) => s + t, 0);
+
+    // ── Moments: run mixer with physical T_max, then clip to per-motor sat ─
+    const mx = UniversalMixer.mix(this.config.droneType, action, T_max, this.tests.motorOutEnabled, this.config.armLength);
     let { L, M, N } = mx.moments;
+    // Yaw-torque saturation (brushless motors can't produce unbounded reactive torque)
+    const N_max = maxYawTorquePerMotor(this.config.propDiameter, this.config.batteryVoltage) * numMotors;
+    N = Math.max(-N_max, Math.min(N_max, N));
+    // Roll/pitch moments are bounded implicitly by per-motor thrust saturation
+    // (the mixer already uses armLength × T_max), but we also cap by arm·ΣT_max
+    // as a defensive ceiling against numerical artefacts under heavy wind.
+    const M_max = this.config.armLength * T_max * numMotors;
+    L = Math.max(-M_max, Math.min(M_max, L));
+    M = Math.max(-M_max, Math.min(M_max, M));
 
     if (this.tests.payloadShiftEnabled || this.tests.missionPreset==='precision-drop') {
       let cx=(this.config.propDiameter*0.0254)*0.1, cy=cx;
@@ -253,10 +254,10 @@ export class PhysicsEngine {
         const z_agl_hi = Math.max(0, this.z);
         const windRampHi = Math.min(1.0, Math.log(1 + z_agl_hi) / Math.log(31));
         // Gust forces in world frame (mass * acceleration from gust)
-        wfx = this.config.mass * gust.u * 0.5 * windRampHi;
-        wfy = this.config.mass * gust.v * 0.5 * windRampHi;
+        wfx = Math.max(0.02, this.config.mass) * gust.u * 0.5 * windRampHi;
+        wfy = Math.max(0.02, this.config.mass) * gust.v * 0.5 * windRampHi;
         // Vertical gust contributes to Fz modulation
-        Fz  = Math.max(0, Fz + this.config.mass * gust.w * 0.3);
+        Fz  = Math.max(0, Fz + Math.max(0.02, this.config.mass) * gust.w * 0.3);
         // Angular gust disturbs rates
         this.p += gust.p * dt;
         this.q += gust.q * dt;
@@ -283,13 +284,13 @@ export class PhysicsEngine {
     // ── Thermal updraft ───────────────────────────────────────────────
     if (hifi && this.config.thermalConfig?.enabled) {
       const wThermal = thermalUpdraft(this.x, this.y, this.z, this.config.thermalConfig);
-      Fz += this.config.mass * wThermal * 0.5;
+      Fz += Math.max(0.02, this.config.mass) * wThermal * 0.5;
     }
 
     // ── Aerodynamic drag ──────────────────────────────────────────────────
     let extraFx = wfx, extraFy = wfy;
     if (hifi) {
-      const dragTensor = scaleDragTensorForMass(DEFAULT_DRAG_TENSOR, 5.0, this.config.mass);
+      const dragTensor = scaleDragTensorForMass(DEFAULT_DRAG_TENSOR, 5.0, Math.max(0.02, this.config.mass));
       const [dfx, dfy, dfz] = computeDragForces(
         this.x_dot, this.y_dot, this.z_dot,
         this.phi, this.theta,
@@ -300,9 +301,38 @@ export class PhysicsEngine {
       Fz = Math.max(0, Fz + dfz);
     }
 
+    // ── Energy: actuator disk momentum theory on the ACTUAL total thrust ──
+    // Induced power for the whole vehicle (not summed per-motor) using the
+    // combined swept area is the correct formulation — it captures the fact
+    // that closely-spaced rotors share the same induced flow.
+    //   P_ideal = Fz^1.5 / sqrt(2·ρ·A_total)
+    //   P_shaft = P_ideal / FoM
+    //   P_elec  = P_shaft / η_motor_esc + P_idle
+    const A_total = numMotors * Math.PI * rotorRadius_m * rotorRadius_m;
+    if (Fz > 0.001 && A_total > 1e-9) {
+      const P_ideal = Math.pow(Fz, 1.5) / Math.sqrt(2 * airDensity * A_total);
+      const P_shaft = P_ideal / FIGURE_OF_MERIT;
+      instantPower  = P_shaft / MOTOR_ESC_EFF + IDLE_POWER_W;
+    } else {
+      instantPower = IDLE_POWER_W;
+    }
+    if (!Number.isFinite(instantPower) || instantPower < 0) instantPower = IDLE_POWER_W;
+    this.totalEnergyConsumed += instantPower * dt;
+    this.lastPowerW = instantPower;
+
     const sv0 = [this.x,this.y,this.z, this.x_dot,this.y_dot,this.z_dot, ...this.quat, this.p,this.q,this.r];
-    const { Ixx, Iyy, Izz } = this.config.inertiaOverride ?? computeInertia(this.config.propDiameter, this.config.mass, this.config.armLength);
-    const sv1 = rk4Step(sv0, {Fz,L,M,N}, {fx:extraFx,fy:extraFy}, this.config.mass, Ixx, Iyy, Izz, dt);
+    // Clamp mass to a floor that keeps the RK4 integrator numerically stable
+    // (20g nano-drones are supported; below that the attitude dynamics become
+    // too stiff for a 16 ms timestep).
+    const mass_eff = Math.max(0.02, Math.max(0.02, this.config.mass));
+    const { Ixx: Ixx_raw, Iyy: Iyy_raw, Izz: Izz_raw } =
+      this.config.inertiaOverride ?? computeInertia(this.config.propDiameter, mass_eff, this.config.armLength);
+    // Inertia floor — prevent divide-by-zero in angular ODE for tiny rotors
+    const I_MIN = 1e-7;
+    const Ixx = Math.max(I_MIN, Ixx_raw);
+    const Iyy = Math.max(I_MIN, Iyy_raw);
+    const Izz = Math.max(I_MIN, Izz_raw);
+    const sv1 = rk4Step(sv0, {Fz,L,M,N}, {fx:extraFx,fy:extraFy}, mass_eff, Ixx, Iyy, Izz, dt);
 
     this.x=sv1[0]; this.y=sv1[1]; this.z=sv1[2];
     this.x_dot=sv1[3]; this.y_dot=sv1[4]; this.z_dot=sv1[5];

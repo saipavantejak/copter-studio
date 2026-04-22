@@ -60,6 +60,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
             <label className="block text-xs text-zinc-500 mb-1.5">Quick Presets</label>
             <div className="flex flex-wrap gap-1.5">
               {[
+                { label: 'Nano (Crazyflie)', cfg: { droneType: 'quadcopter' as DroneType, mass: 0.027, propDiameter: 1.5, batteryVoltage: 3.7, armLength: 0.046 } },
                 { label: 'Micro Racer', cfg: { droneType: 'quadcopter' as DroneType, mass: 2.5, propDiameter: 8, batteryVoltage: 14.8, armLength: 0.15 } },
                 { label: 'Research Bi', cfg: { droneType: 'bicopter' as DroneType, mass: 5.0, propDiameter: 15, batteryVoltage: 22.2, armLength: 0.5 } },
                 { label: 'Cargo Quad', cfg: { droneType: 'quadcopter' as DroneType, mass: 8.0, propDiameter: 18, batteryVoltage: 22.2, armLength: 0.6 } },
@@ -73,13 +74,13 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
             </div>
           </div>
           {[
-            ['mass','Mass (kg)',1,20,0.5,'Typical: 2-5kg (small), 5-10kg (cargo), 10-20kg (heavy-lift)'] as const,
-            ['propDiameter','Prop Ø (in)',5,30,1,'Typical: 8-10" (racing), 12-15" (general), 18-30" (heavy-lift)'] as const,
-            ['batteryVoltage','Battery (V)',11.1,50,1.1,'Common: 11.1V (3S), 14.8V (4S), 22.2V (6S), 44.4V (12S)'] as const,
-            ['armLength','Arm length (m)',0.1,1.5,0.05,'Motor-to-center distance. Typical: 0.2-0.5m (small), 0.5-1.0m (large)'] as const,
-          ].map(([k,lbl,mn,mx,st,hint])=>(
+            ['mass','Mass (kg)',0.02,20,0.01,3,'Nano 0.02-0.2kg (Crazyflie), 2-5kg (small), 5-10kg (cargo), 10-20kg (heavy-lift)'] as const,
+            ['propDiameter','Prop Ø (in)',1.0,30,0.5,1,'Typical: 1.5" (nano), 5" (racing), 10-15" (general), 18-30" (heavy-lift)'] as const,
+            ['batteryVoltage','Battery (V)',3.7,50,0.1,1,'Common: 3.7V (1S nano), 11.1V (3S), 14.8V (4S), 22.2V (6S), 44.4V (12S)'] as const,
+            ['armLength','Arm length (m)',0.03,1.5,0.01,2,'Motor-to-center distance. 0.03-0.1m (nano), 0.15-0.5m (small-med), 0.5-1m (heavy)'] as const,
+          ].map(([k,lbl,mn,mx,st,prec,hint])=>(
             <div key={k}>
-              <label className="block text-xs text-zinc-500 mb-1">{lbl}: <span className="text-zinc-300">{(config as any)[k].toFixed(1)}</span></label>
+              <label className="block text-xs text-zinc-500 mb-1">{lbl}: <span className="text-zinc-300">{(config as any)[k].toFixed(prec)}</span></label>
               <input type="range" min={mn} max={mx} step={st} value={(config as any)[k]}
                 onChange={e=>setConfig({...config,[k]:parseFloat(e.target.value)})}
                 className="w-full accent-emerald-500" />

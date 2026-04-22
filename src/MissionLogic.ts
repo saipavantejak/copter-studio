@@ -30,25 +30,33 @@ export class MissionLogic {
     totalEnergyConsumed: number,
     totalDistance: number
   ): MissionMetrics {
-    const payloadMassGrams = Math.max(100, (config.mass - 2.0) * 1000);
-    const distanceKm = totalDistance / 1000;
+    // Payload mass = total mass minus a 2.0 kg "airframe reference". For
+    // nano drones (Crazyflie, 27 g) the airframe subtraction yields a
+    // negative number — we floor to 10 g so SEC remains finite and any
+    // benchmark can interpret it as "per-gram" specific energy.
+    const payloadMassGrams = Math.max(10, (config.mass - 2.0) * 1000);
+    const distanceKm = Math.max(0, totalDistance) / 1000;
 
     let sec = 0;
     let hoverPowerW = 0;
     if (distanceKm < 0.01) {
-      // During hover (distance < 10m), SEC is meaningless (denominator ~0).
-      // Report instantaneous power draw instead.
-      sec = 0;
+      // Hover → report instantaneous power draw (J·kg/W/m-independent metric)
       if (history.length >= 2) {
         const last = history[history.length - 1];
         const prev = history[history.length - 2];
-        const dt = (last.time - prev.time) || 1;
-        const dE = totalEnergyConsumed - (prev.energyConsumed ?? 0);
-        hoverPowerW = dE / dt; // Watts = Joules / second
+        const dt = Math.max(1e-3, (last.time - prev.time));
+        const dE = Math.max(0, totalEnergyConsumed - (prev.energyConsumed ?? 0));
+        hoverPowerW = dE / dt;
       }
-    } else if (payloadMassGrams > 0) {
-      sec = totalEnergyConsumed / (payloadMassGrams * distanceKm);
+      sec = 0;
+    } else {
+      // Division guards — both factors already floored to strictly positive.
+      const denom = payloadMassGrams * distanceKm;
+      sec = denom > 1e-9 ? totalEnergyConsumed / denom : 0;
     }
+    // NaN / Inf guard — any upstream divide-by-zero collapses to 0 here.
+    if (!Number.isFinite(sec)) sec = 0;
+    if (!Number.isFinite(hoverPowerW)) hoverPowerW = 0;
 
     let spt = 0;
     if (history.length > 1) {

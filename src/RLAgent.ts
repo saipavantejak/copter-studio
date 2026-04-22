@@ -11,6 +11,7 @@ import {
   BET_THETA_MIN_DEG, BET_THETA_MAX_DEG, OMEGA_IDLE, OMEGA_MAX,
   INCHES_TO_METRES,
 } from './physics/constants';
+import { maxThrustPerMotor } from './physics/thrustLimits';
 
 // ── Serialized model payload (structured-clone-safe) ─────────────────────────
 
@@ -170,28 +171,46 @@ export class RLAgent {
 
   /**
    * Compute the collective command tc ∈ [-1,1] where total rotor thrust = mg.
-   * Uses binary search over the actual BET thrust model — cached per config key.
+   *
+   * Uses binary search over the actual BET thrust model — cached per config
+   * key. If BET cannot deliver mg at tc=1 (under-powered drone) the function
+   * returns +1 (saturated) so the outer PID can still ramp the integral to
+   * push the motors as high as physics allows, rather than silently returning
+   * an infeasible bias.
    */
   private computeHoverTc(numMotors: number, propDiamIn: number, mass: number): number {
-    const key = `${numMotors}_${propDiamIn}_${mass}`;
+    const key = `${numMotors}_${propDiamIn}_${mass.toFixed(4)}`;
     const cached = this.cachedHoverTc.get(key);
     if (cached !== undefined) return cached;
 
-    const mg = mass * GRAVITY;
-    let lo = -1, hi = 1;
-    for (let i = 0; i < 40; i++) {
-      const mid = (lo + hi) / 2;
-      // Compute total thrust at tc=mid
-      const omega = OMEGA_IDLE + Math.max(0, (mid + 1) / 2) * (OMEGA_MAX - OMEGA_IDLE);
+    const mg = Math.max(1e-4, mass) * GRAVITY;
+
+    // Feasibility check — BET thrust at tc = +1, scaled by numMotors
+    const thrustAt = (tc: number): number => {
+      const omega = OMEGA_IDLE + Math.max(0, (tc + 1) / 2) * (OMEGA_MAX - OMEGA_IDLE);
       const R  = (propDiamIn * INCHES_TO_METRES) / 2;
       const A  = Math.PI * R * R;
-      const thetaDeg = BET_THETA_MIN_DEG + ((mid + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
+      const thetaDeg = BET_THETA_MIN_DEG + ((tc + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
       const theta = thetaDeg * Math.PI / 180;
       const CT = Math.max(0, (BET_NB * BET_CHORD * BET_LIFT * theta * R) / (4 * A));
       const vTip = omega * R;
-      const thrustPerMotor = CT * AIR_DENSITY * A * vTip * vTip;
-      const totalThrust = numMotors * thrustPerMotor;
-      if (totalThrust > mg) hi = mid; else lo = mid;
+      return numMotors * CT * AIR_DENSITY * A * vTip * vTip;
+    };
+
+    if (thrustAt(1) < mg) {
+      this.cachedHoverTc.set(key, 1);
+      return 1;
+    }
+    if (thrustAt(-1) > mg) {
+      // Overpowered — hover well below idle; clamp to a safe floor
+      this.cachedHoverTc.set(key, -0.5);
+      return -0.5;
+    }
+
+    let lo = -1, hi = 1;
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2;
+      if (thrustAt(mid) > mg) hi = mid; else lo = mid;
     }
     const hoverTc = (lo + hi) / 2;
     this.cachedHoverTc.set(key, hoverTc);
@@ -205,6 +224,9 @@ export class RLAgent {
     else if (missionPreset==='high-speed') xt=1000;
 
     const hasMissionTarget = (missionPreset !== 'none' && (xt !== 0 || yt !== 0));
+    // Guard nano-drone path: 20 g Crazyflie has mass=0.027 kg — all gains below
+    // must stay finite and integrator must not wind up unbounded.
+    const mass_eff = Math.max(0.02, mass);
 
     // ── Config-dependent parameters ──────────────────────────────────────
     const numMotors = droneType === 'hexacopter' ? 6 : droneType === 'quadcopter' ? 4 : 2;
@@ -215,37 +237,58 @@ export class RLAgent {
     // Scale altitude gains inversely with thrust authority so all drones have
     // similar closed-loop altitude response.
     const thrustAuthority = (numMotors / 2) * Math.pow(estPropDiam / 15, 4);
-    const massRatio = mass / 5.0;
+    const massRatio = mass_eff / 5.0;
     // altScale: heavier → need more tc, more thrust authority → need less tc
-    const altScale = massRatio / thrustAuthority;
+    const altScale = massRatio / Math.max(1e-6, thrustAuthority);
 
     const refInertia = 5.0 * 0.5 * 0.5;
     const estArmLength = droneType === 'hexacopter' ? 0.8 : droneType === 'quadcopter' ? 0.5 : 0.5;
-    const estInertia = mass * estArmLength * estArmLength;
+    const estInertia = mass_eff * estArmLength * estArmLength;
     const inertiaRatio = estInertia / refInertia;
 
-    // PD gains scaled so all configs have similar closed-loop response
-    const Kp_alt  = 0.4  * altScale;
-    const Kd_alt  = 0.25 * Math.sqrt(altScale);
-    const Ki_alt  = 0.06 * altScale;
+    // PID gains — D term scaled separately from P to keep damping ratio ~0.7
+    // across the full mass range (20 g nano → 20 kg heavy).
+    const Kp_alt  = 0.8;
+    const Kd_alt  = 0.5;
+    const Ki_alt  = 0.4;
     const Kp_att  = 0.15 * inertiaRatio;
     const Kd_att  = 0.08 * inertiaRatio;
     const Kp_yaw  = 0.1;
     const Kd_yaw  = 0.05;
 
-    // ── Altitude PID with hover bias ──────────────────────────────────────
-    // Compute exact hover collective from BET thrust model via binary search.
-    // PD corrections are applied around this equilibrium point.
-    const hoverBias = this.computeHoverTc(numMotors, estPropDiam, mass);
+    // ── Altitude PID with gravity feed-forward ────────────────────────────
+    //
+    //   tc = hoverBias(mg)                        ← FEED-FORWARD (cancels mg)
+    //      + K_p · (z_ref - z)                    ← PROPORTIONAL
+    //      + K_d · (-ż)                           ← DERIVATIVE (damps motion)
+    //      + K_i · ∫(z_ref - z) dt                ← INTEGRAL  (kills SS error)
+    //
+    // The feed-forward converts `mass·g` into the collective that produces
+    // exactly mg total thrust (via BET binary search), so at z = z_ref, ż=0,
+    // the integral stays at 0 and the drone sits at rest. The SS error term
+    // that plagued the old PD loop (≈1 m offset) is eliminated entirely by
+    // the feed-forward; the integral only corrects for disturbances.
+    const hoverBias = this.computeHoverTc(numMotors, estPropDiam, mass_eff);
 
     const altError = zt - z;
     const dt = DT;
-    this.altIntegral = Math.max(-2, Math.min(2, this.altIntegral + altError * dt));
 
-    const clamp = (v:number) => Math.max(-1, Math.min(1,v));
-    // PD correction around hover bias
-    const correction = clamp(altError * Kp_alt + (-zd) * Kd_alt + this.altIntegral * Ki_alt);
-    let tc = Math.max(-1, Math.min(1, hoverBias + correction));
+    // Trapezoid integral with CONDITIONAL anti-windup:
+    // Only accumulate when the raw command isn't already saturating in the
+    // direction of the error — this prevents the integrator from charging up
+    // while the actuator is clipped and then overshooting on release.
+    const clamp = (v:number, lo=-1, hi=1) => Math.max(lo, Math.min(hi, v));
+    const rawPD  = altError * Kp_alt + (-zd) * Kd_alt;
+    const rawCmd = hoverBias + rawPD + this.altIntegral * Ki_alt;
+    const willSaturate =
+      (rawCmd >  1 && altError > 0) ||
+      (rawCmd < -1 && altError < 0);
+    if (!willSaturate) {
+      this.altIntegral = clamp(this.altIntegral + altError * dt, -5, 5);
+    }
+
+    const correction = rawPD + this.altIntegral * Ki_alt;
+    let tc = clamp(hoverBias + correction);
 
     // ── Horizontal position PD (when mission target exists) ───────────────
     let pitchTarget = 0;   // desired pitch angle for forward (x) motion
