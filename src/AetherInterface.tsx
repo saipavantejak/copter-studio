@@ -12,7 +12,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { geminiClient, type ChatMessage } from './geminiClient';
-import { Send, Bot, AlertTriangle, Activity, Code, Download, Cpu, Play, HelpCircle } from 'lucide-react';
+import { Send, Bot, AlertTriangle, Activity, Code, Download, Cpu, Play, HelpCircle, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { MissionMetrics } from './MissionLogic';
 import { DroneState, PhysicsConfig, TestModules } from './PhysicsEngine';
@@ -69,8 +69,14 @@ function buildContext(
   return parts.join('\n');
 }
 
-function downloadColabNotebook(config: PhysicsConfig) {
-  const notebook = {
+/** Build the Colab notebook JSON string for the current config. */
+function buildColabNotebookJson(config: PhysicsConfig): string {
+  const notebook = buildColabNotebookObject(config);
+  return JSON.stringify(notebook, null, 2);
+}
+
+function buildColabNotebookObject(config: PhysicsConfig) {
+  return ({
     "cells": [
       {
         "cell_type": "markdown",
@@ -184,8 +190,12 @@ function downloadColabNotebook(config: PhysicsConfig) {
     },
     "nbformat": 4,
     "nbformat_minor": 0
-  };
-  const blob = new Blob([JSON.stringify(notebook, null, 2)], { type: 'application/json' });
+  });
+}
+
+function downloadColabNotebook(config: PhysicsConfig) {
+  const json = buildColabNotebookJson(config);
+  const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -194,6 +204,29 @@ function downloadColabNotebook(config: PhysicsConfig) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+/** Copy the Colab notebook JSON to the clipboard. Returns true on success. */
+async function copyColabNotebook(config: PhysicsConfig): Promise<boolean> {
+  try {
+    const json = buildColabNotebookJson(config);
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(json);
+      return true;
+    }
+    // Fallback for browsers without async clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = json;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
 }
 
 export const AetherInterface = ({
@@ -216,6 +249,8 @@ export const AetherInterface = ({
   const [lastEpStats,    setLastEpStats]    = useState<any>(null);
   const [geminiOnline,   setGeminiOnline]   = useState(false);
   const [trainingOffered, setTrainingOffered] = useState(false);
+  // Toast state for the "Copy Notebook" button — flashes "Copied!" briefly
+  const [notebookCopied, setNotebookCopied] = useState<'idle' | 'ok' | 'err'>('idle');
 
   const messagesEndRef   = useRef<HTMLDivElement>(null);
   const hasAnalyzedCrash = useRef(false);
@@ -342,11 +377,12 @@ export const AetherInterface = ({
       downloadColabNotebook(intent.config);
       setMessages(p=>[...p,{
         role:'assistant', isSim:true,
-        content:`✅ **Colab Notebook Generated.**\n\n` + 
-        `1. Go to [colab.research.google.com](https://colab.research.google.com/)\n` + 
-        `2. Click **File -> Upload Notebook** and select the \`swash-bicop-colab-trainer.ipynb\` file that just downloaded.\n` + 
-        `3. Follow the instructions in the notebook to harness cloud GPUs for training!\n` + 
-        `4. Once trained, drag \`cargo_policy.zip\` into the **Load RL Model** dropzone.`
+        content:`✅ **Colab Notebook Generated.**\n\n` +
+        `1. Go to [colab.research.google.com](https://colab.research.google.com/)\n` +
+        `2. Click **File → Upload Notebook** and select the \`swash-bicop-colab-trainer.ipynb\` file that just downloaded.\n` +
+        `3. Follow the instructions in the notebook to harness cloud GPUs for training.\n` +
+        `4. Once trained, drag \`cargo_policy.zip\` into the **Load RL Model** dropzone.\n\n` +
+        `*Prefer to paste the notebook directly into Colab? Click* **Copy Notebook** *in the toolbar below to copy the JSON to your clipboard.*`
       }]);
       return;
     }
@@ -406,9 +442,6 @@ export const AetherInterface = ({
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-xs font-bold text-zinc-100">Aether</div>
-            <div className="text-[9px] text-zinc-600 font-mono truncate">
-            {geminiOnline ? 'Gemini-2.5-Flash · Sim-Operator · Online' : 'Gemini offline · Local parser only'}
-            </div>
           </div>
           <Activity className={`w-3 h-3 ${isLoading||isParsing?'text-emerald-400 animate-pulse':'text-zinc-700'}`} />
         </div>
@@ -503,6 +536,27 @@ export const AetherInterface = ({
                 <Icon className="w-3 h-3" />{label}
               </button>
             ))}
+            {/* Copy Colab notebook JSON to clipboard — flashes "Copied!" on success */}
+            <button
+              onClick={async () => {
+                const ok = await copyColabNotebook(config);
+                setNotebookCopied(ok ? 'ok' : 'err');
+                setTimeout(() => setNotebookCopied('idle'), 1800);
+              }}
+              title="Copy the Colab notebook JSON to your clipboard"
+              className={`flex items-center gap-1 px-2 py-1 border rounded-lg text-[10px] transition-colors ${
+                notebookCopied === 'ok'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                  : notebookCopied === 'err'
+                    ? 'bg-red-500/10 border-red-500/30 text-red-300'
+                    : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-600 text-zinc-500 hover:text-zinc-300'
+              }`}>
+              {notebookCopied === 'ok'
+                ? (<><Check className="w-3 h-3" />Copied!</>)
+                : notebookCopied === 'err'
+                  ? (<><AlertTriangle className="w-3 h-3" />Copy failed</>)
+                  : (<><Copy className="w-3 h-3" />Copy Notebook</>)}
+            </button>
           </div>
           <div className="mt-1.5 flex items-center gap-1 text-[9px] text-zinc-700">
             <HelpCircle className="w-2.5 h-2.5 shrink-0" />

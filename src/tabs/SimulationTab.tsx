@@ -11,7 +11,7 @@ import { EfficiencyUI } from '../EfficiencyUI';
 import { ObsActionViz } from '../ObsActionViz';
 import { PanelErrorBoundary } from '../ErrorBoundary';
 import { exportCSV, exportROSBag } from '../TelemetryExport';
-import { GitCompare, Play, ChevronDown, ChevronUp, Layers, Terminal, Download } from 'lucide-react';
+import { GitCompare, Play, Square, ChevronDown, ChevronUp, Layers, Terminal, Download } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 export function SimulationTab() {
@@ -23,7 +23,7 @@ export function SimulationTab() {
     handleMetricsUpdate, handleReset,
     modelLoadTrigger, modelErrorTrigger, controllerStatus,
     handleModelLoaded, handleModelError,
-    simStarted, setSimStarted, simResetTrigger,
+    simStarted, setSimStarted, simResetTrigger, setSimResetTrigger,
     comparisonMode, setComparisonMode,
     rightTab, setRightTab, metricsTrayOpen, setMetricsTrayOpen,
     agentRef, pdAgentRef,
@@ -35,13 +35,49 @@ export function SimulationTab() {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
-  // ── 3D Viewport + Start Button ──────────────────────────────────────────
+  // ── Start / Stop handlers ───────────────────────────────────────────────
+  // Both prompt the user with window.confirm before mutating sim state, so an
+  // accidental click while editing config doesn't kick off / kill a run.
+  const handleStartSimulation = () => {
+    const ok = window.confirm(
+      `Start simulation with this configuration?\n\n` +
+      `  • Drone:   ${config.droneType}\n` +
+      `  • Mass:    ${config.mass} kg\n` +
+      `  • Prop Ø:  ${config.propDiameter}″\n` +
+      `  • Battery: ${config.batteryVoltage} V`
+    );
+    if (!ok) return;
+    setSimStarted(true);
+    // Hard reset so each launch begins from a known state
+    setTimeout(() => setSimResetTrigger(t => t + 1), 50);
+  };
+
+  const handleStopSimulation = () => {
+    const ok = window.confirm(
+      'Stop the simulation?\n\nThe drone will halt and the scene will reset to the launch overlay.'
+    );
+    if (!ok) return;
+    setSimStarted(false);
+    setTimeout(() => setSimResetTrigger(t => t + 1), 50);
+  };
+
+  // ── 3D Viewport + Start / Stop Buttons ──────────────────────────────────
   const viewport = (
     <div className="flex-1 min-h-0 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
-      <button onClick={() => setComparisonMode(c => !c)}
-        className={`absolute top-3 right-3 z-30 flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border transition-colors ${comparisonMode ? 'bg-amber-500/20 border-amber-500/40 text-amber-300' : 'bg-zinc-800/80 border-zinc-700 text-zinc-500 hover:text-zinc-300'}`}>
-        <GitCompare className="w-3 h-3" /> {comparisonMode ? 'PD vs RL' : 'Compare'}
-      </button>
+      {/* Top-right control cluster: Stop (only while running) + Compare */}
+      <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+        {simStarted && (
+          <button onClick={handleStopSimulation}
+            title="Stop the simulation"
+            className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-lg border bg-red-500/15 border-red-500/40 text-red-300 hover:bg-red-500/25 hover:text-red-200 transition-colors">
+            <Square className="w-3 h-3 fill-current" /> Stop
+          </button>
+        )}
+        <button onClick={() => setComparisonMode(c => !c)}
+          className={`flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border transition-colors ${comparisonMode ? 'bg-amber-500/20 border-amber-500/40 text-amber-300' : 'bg-zinc-800/80 border-zinc-700 text-zinc-500 hover:text-zinc-300'}`}>
+          <GitCompare className="w-3 h-3" /> {comparisonMode ? 'PD vs RL' : 'Compare'}
+        </button>
+      </div>
       <div className="absolute inset-0">
         <PanelErrorBoundary name="3D Simulation">
           <DroneSim agentRef={agentRef} pdAgentRef={pdAgentRef}
@@ -55,7 +91,7 @@ export function SimulationTab() {
       </div>
       {!simStarted && (
         <div id="start-sim-area" className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <button onClick={() => setSimStarted(true)}
+          <button onClick={handleStartSimulation}
             className="group flex flex-col items-center gap-3 px-8 py-5 bg-emerald-600/90 hover:bg-emerald-500 rounded-2xl shadow-2xl shadow-emerald-500/20 transition-all hover:scale-105">
             <Play className="w-10 h-10 text-white group-hover:scale-110 transition-transform" />
             <span className="text-white font-bold text-sm tracking-wide">Start Simulation</span>

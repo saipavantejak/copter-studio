@@ -117,6 +117,7 @@ export interface AppContextType {
   setShowForensics: React.Dispatch<React.SetStateAction<boolean>>;
   setShowReplay: React.Dispatch<React.SetStateAction<boolean>>;
   setComparisonMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setSimResetTrigger: React.Dispatch<React.SetStateAction<number>>;
 
   // Actions
   handleStartMission: () => void;
@@ -308,7 +309,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setActiveTab, setRightTab, setMetricsTrayOpen, setSimStarted,
     setConfig, setTests, setSensorCfg, setDomainRandCfg, setMasterSeed,
     setTelemetry, setNoisyState, setLastAction, setCrashData,
-    setShowForensics, setShowReplay, setComparisonMode,
+    setShowForensics, setShowReplay, setComparisonMode, setSimResetTrigger,
     handleStartMission, handleModelLoaded, handleModelError,
     handleMetricsUpdate, handleReset, handleRunSimulation,
     runBenchmark, stopWorker, clearHistory,
