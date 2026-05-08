@@ -3,6 +3,7 @@
 // All state management → AppContext.tsx
 // All tab rendering → individual tab components in src/tabs/
 
+import { useState } from 'react';
 import { AppProvider, useAppContext, type AppTab } from './context/AppContext';
 import { SimulationTab } from './tabs/SimulationTab';
 import { BenchmarkTab } from './tabs/BenchmarkTab';
@@ -14,7 +15,8 @@ import { WelcomeOverlay } from './WelcomeOverlay';
 import { CrashForensics } from './CrashForensics';
 import { CrashReplay } from './CrashReplay';
 import { OnboardingTour } from './OnboardingTour';
-import { Activity, Wind, Trophy, BarChart2, Eye, Settings, Terminal } from 'lucide-react';
+import { UserGuide } from './UserGuide';
+import { Activity, Wind, Trophy, BarChart2, Eye, Settings, Terminal, HelpCircle } from 'lucide-react';
 
 const TABS: { id: AppTab; label: string; icon: any }[] = [
   { id: 'simulation',   label: 'Simulation',   icon: Wind      },
@@ -33,6 +35,9 @@ function AppContent() {
     showForensics, setShowForensics,
     showReplay, setShowReplay, fullHistory,
   } = useAppContext();
+
+  // Beginner's Guide modal — toggled by the "?" button in the header.
+  const [showGuide, setShowGuide] = useState(false);
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-emerald-500/30">
@@ -71,6 +76,15 @@ function AppContent() {
                 <Activity className={`w-3 h-3 ${crashData ? 'text-red-500' : 'text-emerald-500 animate-pulse'}`} />
                 <span className={crashData ? 'text-red-400 font-bold' : 'text-emerald-400'}>{crashData ? 'SYS_FAULT' : 'SYS_NOMINAL'}</span>
               </div>
+              {/* Beginner's Guide — always one click away */}
+              <button
+                onClick={() => setShowGuide(true)}
+                title="Open the Beginner's Guide"
+                className="flex items-center gap-1 px-2 py-1 rounded-md border border-zinc-700 bg-zinc-900 hover:bg-emerald-500/10 hover:border-emerald-500/40 text-zinc-400 hover:text-emerald-300 transition-colors"
+              >
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline text-[11px] font-bold">Guide</span>
+              </button>
             </div>
           </div>
         </header>
@@ -86,6 +100,7 @@ function AppContent() {
         {/* Modals */}
         {showForensics && <CrashForensics crashData={crashData} fullHistory={fullHistory} onClose={() => setShowForensics(false)} />}
         {showReplay    && <CrashReplay    history={fullHistory}                            onClose={() => setShowReplay(false)} />}
+        {showGuide     && <UserGuide      onClose={() => setShowGuide(false)} />}
 
         {/* Onboarding Tour */}
         {isStarted && <OnboardingTour />}
