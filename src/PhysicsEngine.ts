@@ -14,7 +14,7 @@ import { rotorThrust, thrustLimit, interpolatePropulsion, type PropulsionPoint }
 import { SensorNoise, SensorConfig } from './SensorNoise';
 import { SeededRandom } from './SeededRandom';
 import {
-  qNorm, qToEuler, eulerToQuatSmallAngle,
+  qNorm, qToEuler, eulerToQuat,
   betThrust, stepMotor, rk4Step, computeInertia,
   rigidBodyDerivatives,
 } from './physics/core';
@@ -140,12 +140,14 @@ export class PhysicsEngine {
   }
 
   /** Set initial conditions without 'as any' casts. Call reset() first. */
-  public setInitialConditions(z0: number, phi0: number, theta0: number): void {
+  public setInitialConditions(z0: number, phi0: number, theta0: number, psi0 = 0): void {
+    if (![z0,phi0,theta0,psi0].every(Number.isFinite) || z0<0) throw new Error('Invalid initial state');
     this.airborne = z0 > 0.1;
     this.z     = z0;
     this.phi   = phi0;
     this.theta = theta0;
-    this.quat  = eulerToQuatSmallAngle(phi0, theta0);
+    this.psi   = psi0;
+    this.quat  = eulerToQuat(phi0, theta0, psi0);
   }
 
   public step(action: number[]): DroneState {

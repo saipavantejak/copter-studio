@@ -64,6 +64,7 @@ export function BenchmarkTab() {
           className="ml-2 w-24 bg-zinc-900 border border-zinc-700 p-1" />
       </label>
       {batchStats && <p className="text-xs text-zinc-300">Mission success: {((batchStats.successRate ?? 0)*100).toFixed(1)}% · Total energy across all attempts: {(batchStats.totalEnergyJ ?? 0).toFixed(1)} J · Valid SEC samples: {batchStats.efficiencySampleCount ?? 0}</p>}
+      {batchStats?.successRate95CI && <p className="text-xs text-zinc-400">95% interval for simulated mission success: {batchStats.successRate95CI.map(v=>(100*v).toFixed(1)+'%').join('–')}. Conditional on these test settings; not a real-flight reliability estimate.</p>}
       {/* Quick presets */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">

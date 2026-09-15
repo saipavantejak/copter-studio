@@ -7,6 +7,8 @@ export const CONFIG_LIMITS = {
 
 export function configErrors(config: PhysicsConfig): string[] {
   const errors: string[] = [];
+  if (!config || typeof config !== 'object' || Array.isArray(config)) return ['Configuration must be an object'];
+  if (config.useHighFidelityAero !== undefined && typeof config.useHighFidelityAero !== 'boolean') errors.push('useHighFidelityAero must be boolean');
   if (!['bicopter', 'quadcopter', 'hexacopter'].includes(config.droneType)) errors.push('Unsupported drone type');
   for (const [key, range] of Object.entries(CONFIG_LIMITS)) {
     const value = config[key as keyof typeof CONFIG_LIMITS];
@@ -27,7 +29,10 @@ export function configErrors(config: PhysicsConfig): string[] {
     if (curve.length < 2 || curve[0]?.command !== -1 || curve[curve.length - 1]?.command !== 1) errors.push('Propulsion curve must span commands -1 to 1 with at least two points');
     curve.forEach((p, i) => {
       if (![p.command, p.thrustN, p.powerW].every(Number.isFinite) || p.thrustN < 0 || p.powerW < 0 || (i > 0 && (p.command <= curve[i - 1].command || p.thrustN < curve[i - 1].thrustN))) errors.push('Invalid or non-monotonic propulsion curve');
+      if (p.thrustN > 0 && p.powerW <= 0) errors.push('Positive thrust requires positive electrical power');
     });
+    if (curve.length && curve[curve.length-1].thrustN <= 0) errors.push('Propulsion curve must provide positive maximum thrust');
+    if (config.maxThrustPerMotorN !== undefined && curve.length && Math.abs(curve[curve.length-1].thrustN-config.maxThrustPerMotorN) > 1e-9) errors.push('Propulsion curve maximum conflicts with maxThrustPerMotorN; remove the redundant maximum or make them agree');
   }
   return errors;
 }

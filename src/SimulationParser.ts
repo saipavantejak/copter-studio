@@ -1,9 +1,8 @@
 import { configErrors } from './configValidation';
+import { AIRCRAFT_PROFILES } from './AircraftProfiles';
 import { DEFAULT_MISSION, missionErrors } from './MissionSpec';
 // Converts natural language simulation requests → structured SimulationIntent.
-// Two-path design:
-//   1. Gemini API (if key present) — full semantic understanding
-//   2. Local heuristic parser — deterministic regex fallback, always available
+// Execution uses a deterministic supported grammar; Gemini chat is separate.
 //
 // Outputs rich Ambiguity objects so the ApprovalDialog can explain every
 // assumption made and request user sign-off before touching the simulator.
@@ -89,7 +88,19 @@ export function hydrateGeminiResponse(r: any): SimulationIntent {
 
 export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFIG, currentTests: TestModules = DEF_TESTS): SimulationIntent {
   const ambiguities: Ambiguity[] = [];
-  const cl = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+  const block = (field: string, issue: string) => ambiguities.push({level:'error',field,issue,assumed:'Execution blocked; clarify the request'});
+  const number = '[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?';
+  const profile = /\bcrazyflie\s*2\.1\b(?!\s*\+)/i.test(msg)
+    ? AIRCRAFT_PROFILES[/brushless/i.test(msg) ? 1 : 0] : undefined;
+  if (profile) {
+    currentConfig = {...profile.config};
+    ambiguities.push({level:'warning',field:'aircraft',issue:profile.limitations,assumed:profile.name});
+  } else if (/crazyflie|\bdji\b|\bmini\s*4|\bavata\b|\bmavic\b|\bmatrice\b|\banafi\b|v-coptr|\balta\s*x/i.test(msg)) {
+    block('aircraft','No supported reference profile for this named aircraft; supply an explicit configuration');
+  }
+  for (const [field, pattern] of [['mass',number+'\\s*(?:kg|kilograms?|grams?|g)\\b'],['voltage',number+'\\s*(?:v|volts?)\\b'],['speed',number+'\\s*(?:m/s|mps)'],['episodes',number+'[ -]*episodes?']] as const) {
+    if ([...msg.matchAll(new RegExp(pattern,'gi'))].length > 1) block(field,'Multiple values require clarification');
+  }
 
   // Type
   const isBenchmark = /benchmark|stress[\s-]?test|batch|episodes?|run\s+\d+\s*times?|headless/i.test(msg);
@@ -104,7 +115,7 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
 
   // Mass
   let mass = currentConfig.mass;
-  const kgMatch = msg.match(/(-?\d+(?:\.\d+)?)\s*(kg|kilograms?|grams?|g)\b/i);
+  const kgMatch = msg.match(new RegExp('('+number+')\\s*(kg|kilograms?|grams?|g)\\b','i'));
   if (kgMatch) {
     const v = parseFloat(kgMatch[1]) * (/^(g|grams?)$/i.test(kgMatch[2]) ? 0.001 : 1);
     mass = v;
@@ -114,13 +125,13 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
 
   // Prop diameter
   let propDiameter = currentConfig.propDiameter;
-  const propMatch = msg.match(/(-?\d+(?:\.\d+)?)\s*(?:inch(?:es)?|in|")\s*(?:prop|propeller)?/i);
+  const propMatch = msg.match(new RegExp('('+number+')\\s*(?:inch(?:es)?|in\\b|")\\s*(?:prop|propeller)?','i'));
   if (propMatch) propDiameter = parseFloat(propMatch[1]);
   else ambiguities.push({ level: 'info', field: 'propDiameter', issue: 'Prop diameter not specified', assumed: 'Retain current prop diameter' });
 
   // Battery voltage
   let batteryVoltage = currentConfig.batteryVoltage;
-  const voltMatch = msg.match(/(-?\d+(?:\.\d+)?)\s*[Vv](?:\b|olt)/);
+  const voltMatch = msg.match(new RegExp('('+number+')\\s*(?:v|volts?)\\b','i'));
   if (voltMatch) {
     const v = parseFloat(voltMatch[1]);
     batteryVoltage = v;
@@ -128,7 +139,7 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
 
   // Arm length
   let armLength = currentConfig.armLength;
-  const armMatch = msg.match(/arm[\s-]?(?:length)?\s*[=:]?\s*(-?\d+(?:\.\d+)?)\s*(mm|cm|m)\b/i);
+  const armMatch = msg.match(new RegExp('arm[\\s-]?(?:length)?\\s*[=:]?\\s*('+number+')\\s*(mm|cm|m)\\b','i'));
   if (armMatch) armLength = parseFloat(armMatch[1]) * (armMatch[2].toLowerCase()==='mm' ? 0.001 : armMatch[2].toLowerCase()==='cm' ? 0.01 : 1);
 
   // Test modules
@@ -144,21 +155,21 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
   else if (/high[\s-]?speed|\bintercept\b|\bfast\b/i.test(msg)) missionPreset = 'high-speed';
 
   // Sensor noise
-  const enableNoise = !/no sensor|disable sensor/i.test(msg) && /sensor[\s-]?noise|\bnoisy\b|realistic[\s-]?sensor|real[\s-]?world[\s-]?sensor/i.test(msg);
+  let enableNoise = !/no sensor|disable sensor/i.test(msg) && /sensor[\s-]?noise|\bnoisy\b|realistic[\s-]?sensor|real[\s-]?world[\s-]?sensor/i.test(msg);
 
   // Domain rand
-  const domainRandEnabled = !/no domain|disable domain/i.test(msg) && /domain[\s-]?rand|\brobust\b|randomize[\s-]?param|sim[\s-]?to[\s-]?real/i.test(msg);
+  let domainRandEnabled = !/no domain|disable domain/i.test(msg) && /domain[\s-]?rand|\brobust\b|randomize[\s-]?param|sim[\s-]?to[\s-]?real/i.test(msg);
 
   // Episodes
   let numEpisodes = 50;
-  const epMatch = msg.match(/(-?\d+)[\s-]*episodes?/i);
-  if (epMatch) numEpisodes = parseInt(epMatch[1]);
+  const epMatch = msg.match(new RegExp('('+number+')[\\s-]*episodes?','i')) ?? msg.match(new RegExp('run\\s+('+number+')\\s*times?','i'));
+  if (epMatch) numEpisodes = Number(epMatch[1]);
   else if (isBenchmark) ambiguities.push({ level: 'info', field: 'numEpisodes', issue: 'Episode count not specified', assumed: '50 (default)' });
 
   // Seed
   let masterSeed = 42;
-  const seedMatch = msg.match(/\bseed\s*[=:]?\s*(-?\d+)/i);
-  if (seedMatch) masterSeed = parseInt(seedMatch[1]);
+  const seedMatch = msg.match(new RegExp('\\bseed\\s*[=:]?\\s*('+number+')','i'));
+  if (seedMatch) masterSeed = Number(seedMatch[1]);
 
   if (!Number.isInteger(numEpisodes) || numEpisodes < 1 || numEpisodes > 500) ambiguities.push({level:'error',field:'numEpisodes',issue:'Use 1–500 episodes',assumed:'Not clamped; execution blocked'});
   if (!Number.isSafeInteger(masterSeed) || masterSeed < 0 || masterSeed > 0xffffffff) ambiguities.push({level:'error',field:'seed',issue:'Use a uint32 seed',assumed:'Execution blocked'});
@@ -173,20 +184,32 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
   }
 
   // Preserve unspecified faults; handle explicit negation and all-fault requests.
-  const flag = (term: string, parsed: boolean, previous: boolean) =>
-    new RegExp(term, 'i').test(msg) ? !new RegExp('(?:no|without|disable)\\s+'+term+'|'+term+'\\s+(?:off|disabled)','i').test(msg) && parsed : previous;
-  windEnabled = flag('wind',windEnabled,currentTests.windEnabled);
-  payloadShiftEnabled = flag('payload[ -]?shift',payloadShiftEnabled,currentTests.payloadShiftEnabled);
-  batterySagEnabled = flag('battery[ -]?sag',batterySagEnabled,currentTests.batterySagEnabled);
-  motorOutEnabled = flag('motor[ -]?(?:out|fail)',motorOutEnabled,currentTests.motorOutEnabled);
+  const flag = (term: string, previous: boolean) => {
+    const token = '(?:'+term+')';
+    if (!new RegExp(token,'i').test(msg)) return previous;
+    return !new RegExp('(?:no|without|disable|except)\\s+'+token+'|'+token+'\\s+(?:off|disabled)','i').test(msg);
+  };
   if (/all\s+fault/i.test(msg)) {
     const enabled = !/(?:no|without|disable)\s+all\s+fault/i.test(msg);
     windEnabled = payloadShiftEnabled = batterySagEnabled = motorOutEnabled = enabled;
+  } else {
+    windEnabled=currentTests.windEnabled;payloadShiftEnabled=currentTests.payloadShiftEnabled;
+    batterySagEnabled=currentTests.batterySagEnabled;motorOutEnabled=currentTests.motorOutEnabled;
   }
+  if (/(?:no|without|disable)\s+(?:all\s+)?faults?\b/i.test(msg)) windEnabled=payloadShiftEnabled=batterySagEnabled=motorOutEnabled=false;
+  windEnabled=flag('wind|gusts?|turbulence|storm|breezy',windEnabled);
+  payloadShiftEnabled=flag('payload[ -]?shift|cog|unbalanced|center[ -]of[ -]gravity',payloadShiftEnabled);
+  batterySagEnabled=flag('battery[ -]?sag|voltage[ -]?drop|drain',batterySagEnabled);
+  motorOutEnabled=flag('motor[ -]?(?:out|fail(?:ure)?)|engine[ -]?fail(?:ure)?|one[ -]motor',motorOutEnabled);
+  enableNoise=flag('sensor[ -]?noise|noisy|realistic[ -]?sensor|real[ -]?world[ -]?sensor',enableNoise);
+  domainRandEnabled=flag('domain[ -]?randomization|domain[ -]?rand|robust|randomize[ -]?param|sim[ -]?to[ -]?real',domainRandEnabled);
   let mission = currentTests.mission;
-  const altitude = msg.match(/(?:hover(?:\s+at)?|altitude)\s*[=:]?\s*(-?\d+(?:\.\d+)?)\s*(?:meters?|metres?|m)\b/i);
-  const speed = msg.match(/(-?\d+(?:\.\d+)?)\s*(?:m\/s|mps)/i);
-  const duration = msg.match(/(?:for|duration)\s*[=:]?\s*(-?\d+(?:\.\d+)?)\s*(seconds?|secs?|s|minutes?|mins?)\b/i);
+  const altitude = msg.match(new RegExp('(?:hover(?:\\s+at)?|altitude)\\s*[=:]?\\s*('+number+')\\s*(?:meters?|metres?|m)\\b','i'));
+  const speed = msg.match(new RegExp('('+number+')\\s*(?:m/s|mps)','i'));
+  const duration = msg.match(new RegExp('(?:for|duration)\\s*[=:]?\\s*('+number+')\\s*(seconds?|secs?|s|minutes?|mins?)\\b','i'));
+  if (/\bwind\b/i.test(msg) && speed) block('wind','Numeric wind speed is not supported by this command grammar');
+  if (/\bhover\b/i.test(msg) && speed && Number(speed[1])!==0) block('mission','Hover and nonzero forward velocity conflict');
+  if (new RegExp('(?:'+number+'\\s*|\\b)(?:feet|ft|mph|km/h|kph|lbs?|pounds?)\\b','i').test(msg)) block('units','Unsupported units; use kg/g, meters, m/s and seconds/minutes');
   if (/\bhover\b|fly forward/i.test(msg) || altitude || speed || duration) {
     mission = {...DEFAULT_MISSION,...mission};
     if (/\bhover\b/i.test(msg)) {mission.mode='hover';mission.forwardVelocityMps=0;}
@@ -197,8 +220,11 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
     for (const issue of missionErrors(mission)) ambiguities.push({level:'error',field:'mission',issue,assumed:'Execution blocked'});
   }
   const finalConfig = {...currentConfig,droneType,mass,propDiameter,batteryVoltage,armLength};
-  const capacity = msg.match(/(-?\d+(?:\.\d+)?)\s*mAh\b/i);
+  const capacity = msg.match(new RegExp('('+number+')\\s*mAh\\b','i'));
   if (capacity) finalConfig.batteryCapacity=Number(capacity[1]);
+  if ((propDiameter!==currentConfig.propDiameter || batteryVoltage!==currentConfig.batteryVoltage || droneType!==currentConfig.droneType) && (currentConfig.propulsionCurve || currentConfig.maxThrustPerMotorN)) {
+    block('propulsion','Hardware change invalidates retained propulsion data; select a matching profile or update the curve in the configuration editor');
+  }
   for (const issue of configErrors(finalConfig)) ambiguities.push({level:'error',field:'config',issue,assumed:'Input preserved; execution blocked'});
   if (/waypoint|heading|orbit|fly left|fly right|backward|return.to.home/i.test(msg))
     ambiguities.push({level:'error',field:'mission',issue:'Unsupported mission feature',assumed:'Execution blocked; no silent substitution'});

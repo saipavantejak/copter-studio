@@ -8,9 +8,10 @@ import { EpisodeRunner } from '../src/EpisodeRunner';
 import type { PhysicsConfig } from '../src/PhysicsEngine';
 import { DEFAULT_DOMAIN_RAND } from '../src/DomainRandomizer';
 import { DEF_TESTS } from '../src/SimulationParser';
+import { AIRCRAFT_PROFILES } from '../src/AircraftProfiles';
 
-const nano: PhysicsConfig = {droneType:'quadcopter',mass:0.029,propDiameter:45/25.4,batteryVoltage:3.7,armLength:0.046,batteryCapacity:250,maxThrustPerMotorN:0.060*9.81/4};
-const brushless: PhysicsConfig = {...nano,mass:0.032,propDiameter:2.17,batteryCapacity:350,maxThrustPerMotorN:0.120*9.81/4};
+const nano: PhysicsConfig = {...AIRCRAFT_PROFILES[0].config};
+const brushless: PhysicsConfig = {...AIRCRAFT_PROFILES[1].config};
 const fixtures: Array<[string,PhysicsConfig]> = [
   ['29g nano, supplied 60g thrust ceiling',nano],
   ['44g nano payload fixture',{...nano,mass:0.044,payloadMassKg:0.015}],
@@ -22,17 +23,19 @@ const fixtures: Array<[string,PhysicsConfig]> = [
 ];
 const results = [];
 for (const [name,config] of fixtures) {
+ for (const masterSeed of [42,2026,8675309]) {
   const agent = new RLAgent();
   try {
     const stats=await new EpisodeRunner().run(agent,{
       numEpisodes:50,maxStepsPerEpisode:1000,randomizeIC:true,
       icAltRange:[0.5,1.5],icAttRange:[-0.2,0.2],physicsConfig:config,
-      testModules:{...DEF_TESTS},masterSeed:42,domainRandConfig:{...DEFAULT_DOMAIN_RAND,enabled:false},
+      testModules:{...DEF_TESTS},masterSeed,domainRandConfig:{...DEFAULT_DOMAIN_RAND,enabled:false},
     });
-    const result={name,config,crashRate:stats.crashRate,successRate:stats.successRate,meanAltError:stats.meanAltError,
+    const result={name,masterSeed,config,crashRate:stats.crashRate,successRate:stats.successRate,successRate95CI:stats.successRate95CI,meanAltError:stats.meanAltError,
       meanSurvivalTime:stats.meanSurvivalTime,totalEnergyJ:stats.totalEnergyJ,efficiencySampleCount:stats.efficiencySampleCount};
     results.push(result);
     console.log(JSON.stringify(result));
   } finally {agent.dispose();}
+ }
 }
 if(results.some(r=>r.crashRate!==0 || r.successRate!==1 || r.meanAltError>=0.1)) process.exitCode=1;

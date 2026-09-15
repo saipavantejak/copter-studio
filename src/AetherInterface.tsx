@@ -40,7 +40,7 @@ interface Message {
   isSim?:   boolean;
 }
 
-const SYSTEM_INSTRUCTION = `You are Aether, Senior Drone Systems Architect and RL Research Consultant for the SWASH-BICOP-V11 Digital Twin.
+const SYSTEM_INSTRUCTION = `You are Aether, a drone simulation assistant for an experimental simulator.
 
 Specialisations:
 1. PERFORMANCE AUDIT: Analyse SEC, SPT, hover stability with actual telemetry values.
@@ -67,8 +67,17 @@ function buildContext(
   if (mods) parts.push(`Active: ${mods}`);
   if (activeTests.missionPreset !== 'none') parts.push(`Mission: ${activeTests.missionPreset}`);
   parts.push('Model status: experimental; generic thrust/inertia/power assumptions unless explicitly supplied. No aircraft has independent validation from this run.');
-  parts.push('Executed configuration: '+JSON.stringify(config));
-  if (activeTests.mission) parts.push('Mission with SI units: '+JSON.stringify(activeTests.mission));
+  parts.push('Current editor configuration (may differ from recorded benchmark): '+JSON.stringify(config));
+  if (activeTests.mission) parts.push('Current editor mission with SI units: '+JSON.stringify(activeTests.mission));
+  if (episodeStats) {
+    parts.push('Recorded benchmark request: '+JSON.stringify(episodeStats.requestedConfig ?? 'Unavailable for legacy results; do not substitute current editor settings'));
+    parts.push('95% simulated success interval: '+JSON.stringify(episodeStats.successRate95CI ?? null));
+    parts.push('First recorded episode evidence: '+JSON.stringify(episodeStats.episodes?.[0] ? {
+      config:episodeStats.episodes[0].executedConfig,mission:episodeStats.episodes[0].executedMission,
+      tests:episodeStats.episodes[0].executedTests,sensors:episodeStats.episodes[0].executedSensors,
+      propulsion:episodeStats.episodes[0].propulsionEvidence,outcome:episodeStats.episodes[0].outcome,
+    } : null));
+  }
   if (episodeStats) parts.push('Benchmark duration seconds='+episodeStats.durationSeconds+'; success rate='+episodeStats.successRate+'; conditional SEC sample count='+episodeStats.efficiencySampleCount+'; total energy J='+episodeStats.totalEnergyJ);
   return parts.join('\n');
 }

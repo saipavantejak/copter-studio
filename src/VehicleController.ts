@@ -23,9 +23,11 @@ export class VehicleController {
     const total = Math.max(0, Math.min(n * max, rawTotal));
     const vx = mission.mode === 'velocity' ? mission.forwardVelocityMps : clamp(-0.8 * (s.x ?? 0), 3);
     const vy = clamp(-0.8 * (s.y ?? 0), 3);
-    const pitchTarget = clamp(1.5 * (vx - (s.x_dot ?? 0)) / GRAVITY, 0.3);
-    // Positive roll creates NEGATIVE world-y acceleration in this rigid-body model.
-    const rollTarget = clamp(-1.5 * (vy - (s.y_dot ?? 0)) / GRAVITY, 0.3);
+    const ax=1.5*(vx-(s.x_dot??0)), ay=1.5*(vy-(s.y_dot??0));
+    const heading=s.psi??0, c=Math.cos(heading), sn=Math.sin(heading);
+    // Rotate world-frame acceleration demand into the heading-aligned body frame.
+    const pitchTarget = clamp((c*ax+sn*ay)/GRAVITY, 0.3);
+    const rollTarget = clamp((sn*ax-c*ay)/GRAVITY, 0.3);
     const inertia = config.inertiaOverride ?? computeInertia(config.propDiameter, config.mass, d);
     const L = inertia.Ixx * (36 * (rollTarget - phi) - 10 * (s.p ?? 0));
     const M = inertia.Iyy * (36 * (pitchTarget - theta) - 10 * (s.q ?? 0));

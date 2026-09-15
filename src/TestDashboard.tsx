@@ -4,6 +4,7 @@ import { PhysicsConfig, TestModules } from './PhysicsEngine';
 import { DroneType } from './UniversalMixer';
 import { SensorConfig } from './SensorNoise';
 import { assertValidConfig } from './configValidation';
+import { AIRCRAFT_PROFILES, propulsionEvidence, editHardware } from './AircraftProfiles';
 
 interface TestDashboardProps {
   config: PhysicsConfig;
@@ -44,6 +45,17 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
         </h2>
 
         <p className="text-xs text-amber-400 mb-3">Experimental model. Hardware inputs and simulated success are not independent flight validation.</p>
+        <label className="block text-xs mb-2">Load reference aircraft
+          <select aria-label="Load reference aircraft" value="" onChange={e=>{
+            const profile=AIRCRAFT_PROFILES.find(p=>p.id===e.target.value);
+            if(profile){setConfig({...profile.config});setConfigError('');}
+          }} className="w-full bg-zinc-950 p-2">
+            <option value="">Choose a reference configuration</option>
+            {AIRCRAFT_PROFILES.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
+        <p className="text-xs text-amber-400">Propulsion: {propulsionEvidence(config).status}. Energy and dynamics remain approximate.</p>
+        {propulsionEvidence(config).sources.map(url=><a key={url} href={url} target="_blank" rel="noreferrer" className="block text-xs underline">Manufacturer reference: {new URL(url).pathname}</a>)}
         <details className="mb-3 text-xs">
           <summary>Advanced configuration: battery, payload, inertia, measured propulsion</summary>
           <button type="button" onClick={()=>setConfigDraft(JSON.stringify(config,null,2))} className="my-2 underline">Copy current configuration into editor</button>
@@ -55,7 +67,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
             try {
               const patch=JSON.parse(configDraft);
               if(!patch||typeof patch!=='object'||Array.isArray(patch))throw new Error('Expected an object');
-              const next={...config,...patch};assertValidConfig(next);setConfig(next);setConfigError('');
+              const next=editHardware(config,patch);assertValidConfig(next);setConfig(next);setConfigError('');
             }catch(e){setConfigError(e instanceof Error?e.message:String(e));}
           }}>Validate and apply configuration</button>
           {configError&&<p role="alert" className="text-red-400">{configError}</p>}
@@ -63,7 +75,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
         <div className="space-y-3">
           <div>
             <label className="block text-xs text-zinc-500 mb-1">Drone Type</label>
-            <select value={config.droneType} onChange={e=>setConfig({...config,droneType:e.target.value as DroneType})}
+            <select value={config.droneType} onChange={e=>setConfig(editHardware(config,{droneType:e.target.value as DroneType}))}
               className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-emerald-500">
               <option value="bicopter">Bi-Copter Swashplate</option>
               <option value="quadcopter">Standard Quadcopter</option>
@@ -86,7 +98,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
                 { label: 'Cargo Quad', cfg: { droneType: 'quadcopter' as DroneType, mass: 8.0, propDiameter: 18, batteryVoltage: 22.2, armLength: 0.6 } },
                 { label: 'Heavy Hex', cfg: { droneType: 'hexacopter' as DroneType, mass: 15.0, propDiameter: 22, batteryVoltage: 44.4, armLength: 0.8 } },
               ].map(p => (
-                <button key={p.label} onClick={() => setConfig(c => ({ ...c, ...p.cfg }))}
+                <button key={p.label} onClick={() => setConfig(c => editHardware(c,p.cfg))}
                   className="px-2 py-1 text-[10px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-zinc-400 hover:text-zinc-200 transition-colors">
                   {p.label}
                 </button>
@@ -102,7 +114,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
             <div key={k}>
               <label className="block text-xs text-zinc-500 mb-1">{lbl}: <span className="text-zinc-300">{(config as any)[k].toFixed(prec)}</span></label>
               <input type="range" min={mn} max={mx} step={st} value={(config as any)[k]}
-                onChange={e=>setConfig({...config,[k]:parseFloat(e.target.value)})}
+                onChange={e=>setConfig(editHardware(config,{[k]:parseFloat(e.target.value)}))}
                 className="w-full accent-emerald-500" />
               <div className="text-[9px] text-zinc-600 mt-0.5">{hint}</div>
             </div>

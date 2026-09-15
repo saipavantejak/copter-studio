@@ -56,6 +56,12 @@ export function eulerToQuatSmallAngle(phi: number, theta: number): Vec {
   return [1/n, (phi/2)/n, (theta/2)/n, 0];
 }
 
+/** Exact ZYX Euler conversion for initialization, including nonzero heading. */
+export function eulerToQuat(phi: number, theta: number, psi = 0): Vec {
+  const cr=Math.cos(phi/2),sr=Math.sin(phi/2),cp=Math.cos(theta/2),sp=Math.sin(theta/2),cy=Math.cos(psi/2),sy=Math.sin(psi/2);
+  return [cr*cp*cy+sr*sp*sy,sr*cp*cy-cr*sp*sy,cr*sp*cy+sr*cp*sy,cr*cp*sy-sr*sp*cy];
+}
+
 // ── Blade Element Theory (BET) thrust ────────────────────────────────────────
 
 /**

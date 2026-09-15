@@ -4,6 +4,9 @@
 
 import { DEFAULT_MISSION, missionErrors } from './MissionSpec';
 import { DT } from './physics/constants';
+import { rateInterval } from './BenchmarkEvidence';
+import { propulsionEvidence } from './AircraftProfiles';
+import { assertValidConfig } from './configValidation';
 import type { SensorConfig } from './SensorNoise';
 import { PhysicsEngine, PhysicsConfig, TestModules } from './PhysicsEngine';
 import { RLAgent } from './RLAgent';
@@ -29,6 +32,10 @@ export interface EpisodeBenchmarkConfig {
 }
 
 export interface EpisodeResult {
+  executedMission?: import('./MissionSpec').MissionSpec;
+  executedTests?: TestModules;
+  executedSensors?: SensorConfig;
+  propulsionEvidence?: ReturnType<typeof propulsionEvidence>;
   id:            number;
   crashed:       boolean;
   outcome?: string;
@@ -56,6 +63,11 @@ export interface EpisodeResult {
 }
 
 export interface BatchStats {
+  successRate95CI?: [number, number] | null;
+  crashRate95CI?: [number, number] | null;
+  cancelled?: boolean;
+  requestedConfig?: EpisodeBenchmarkConfig;
+  simulatorVersion?: string;
   numEpisodes: number;
   crashRate: number;
   successRate?: number;
@@ -92,6 +104,14 @@ export class EpisodeRunner {
     cfg: EpisodeBenchmarkConfig,
     signal?: AbortSignal
   ): Promise<BatchStats> {
+    assertValidConfig(cfg.physicsConfig);
+    if (!Number.isSafeInteger(cfg.masterSeed) || cfg.masterSeed < 0 || cfg.masterSeed > 0xffffffff) throw new Error('Seed must be uint32');
+    for (const [range,name,min,max] of [[cfg.icAltRange,'altitude',0,120],[cfg.icAttRange,'attitude',-Math.PI/3,Math.PI/3]] as const) {
+      if (!Array.isArray(range) || range.length!==2 || !range.every(Number.isFinite) || range[0]>range[1] || range[0]<min || range[1]>max) throw new Error('Invalid initial '+name+' range');
+    }
+    for (const key of ['windEnabled','payloadShiftEnabled','batterySagEnabled','motorOutEnabled'] as const) {
+      if (typeof cfg.testModules[key] !== 'boolean') throw new Error(key+' must be boolean');
+    }
     if (!Number.isInteger(cfg.numEpisodes) || cfg.numEpisodes < 1 || cfg.numEpisodes > 500) throw new Error('Episode count must be 1–500');
     if (!Number.isInteger(cfg.maxStepsPerEpisode) || cfg.maxStepsPerEpisode < 1 || cfg.maxStepsPerEpisode > 225000) throw new Error('Invalid step budget');
     const mission = cfg.testModules.mission ?? {...DEFAULT_MISSION, durationSeconds:cfg.maxStepsPerEpisode*DT};
@@ -141,6 +161,7 @@ export class EpisodeRunner {
       let altErrorSum = 0;
       let stepCount = 0;
       let maxRoll = 0, maxPitch = 0;
+      let liftedOff = phys.getState().z > 0.05;
 
       for (let step = 0; step < maxSteps; step++) {
         if (step % 256 === 0) {
@@ -158,6 +179,10 @@ export class EpisodeRunner {
         altErrorSum += Math.abs(ns.z - mission.targetAltitudeM);
         maxRoll  = Math.max(maxRoll,  Math.abs(ns.phi));
         maxPitch = Math.max(maxPitch, Math.abs(ns.theta));
+        liftedOff ||= ns.z > 0.05;
+        // A hover/velocity mission requires takeoff; do not waste a long horizon
+        // reporting an upright vehicle on the floor as successful survival.
+        if (!liftedOff && ns.time >= 5) { outcome = 'Failed takeoff'; break; }
 
         if (ns.failureReason) { crashed = true; outcome = ns.failureReason; break; }
         // Ground crash: low altitude + bad attitude
@@ -169,11 +194,13 @@ export class EpisodeRunner {
         // Attitude divergence: drone inverted or tumbling at ANY altitude (> 60° roll or pitch)
         if (Math.abs(ns.phi) > Math.PI / 3 || Math.abs(ns.theta) > Math.PI / 3) {
           crashed = true;
+          outcome = 'Attitude/operating envelope failure';
           break;
         }
         // Altitude runaway: uncontrolled climb beyond reasonable bounds
         if (ns.z > 500) {
           crashed = true;
+          outcome = 'Altitude operating envelope failure';
           break;
         }
       }
@@ -192,6 +219,8 @@ export class EpisodeRunner {
       );
 
       const result: EpisodeResult = {
+        executedMission: {...mission}, executedTests: {...phys.tests,mission:{...mission}},
+        executedSensors: {...phys.sensorCfg}, propulsionEvidence: propulsionEvidence(phys.config),
         id: ep, crashed, outcome, successful,
         energyJ: phys.totalEnergyConsumed, finalBattery: finalState.battery,
         executedConfig: {...phys.config}, secApplicable: metrics.secApplicable,
@@ -223,6 +252,11 @@ export class EpisodeRunner {
     const mAlt=mean(altErrs), mSEC=mean(secs), mSPT=mean(spts);
 
     return {
+      simulatorVersion: 'reliability-v2',
+      requestedConfig: JSON.parse(JSON.stringify({...cfg,serializedModel:undefined})),
+      cancelled: signal?.aborted ?? false,
+      successRate95CI: rateInterval(results.filter(r=>r.successful).length,results.length),
+      crashRate95CI: rateInterval(crashed,results.length),
       numEpisodes: results.length,
       crashRate: results.length ? crashed / results.length : 0,
       successRate: results.length ? results.filter(r=>r.successful).length / results.length : 0,

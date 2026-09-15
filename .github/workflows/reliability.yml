@@ -21,3 +21,4 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run ci:reliability
+      - run: npm run ci:adversarial

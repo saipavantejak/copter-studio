@@ -49,13 +49,44 @@ The legacy cloud hydration helper is retained for compatibility/tests, not execu
 ## Verified locally
 
 - Baseline: 46 of 47 existing tests passed; one UI assertion referenced stale branding.
-- New regression suite: 17 tests passed (input, energy, actuators, missions, repeatability,
-  failed takeoff, domain settings, inertia scaling, 60-second run and cancellation).
-- Full suite: 64 tests passed. App/server type checks and production build passed.
-- The standalone seven-fixture / 350-episode catalog CLI could not run locally:
-  the environment denied its Unix IPC socket (EPERM). No catalog pass is claimed.
-  The added CI job runs this script in the standard GitHub runner environment.
+- Initial upgrade: 64 tests passed, including 17 reliability tests. The original
+  350-episode catalog subsequently passed in GitHub Actions and locally using the
+  standard Node tsx import hook (the tsx CLI's IPC listener was unavailable).
+- Second pass: 100 tests passed, including adversarial commands, provenance,
+  confidence intervals and world-frame velocity tracking from +/-90 degree headings.
+- Expanded catalog: seven fixtures x three seeds x 50 episodes = 1,050 episodes.
+  All completed 16-second hover with zero crashes and mean altitude error below 0.1 m.
+- Additional 250 episodes: 50 sixty-second hover missions succeeded; 50 insufficient-
+  thrust and 50 battery-depletion controls failed as intended. Fifty single-motor-out
+  flights and fifty all-fault flights failed; these are NOT flight-recovery passes.
+- Raw results and exact fixture inputs are in reports/reliability-v2.json. This is a
+  headless software regression record, not a manufacturer endurance comparison.
 - These are source-level/headless and mocked component checks, not visual browser QA.
+
+## Second-pass changes and limits
+
+- UI/Aether reference profiles cite Bitcraze's stock brushed and 2023 brushless
+  maximum-thrust references. Profile constants match those inputs by construction;
+  this does not validate a thrust-versus-throttle curve or predict physical flight time.
+  Brushless reference uses 55 mm props and an approximate 50 mm arm length. Later
+  production variants must not be silently treated as this 2023 reference configuration.
+- Generic propulsion remains uncalibrated. No universal coefficient was adjusted just
+  to make the two nano test cases pass. Hardware edits invalidate retained rotor data.
+- Unsupported recognized aircraft names, conflicting mass/voltage/speed/count inputs,
+  fractional counts/seeds, unsupported units and ambiguous wind speeds now block execution.
+  Leading-decimal/scientific notation, fault synonyms, sensor/randomization negation and
+  run-N-times are handled. This is still a bounded grammar, not unrestricted language.
+- Direct benchmarks validate seeds, initial-condition ranges and fault booleans. Positive
+  thrust with zero power, zero-authority curves and conflicting curve maxima are rejected.
+- Benchmark records include executed mission, hardware, faults, sensors, propulsion evidence,
+  simulator version and request settings. Aether separates these from current editor state.
+  RL weights are not embedded; reproducing an RL run still requires the original policy.
+- Wilson 95% intervals express sampling uncertainty conditional on the simulated settings.
+  They do not cover model error, seed overlap across batches or real-aircraft reliability.
+- Exact quaternion initialization and heading-aware velocity demands fix frame inconsistency.
+  Aggressive maneuvers, all geometries and the full heading envelope remain unvalidated.
+- Failure-to-takeoff has a five-second deadline in benchmark execution. Live UI mission
+  deadlines and general sustained-tracking-error deadlines still require further work.
 
 ## Still required before production confidence / physical validation
 
@@ -72,7 +103,7 @@ The legacy cloud hydration helper is retained for compatibility/tests, not execu
    have no traceable raw fit dataset here; their label does not establish fidelity.
 5. Validate timestep convergence, aggressive maneuvers, yaw allocation, nonzero-heading
    velocity tracking, all vehicle geometries and fault-recovery envelopes.
-6. Add sustained-error/failure-to-takeoff deadlines, mission-relative position errors,
+6. Add sustained-error deadlines, mission-relative position errors,
    geofences and full mission outcome handling in the live UI. Live duration currently
    pauses at the horizon; it does not execute an automatic landing.
 7. Replace legacy SPT, structural-stress, cargo and half-range heuristics; add uncertainty
@@ -93,6 +124,7 @@ The legacy cloud hydration helper is retained for compatibility/tests, not execu
     npm test
     npm run build
     npm run ci:reliability
+    npm run ci:adversarial
 
 Server checking uses noEmit + Bundler resolution because the supported server scripts
 run through tsx; this configuration does not promise executable emitted NodeNext JS.

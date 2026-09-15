@@ -67,7 +67,7 @@ describe('Energy and actuator consistency', () => {
     expect((p.batteryCapacity-p.currentBattery)*p.config.batteryVoltage*3.6).toBeCloseTo(p.totalEnergyConsumed,7);
   });
   it('uses a measured curve for both command inverse and electrical draw', () => {
-    const p=new PhysicsEngine();p.config={...nano,batteryCapacity:10000,propulsionCurve:[{command:-1,thrustN:0,powerW:0},{command:1,thrustN:1,powerW:25}]};p.reset();p.setInitialConditions(100,0,0);
+    const p=new PhysicsEngine();p.config={...nano,maxThrustPerMotorN:undefined,batteryCapacity:10000,propulsionCurve:[{command:-1,thrustN:0,powerW:0},{command:1,thrustN:1,powerW:25}]};p.reset();p.setInitialConditions(100,0,0);
     expect(commandForThrust(p.config,0.5)).toBeCloseTo(0,6);
     for(let i=0;i<100;i++)p.step([1,1,1,1,0,0]);
     expect(p.lastPowerW).toBeCloseTo(100.05,1);
@@ -105,6 +105,7 @@ describe('Shared benchmark regression', () => {
       const c=cfg({...nano,maxThrustPerMotorN:0.001});c.randomizeIC=false;
       const result=await new EpisodeRunner().run(agent,c);
       expect(result.successRate).toBe(0);expect(result.episodes.every(r=>r.outcome==='Failed takeoff')).toBe(true);
+      expect(result.meanSurvivalTime).toBeLessThan(5.02);
       expect(result.efficiencySampleCount).toBe(0);
     } finally {agent.dispose();}
   });
