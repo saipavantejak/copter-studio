@@ -51,23 +51,27 @@ async function main() {
     version: 'v12-pro',
     numEpisodes: stats.numEpisodes,
     crashRate: stats.crashRate,
+    successRate: stats.successRate,
+    totalEnergyJ: stats.totalEnergyJ,
+    efficiencySampleCount: stats.efficiencySampleCount,
     meanSurvivalTime: stats.meanSurvivalTime,
     meanAltError: stats.meanAltError,
     meanSEC: stats.meanSEC,
     masterSeed,
     threshold,
-    passed: stats.crashRate <= threshold,
+    passed: (stats.successRate ?? 0) >= 1 - threshold,
   };
 
+  agent.dispose();
   // Output JSON to stdout for CI parsing
   console.log(JSON.stringify(result, null, 2));
 
   if (!result.passed) {
-    console.error(`[CI FAIL] Crash rate ${(stats.crashRate * 100).toFixed(1)}% exceeds threshold ${(threshold * 100).toFixed(0)}%`);
+    console.error(`[CI FAIL] Mission failure rate ${((1-(stats.successRate ?? 0)) * 100).toFixed(1)}% exceeds threshold ${(threshold * 100).toFixed(0)}%`);
     process.exit(1);
   }
 
-  console.error(`[CI PASS] Crash rate ${(stats.crashRate * 100).toFixed(1)}% within threshold`);
+  console.error(`[CI PASS] Mission failure rate ${((1-(stats.successRate ?? 0)) * 100).toFixed(1)}% within threshold`);
   process.exit(0);
 }
 

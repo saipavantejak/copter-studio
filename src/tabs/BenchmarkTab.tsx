@@ -8,6 +8,7 @@ export function BenchmarkTab() {
   const {
     config, tests, controllerStatus,
     masterSeed, setMasterSeed,
+    setTests,
     epNumEpisodes,
     domainRandCfg, setDomainRandCfg,
     epRunning, epProgress, epTotal, epResults,
@@ -56,6 +57,14 @@ export function BenchmarkTab() {
         </div>
       </div>
 
+      <p className="text-xs text-amber-400">Experimental simulation—not a validated aircraft digital twin. SEC is conditional on successful missions with explicit payload; failures remain in success rate and total energy.</p>
+      <label className="text-xs text-zinc-400">Benchmark duration (simulated seconds)
+        <input type="number" min={1} max={3600} value={tests.mission?.durationSeconds ?? 16}
+          onChange={e => {const value=Number(e.target.value);if(Number.isFinite(value)&&value>=1&&value<=3600)setTests(t=>({...t,mission:{mode:'hover',targetAltitudeM:1,forwardVelocityMps:0,...t.mission,durationSeconds:value}}));}}
+          className="ml-2 w-24 bg-zinc-900 border border-zinc-700 p-1" />
+      </label>
+      {batchStats && <p className="text-xs text-zinc-300">Mission success: {((batchStats.successRate ?? 0)*100).toFixed(1)}% · Total energy across all attempts: {(batchStats.totalEnergyJ ?? 0).toFixed(1)} J · Valid SEC samples: {batchStats.efficiencySampleCount ?? 0}</p>}
+      {batchStats?.successRate95CI && <p className="text-xs text-zinc-400">95% interval for simulated mission success: {batchStats.successRate95CI.map(v=>(100*v).toFixed(1)+'%').join('–')}. Conditional on these test settings; not a real-flight reliability estimate.</p>}
       {/* Quick presets */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">
@@ -71,6 +80,7 @@ export function BenchmarkTab() {
             { label: 'Reproducibility check', seed: 7, eps: 25, dr: false, desc: 'Different seed to verify determinism' },
           ].map(p => (
             <button key={p.label} onClick={() => {
+              setTests(t => ({...t,missionPreset:'none',mission:undefined,windEnabled:p.label==='Wind stress'||p.dr,payloadShiftEnabled:p.dr,batterySagEnabled:p.dr,motorOutEnabled:p.dr}));
               setMasterSeed(p.seed);
               epNumEpisodes.current = p.eps;
               setDomainRandCfg(c => ({ ...c, enabled: p.dr }));
@@ -191,15 +201,15 @@ export function BenchmarkTab() {
                       </span>
                     </td>
                     <td className="px-2.5 py-1.5">
-                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${r.crashed ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
-                        {r.crashed ? 'CRASH' : 'OK'}
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${!r.successful ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                        {r.outcome ?? (r.crashed ? 'CRASH' : 'UNVERIFIED')}
                       </span>
                     </td>
                     <td className="px-2.5 py-1.5 text-zinc-300">{r.survivalTime.toFixed(1)}s</td>
                     <td className="px-2.5 py-1.5 text-zinc-300">{r.meanAltError.toFixed(3)}m</td>
                     <td className="px-2.5 py-1.5 text-zinc-300">{(r.maxRoll * 180 / Math.PI).toFixed(1)}°</td>
                     <td className="px-2.5 py-1.5 text-zinc-300">{(r.maxPitch * 180 / Math.PI).toFixed(1)}°</td>
-                    <td className="px-2.5 py-1.5 text-amber-300">{r.sec > 0 ? r.sec.toFixed(4) : '—'}</td>
+                    <td className="px-2.5 py-1.5 text-amber-300">{r.successful && r.secApplicable ? r.sec.toFixed(4) : 'N/A'}</td>
                     <td className="px-2.5 py-1.5 text-blue-300">{r.spt.toFixed(4)}</td>
                     <td className="px-2.5 py-1.5 text-zinc-500">{r.domainParams?.mass.toFixed(2)}kg</td>
                     <td className="px-2.5 py-1.5 text-zinc-500">{r.domainParams?.motorTau ? (r.domainParams.motorTau * 1000).toFixed(0) + 'ms' : '—'}</td>

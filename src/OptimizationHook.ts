@@ -9,6 +9,7 @@ export interface FlightSession {
   id: string;
   timestamp: number;
   duration: number;
+  successful?: boolean;
   metrics: MissionMetrics;
   controller: 'Heuristic PD' | 'Loaded RL Agent';
   missionType: string;
@@ -16,6 +17,7 @@ export interface FlightSession {
 
 interface SaveFlightArgs {
   duration: number;
+  successful?: boolean;
   metrics: MissionMetrics;
   controller: 'Heuristic PD' | 'Loaded RL Agent';
   missionType: string;
@@ -35,7 +37,7 @@ export function useOptimization() {
 
   const getBestFlight = useCallback(
     (metric: keyof MissionMetrics): FlightSession | null => {
-      const valid = history.filter(s => (s.metrics[metric] as number) > 0);
+      const valid = history.filter(s => s.successful === true && (metric !== 'sec' || s.metrics.secApplicable === true) && typeof s.metrics[metric] === 'number' && Number.isFinite(s.metrics[metric]) && (s.metrics[metric] as number) > 0);
       if (!valid.length) return null;
       // For SEC and SPT, lower is better; for others, higher is better
       const lowerIsBetter = metric === 'sec' || metric === 'spt';

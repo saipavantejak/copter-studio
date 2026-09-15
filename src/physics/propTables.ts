@@ -4,9 +4,9 @@
  * Replaces the single-formula BET model with 2-D tables over
  * (RPM, collective-pitch-degrees) with bilinear interpolation.
  *
- * Table data is derived from UIUC Propeller Database curve fits for a
- * representative 15-inch bi-blade multirotor propeller.  Coefficients match
- * measured CT and CP trends from the UIUC APC series at comparable solidity.
+ * Legacy illustrative coefficient tables for a representative 15-inch propeller.
+ * The repository does not include traceable raw measurements or fit residuals;
+ * do not treat these tables as independently calibrated data.
  *
  * Reference: UIUC Propeller Database, Brandt & Selig (2011).
  *
@@ -17,8 +17,8 @@ import { AIR_DENSITY, INCHES_TO_METRES, BET_THETA_MIN_DEG, BET_THETA_MAX_DEG } f
 
 // ── Table breakpoints ─────────────────────────────────────────────────────────
 
-/** RPM breakpoints for the lookup table (rad/s internally) */
-const RPM_BP  = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200];
+/** Angular-velocity breakpoints in rad/s. Do not convert to RPM before lookup. */
+const OMEGA_BP  = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200];
 
 /** Collective pitch breakpoints (degrees mapped from collective ∈ [-1,1]) */
 const PITCH_BP = [-5, -2, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
@@ -133,15 +133,15 @@ export function propTableLookup(
     ((clamp(collective, -1, 1) + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
 
   // RPM for table lookup (clamp to table range, warn if extrapolating)
-  const rawRpm = Math.abs(omegaRadS) * 60 / (2 * Math.PI);
-  if (rawRpm > RPM_BP[RPM_BP.length - 1] * 1.1) {
-    console.warn(`[propTable] RPM ${rawRpm.toFixed(0)} exceeds table max ${RPM_BP[RPM_BP.length - 1]}; clamping`);
+  const rawRpm = Math.abs(omegaRadS);
+  if (rawRpm > OMEGA_BP[OMEGA_BP.length - 1] * 1.1) {
+    console.warn(`[propTable] angular speed ${rawRpm.toFixed(0)} rad/s exceeds table max ${OMEGA_BP[OMEGA_BP.length - 1]}; clamping`);
   }
-  const rpm = clamp(rawRpm, RPM_BP[0], RPM_BP[RPM_BP.length - 1]);
+  const rpm = clamp(rawRpm, OMEGA_BP[0], OMEGA_BP[OMEGA_BP.length - 1]);
   const pitchClamped = clamp(pitchDeg, PITCH_BP[0], PITCH_BP[PITCH_BP.length - 1]);
 
-  const CT = bilinearInterp(CT_TABLE, RPM_BP, PITCH_BP, rpm, pitchClamped);
-  const CP = bilinearInterp(CP_TABLE, RPM_BP, PITCH_BP, rpm, pitchClamped);
+  const CT = bilinearInterp(CT_TABLE, OMEGA_BP, PITCH_BP, rpm, pitchClamped);
+  const CP = bilinearInterp(CP_TABLE, OMEGA_BP, PITCH_BP, rpm, pitchClamped);
 
   // Dimensional thrust and power
   // T = CT · ρ · n² · D⁴

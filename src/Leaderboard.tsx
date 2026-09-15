@@ -28,7 +28,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
 }) => {
   const ranked = useMemo(() => {
     return [...sessions]
-      .filter(s => s.metrics.sec > 0)
+      .filter(s => s.successful === true && s.metrics.secApplicable === true && s.metrics.sec > 0)
       .sort((a,b) => a.metrics.sec - b.metrics.sec); // lower SEC = better
   }, [sessions]);
 
@@ -99,7 +99,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                   <div className="text-right">
                     <div className={`text-base font-mono font-bold ${
                       i===0 ? 'text-amber-300' : 'text-zinc-300'
-                    }`}>{s.metrics.sec === 0 && s.metrics.hoverPowerW > 0
+                    }`}>{!s.metrics.secApplicable && s.metrics.hoverPowerW > 0
                       ? `Hover: ${s.metrics.hoverPowerW.toFixed(0)} W`
                       : s.metrics.sec.toFixed(3)}</div>
                     <div className="text-xs text-zinc-600">{fmtTime(s.timestamp)}</div>

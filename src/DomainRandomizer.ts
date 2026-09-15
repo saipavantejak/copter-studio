@@ -80,6 +80,7 @@ export class DomainRandomizer {
       v * (1 + rng.uniform(-pct, pct));
 
     const randomizedConfig: PhysicsConfig = {
+      ...base,
       droneType:      base.droneType,
       mass:           vary(base.mass,            this.cfg.massVariationPct),
       propDiameter:   vary(base.propDiameter,     this.cfg.propEffVariation),

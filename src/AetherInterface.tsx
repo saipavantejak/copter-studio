@@ -40,17 +40,17 @@ interface Message {
   isSim?:   boolean;
 }
 
-const SYSTEM_INSTRUCTION = `You are Aether, Senior Drone Systems Architect and RL Research Consultant for the SWASH-BICOP-V11 Digital Twin.
+const SYSTEM_INSTRUCTION = `You are Aether, a drone simulation assistant for an experimental simulator.
 
 Specialisations:
 1. PERFORMANCE AUDIT: Analyse SEC, SPT, hover stability with actual telemetry values.
 2. REWARD ARCHITECT: Generate complete SB3-compatible reward functions with mathematical justification.
-3. CRASH ANALYST: Diagnose using aerospace failure modes. Always classify: Battery Exhaustion | Roll Divergence | Pitch Divergence | Motor-Out Cascade | Collective Stall | Total Attitude Failure.
+3. CRASH ANALYST: Diagnose using aerospace failure modes. Use recorded failure events. If the cause is not established, say unknown; do not force a causal classification.
 4. CODE-ON-DEMAND: Generate TypeScript for PhysicsEngine.ts or Python SB3 training loops.
 5. SIMULATION OPERATOR: When user asks to run/simulate/fly/test, confirm you are parsing the request and opening the approval dialog. Never fabricate simulation results.
 
 Rules: cite actual telemetry values. Reward functions show full def compute_reward(). Keep responses concise and technical. Use markdown code blocks.
-When a benchmark shows high crash rates (>50%), proactively suggest generating a Colab training notebook to train a better RL policy.`;
+Never infer real-world validation from simulation success. SPT is a legacy dimensionless actuator/attitude ratio, NOT survival time. SEC is J/(g payload·km) and is N/A without explicit payload and sufficient travel. Check input preservation, calibration, thrust margin, numerical validity and controller compatibility before recommending RL. Distinguish measured, assumed and unavailable data.`;
 
 
 function buildContext(
@@ -60,12 +60,25 @@ function buildContext(
   const parts: string[] = [];
   if (config)    parts.push(`Config: ${config.droneType} | mass=${config.mass}kg | prop=${config.propDiameter}in | ${config.batteryVoltage}V | arm=${config.armLength}m`);
   if (telemetry) parts.push(`Telemetry: alt=${telemetry.z.toFixed(3)}m | roll=${(telemetry.phi*180/Math.PI).toFixed(1)}° | pitch=${(telemetry.theta*180/Math.PI).toFixed(1)}° | bat=${(telemetry.battery*100).toFixed(1)}% | t=${telemetry.time.toFixed(2)}s`);
-  if (metrics)   parts.push(`Metrics: SEC=${metrics.sec === 0 && metrics.hoverPowerW > 0 ? `Hover:${metrics.hoverPowerW.toFixed(0)}W` : metrics.sec.toFixed(5)} | SPT=${metrics.spt.toFixed(5)} (${metrics.sptGrade}) | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
+  if (metrics)   parts.push(`Metrics: SEC=${metrics.secApplicable ? metrics.sec.toFixed(5) : 'N/A'} | SPT=${metrics.spt.toFixed(5)} (${metrics.sptGrade}) | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
   if (crashData) parts.push(`CRASH: ${crashData.reason ?? 'unknown'}`);
-  if (episodeStats) parts.push(`Batch: ${episodeStats.numEpisodes}eps | crashRate=${(episodeStats.crashRate*100).toFixed(1)}% | meanSEC=${episodeStats.meanSEC?.toFixed(4)} | meanSPT=${episodeStats.meanSPT?.toFixed(4)}`);
+  if (episodeStats) parts.push(`Batch: ${episodeStats.numEpisodes}eps | crashRate=${(episodeStats.crashRate*100).toFixed(1)}% | conditional meanSEC=${episodeStats.efficiencySampleCount ? episodeStats.meanSEC?.toFixed(4) : 'N/A'} | meanSPT=${episodeStats.meanSPT?.toFixed(4)}`);
   const mods = Object.entries(activeTests).filter(([k,v])=>k!=='missionPreset'&&v===true).map(([k])=>k).join(', ');
   if (mods) parts.push(`Active: ${mods}`);
   if (activeTests.missionPreset !== 'none') parts.push(`Mission: ${activeTests.missionPreset}`);
+  parts.push('Model status: experimental; generic thrust/inertia/power assumptions unless explicitly supplied. No aircraft has independent validation from this run.');
+  parts.push('Current editor configuration (may differ from recorded benchmark): '+JSON.stringify(config));
+  if (activeTests.mission) parts.push('Current editor mission with SI units: '+JSON.stringify(activeTests.mission));
+  if (episodeStats) {
+    parts.push('Recorded benchmark request: '+JSON.stringify(episodeStats.requestedConfig ?? 'Unavailable for legacy results; do not substitute current editor settings'));
+    parts.push('95% simulated success interval: '+JSON.stringify(episodeStats.successRate95CI ?? null));
+    parts.push('First recorded episode evidence: '+JSON.stringify(episodeStats.episodes?.[0] ? {
+      config:episodeStats.episodes[0].executedConfig,mission:episodeStats.episodes[0].executedMission,
+      tests:episodeStats.episodes[0].executedTests,sensors:episodeStats.episodes[0].executedSensors,
+      propulsion:episodeStats.episodes[0].propulsionEvidence,outcome:episodeStats.episodes[0].outcome,
+    } : null));
+  }
+  if (episodeStats) parts.push('Benchmark duration seconds='+episodeStats.durationSeconds+'; success rate='+episodeStats.successRate+'; conditional SEC sample count='+episodeStats.efficiencySampleCount+'; total energy J='+episodeStats.totalEnergyJ);
   return parts.join('\n');
 }
 
@@ -259,7 +272,7 @@ export const AetherInterface = ({
   // Check proxy availability once on mount
   useEffect(() => { geminiClient.isAvailable().then(setGeminiOnline); }, []);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }); }, [messages]);
+  useEffect(() => { messagesEndRef.current?.scrollIntoView?.({ behavior:'smooth' }); }, [messages]);
 
   const callAI = useCallback(async (userMsg: string, ctx?: string): Promise<string> => {
     const context = ctx ?? buildContext(telemetry, crashData, activeTests, config, metrics, episodeStats);
@@ -294,7 +307,7 @@ export const AetherInterface = ({
   }, [crashData, callAI]);
 
   useEffect(() => {
-    if (modelLoadTrigger>0) setMessages(p=>[...p,{role:'assistant',content:'✅ RL model loaded and validated. Neural network now in control. Run the Benchmark tab to compare against heuristic PD.'}]);
+    if (modelLoadTrigger>0) setMessages(p=>[...p,{role:'assistant',content:'RL model loaded with compatible dimensions. Flight performance and observation/action semantics are NOT validated. Run a controlled evaluation before trusting it.'}]);
   }, [modelLoadTrigger]);
 
   useEffect(() => {
@@ -309,22 +322,13 @@ export const AetherInterface = ({
     setLastEpStats(episodeStats);
     callAI(
       `Batch benchmark done: ${episodeStats.numEpisodes}eps, crashRate=${(episodeStats.crashRate*100).toFixed(1)}%, ` +
-      `meanSEC=${episodeStats.meanSEC?.toFixed(5)}, meanSPT=${episodeStats.meanSPT?.toFixed(5)}, stdSEC=${episodeStats.stdSEC?.toFixed(5)}. ` +
+      `conditional meanSEC=${episodeStats.efficiencySampleCount ? episodeStats.meanSEC?.toFixed(5) : 'N/A'}, meanSPT=${episodeStats.meanSPT?.toFixed(5)}, stdSEC=${episodeStats.stdSEC?.toFixed(5)}. ` +
       `3-bullet performance audit + one concrete improvement.`
     ).then(text=>setMessages(p=>[...p,{role:'assistant',content:text}])).catch(()=>{});
 
-    // If crash rate is high, offer to generate a Colab training notebook
     if (episodeStats.crashRate > 0.5 && !trainingOffered) {
       setTrainingOffered(true);
-      setTimeout(() => {
-        setMessages(p => [...p, {
-          role: 'assistant', isSim: true,
-          content: `⚠️ **High crash rate detected (${(episodeStats.crashRate*100).toFixed(0)}%).** The heuristic PD controller is struggling with this configuration.\n\n` +
-            `**Recommendation:** Train a custom RL policy using Google Colab. I can generate a pre-configured notebook with your exact physics parameters.\n\n` +
-            `Click **"Export Colab Notebook"** below, or say *"generate training notebook"* to get started.\n\n` +
-            `After training (~15 min on Colab free GPU), download the model and upload it via **Load RL Model** to benchmark against the heuristic.`
-        }]);
-      }, 2000);
+      setMessages(p => [...p,{role:'assistant',content:'High failure rate: verify the executed configuration, propulsion/inertia assumptions, numerical failures and controller compatibility first. RL training cannot validate or repair incorrect physics.'}]);
     }
   }, [episodeStats]);
 
@@ -336,7 +340,7 @@ export const AetherInterface = ({
       { role:'assistant', content:'🔍 Parsing simulation request…', isSim:true },
     ]);
     try {
-      const intent = await parseSimulationIntent(userMsg);
+      const intent = await parseSimulationIntent(userMsg, config, activeTests);
       setPendingIntent(intent);
       setPendingPrompt(userMsg);
       const hasErr  = intent.ambiguities.some(a=>a.level==='error');
@@ -354,7 +358,7 @@ export const AetherInterface = ({
     } catch(err:any) {
       setMessages(p=>{ const u=[...p]; u[u.length-1]={role:'assistant',content:`❌ Parse failed: ${err?.message??'unknown'}. Try rephrasing.`,isError:true}; return u; });
     } finally { setIsParsing(false); }
-  }, []);
+  }, [config, activeTests]);
 
   const handleSend = useCallback(async () => {
     const msg = input.trim();

@@ -9,10 +9,12 @@
 //   All new features default OFF — existing behaviour is unchanged.
 
 import { UniversalMixer, DroneType } from './UniversalMixer';
+import { assertValidConfig } from './configValidation';
+import { rotorThrust, thrustLimit, interpolatePropulsion, type PropulsionPoint } from './physics/propulsion';
 import { SensorNoise, SensorConfig } from './SensorNoise';
 import { SeededRandom } from './SeededRandom';
 import {
-  qNorm, qToEuler, eulerToQuatSmallAngle,
+  qNorm, qToEuler, eulerToQuat,
   betThrust, stepMotor, rk4Step, computeInertia,
   rigidBodyDerivatives,
 } from './physics/core';
@@ -41,9 +43,15 @@ export interface PhysicsConfig {
   /** Enable thermal/updraft model for long-range missions */
   thermalConfig?: import('./physics/atmosphere').ThermalConfig;
   batteryCapacity?: number;
+  /** Explicit payload mass in kg; never inferred from a universal airframe mass. */
+  payloadMassKg?: number;
+  /** Measured nominal-voltage maximum static thrust per rotor, newtons. */
+  maxThrustPerMotorN?: number;
+  propulsionCurve?: PropulsionPoint[];
 }
 
 export interface TestModules {
+  mission?: import('./MissionSpec').MissionSpec;
   windEnabled: boolean;
   payloadShiftEnabled: boolean;
   batterySagEnabled: boolean;
@@ -61,6 +69,8 @@ export interface DroneState {
   time: number;
   energyConsumed: number;
   motorOmegas: number[];
+  failureReason?: string;
+  impactSpeedMps?: number;
 }
 
 export class PhysicsEngine {
@@ -97,6 +107,9 @@ export class PhysicsEngine {
   public lastSaturated: boolean = false;
   /** Instantaneous electrical draw (Watts) from last step. */
   public lastPowerW: number = 0;
+  public failureReason: string | undefined;
+  public impactSpeedMps = 0;
+  private airborne = false;
 
   // ── v12 high-fidelity subsystems ─────────────────────────────────────────
   private dryden = new DrydenTurbulence(DT);
@@ -104,6 +117,12 @@ export class PhysicsEngine {
   constructor() { this.reset(); }
 
   public reset() {
+    assertValidConfig(this.config);
+    this.failureReason = undefined;
+    this.impactSpeedMps = 0;
+    this.airborne = false;
+    this.lastPowerW = 0;
+    this.lastSaturated = false;
     this.x=this.y=this.z=0;
     this.x_dot=this.y_dot=this.z_dot=0;
     this.quat=[1,0,0,0];
@@ -121,14 +140,25 @@ export class PhysicsEngine {
   }
 
   /** Set initial conditions without 'as any' casts. Call reset() first. */
-  public setInitialConditions(z0: number, phi0: number, theta0: number): void {
+  public setInitialConditions(z0: number, phi0: number, theta0: number, psi0 = 0): void {
+    if (![z0,phi0,theta0,psi0].every(Number.isFinite) || z0<0) throw new Error('Invalid initial state');
+    this.airborne = z0 > 0.1;
     this.z     = z0;
     this.phi   = phi0;
     this.theta = theta0;
-    this.quat  = eulerToQuatSmallAngle(phi0, theta0);
+    this.psi   = psi0;
+    this.quat  = eulerToQuat(phi0, theta0, psi0);
   }
 
   public step(action: number[]): DroneState {
+    if (this.failureReason) return this.getState();
+    const required = this.config.droneType === 'quadcopter' ? 4 : 6;
+    if (action.length < required || !action.slice(0, required).every(Number.isFinite)) {
+      this.failureReason = 'Invalid controller output';
+      return this.getState();
+    }
+    const commandSaturated = action.some(v => Math.abs(v) >= 0.999);
+    action = action.map(v => Math.max(-1, Math.min(1, v)));
     this.time += this.dt;
     const dt = this.dt;
 
@@ -162,22 +192,11 @@ export class PhysicsEngine {
     let instantPower = 0;
 
     if (this.tests.batterySagEnabled) {
-      // Battery drain based on actual power: P = V * I, energy = P * dt
-      // currentBattery is in mAh-equivalent units (batteryCapacity default = 10000)
-      // Convert: batteryCapacity mAh at nominal voltage = capacity in Wh
-      const nominalVoltage = this.config.batteryVoltage;
-      const capacityWh = (this.batteryCapacity / 1000) * nominalVoltage; // e.g. 10000mAh * 22.2V = 222 Wh
-      const energyUsedWh = (instantPower * dt) / 3600; // Joules to Wh
-      const drainFraction = energyUsedWh / capacityWh;
-      this.currentBattery = Math.max(0, this.currentBattery - drainFraction * this.batteryCapacity);
-      const pct = this.currentBattery/this.batteryCapacity;
-      vf *= pct>0.2 ? 1.0 : (pct/0.2)*0.3+0.7;
-    } else {
-      this.currentBattery = this.batteryCapacity;
+      const pct = this.currentBattery / this.batteryCapacity;
+      vf = pct > 0.2 ? 1 : (pct / 0.2) * 0.3 + 0.7;
     }
+    if (this.currentBattery <= 0) vf = 0;
 
-    const safePropDiam = Math.max(1, this.config.propDiameter);
-    const pf = Math.pow(safePropDiam/15, 4);
     const hifi = this.config.useHighFidelityAero === true;
 
     // ── Air density correction (ISA) ─────────────────────────────────────
@@ -188,39 +207,27 @@ export class PhysicsEngine {
     // Physical ceiling derived from battery voltage + prop diameter. Once
     // this is applied, domain-randomisation of wind/mass CAN overwhelm the
     // controller — restoring the expected non-zero crash rate.
-    const T_max = maxThrustPerMotor(this.config.propDiameter, this.config.batteryVoltage);
+    const T_max = thrustLimit(this.config);
     const rotorRadius_m = (this.config.propDiameter * 0.0254) / 2;
     const ge = hifi
       ? multiRotorGroundEffect(Math.max(0.01, this.z), rotorRadius_m, this.config.armLength, this.phi)
       : 1.0;
 
-    // Calibrate BET output so max-throttle thrust matches the motor's real
-    // static ceiling. Solves the nano-drone thrust-starvation issue: a 1.5"
-    // prop at OMEGA_MAX=1200 rad/s only produces 0.027 N in raw BET, but a
-    // real Crazyflie motor delivers ~0.4 N at peak (via 2300 rad/s tip speed).
-    // The calibration multiplies BET output so calibrated(tc=+1) == T_max.
-    const betCal = betCalibration(
-      betThrust(1, OMEGA_MAX_CONST, this.config.propDiameter),
-      this.config.propDiameter,
-      this.config.batteryVoltage,
-    );
-
+    // Shared propulsion mapping; generic estimates are not measured calibration.
     const rawThrusts: number[] = new Array(numMotors).fill(0);
     const thrustIdx = (i: number) => (this.config.droneType === 'bicopter' && i === 1) ? 3 : i;
     for (let i = 0; i < numMotors; i++) {
       if (failed[i]) continue;
       const cmd = action[thrustIdx(i)] ?? 0;
-      const t = hifi
-        ? propTableLookup(cmd, this.motorOmegas[i], this.config.propDiameter, airDensity).thrust
-        : betThrust(cmd, this.motorOmegas[i], this.config.propDiameter) * betCal;
+      const t = rotorThrust(this.config, cmd, this.motorOmegas[i], airDensity);
       rawThrusts[i] = t * vf * ge;
     }
     const { thrusts: satThrusts, saturated } = saturateMotorThrusts(rawThrusts, T_max);
-    this.lastSaturated = saturated;
+    this.lastSaturated = saturated || commandSaturated;
     let Fz = satThrusts.reduce((s, t) => s + t, 0);
 
     // ── Moments: run mixer with physical T_max, then clip to per-motor sat ─
-    const mx = UniversalMixer.mix(this.config.droneType, action, T_max, this.tests.motorOutEnabled, this.config.armLength);
+    const mx = UniversalMixer.fromThrusts(this.config.droneType, satThrusts, action, this.config.armLength);
     let { L, M, N } = mx.moments;
     // Yaw-torque saturation (brushless motors can't produce unbounded reactive torque)
     const N_max = maxYawTorquePerMotor(this.config.propDiameter, this.config.batteryVoltage) * numMotors;
@@ -301,24 +308,26 @@ export class PhysicsEngine {
       Fz = Math.max(0, Fz + dfz);
     }
 
-    // ── Energy: actuator disk momentum theory on the ACTUAL total thrust ──
-    // Induced power for the whole vehicle (not summed per-motor) using the
-    // combined swept area is the correct formulation — it captures the fact
-    // that closely-spaced rotors share the same induced flow.
-    //   P_ideal = Fz^1.5 / sqrt(2·ρ·A_total)
-    //   P_shaft = P_ideal / FoM
-    //   P_elec  = P_shaft / η_motor_esc + P_idle
-    const A_total = numMotors * Math.PI * rotorRadius_m * rotorRadius_m;
-    if (Fz > 0.001 && A_total > 1e-9) {
-      const P_ideal = Math.pow(Fz, 1.5) / Math.sqrt(2 * airDensity * A_total);
-      const P_shaft = P_ideal / FIGURE_OF_MERIT;
-      instantPower  = P_shaft / MOTOR_ESC_EFF + IDLE_POWER_W;
-    } else {
-      instantPower = IDLE_POWER_W;
+    // Electrical draw derives from rotor thrust, not wind/drag/updraft forces.
+    const rotorArea = Math.PI * rotorRadius_m * rotorRadius_m;
+    instantPower = this.currentBattery <= 0 ? 0 : IDLE_POWER_W;
+    for (let i = 0; i < numMotors; i++) {
+      if (failed[i] || this.currentBattery <= 0) continue;
+      if (this.config.propulsionCurve?.length) {
+        const actualCommand = 2 * (this.motorOmegas[i] - OMEGA_IDLE) / (OMEGA_MAX_CONST - OMEGA_IDLE) - 1;
+        instantPower += interpolatePropulsion(this.config.propulsionCurve, actualCommand).powerW;
+      } else {
+        instantPower += Math.pow(satThrusts[i], 1.5) /
+          Math.sqrt(2 * airDensity * rotorArea) / FIGURE_OF_MERIT / MOTOR_ESC_EFF;
+      }
     }
-    if (!Number.isFinite(instantPower) || instantPower < 0) instantPower = IDLE_POWER_W;
-    this.totalEnergyConsumed += instantPower * dt;
-    this.lastPowerW = instantPower;
+    // Nominal-energy model. Voltage sag remains an explicitly approximate modifier.
+    const availableJ = this.currentBattery * this.config.batteryVoltage * 3.6;
+    const usedJ = Math.min(availableJ, instantPower * dt);
+    this.totalEnergyConsumed += usedJ;
+    this.currentBattery = Math.max(0, this.currentBattery - usedJ / (this.config.batteryVoltage * 3.6));
+    this.lastPowerW = usedJ / dt;
+    if (this.currentBattery <= 0) this.failureReason = 'Battery depletion';
 
     const sv0 = [this.x,this.y,this.z, this.x_dot,this.y_dot,this.z_dot, ...this.quat, this.p,this.q,this.r];
     // Clamp mass to a floor that keeps the RK4 integrator numerically stable
@@ -334,6 +343,10 @@ export class PhysicsEngine {
     const Izz = Math.max(I_MIN, Izz_raw);
     const sv1 = rk4Step(sv0, {Fz,L,M,N}, {fx:extraFx,fy:extraFy}, mass_eff, Ixx, Iyy, Izz, dt);
 
+    if (!sv1.every(Number.isFinite)) {
+      this.failureReason = 'Numerical divergence';
+      return this.getState();
+    }
     this.x=sv1[0]; this.y=sv1[1]; this.z=sv1[2];
     this.x_dot=sv1[3]; this.y_dot=sv1[4]; this.z_dot=sv1[5];
     this.quat=[sv1[6],sv1[7],sv1[8],sv1[9]];
@@ -341,7 +354,10 @@ export class PhysicsEngine {
     qNorm(this.quat);
     [this.phi,this.theta,this.psi]=qToEuler(this.quat);
 
+    if (this.z > 0.1) this.airborne = true;
     if (this.z<0) {
+      this.impactSpeedMps = Math.max(0, -this.z_dot);
+      if (this.airborne) this.failureReason = 'Ground impact';
       // Spring-damper ground contact with Coulomb friction
       const Kn = 2000, Dn = 50, mu = 0.6;
       const penetration = -this.z;
@@ -357,9 +373,7 @@ export class PhysicsEngine {
       }
       // Angular damping (preserve yaw)
       this.p *= 0.8; this.q *= 0.8; this.r *= 0.9;
-      const [,,yaw] = qToEuler(this.quat);
-      this.phi=0; this.theta=0; this.psi=yaw;
-      this.quat=[Math.cos(yaw/2), 0, 0, Math.sin(yaw/2)];
+      // Preserve impact attitude for failure analysis.
     }
 
     // ── Numerical integration stability guards ────────────────────────────
@@ -371,7 +385,11 @@ export class PhysicsEngine {
       this.p = this.q = this.r = 0;
     }
 
-    // State divergence guard — clamp velocities to physical limits
+    if ([this.x_dot,this.y_dot,this.z_dot].some(v => Math.abs(v) > 50) ||
+        [this.p,this.q,this.r].some(v => Math.abs(v) > 30)) {
+      this.failureReason = this.failureReason ?? 'Numerical operating envelope exceeded';
+    }
+    // Rendering bounds; the failure above is latched and cannot become success.
     const V_MAX = 50; // m/s — well above any multirotor's capability
     this.x_dot = Math.max(-V_MAX, Math.min(V_MAX, this.x_dot));
     this.y_dot = Math.max(-V_MAX, Math.min(V_MAX, this.y_dot));
@@ -404,6 +422,8 @@ export class PhysicsEngine {
       time:this.time,
       energyConsumed:this.totalEnergyConsumed,
       motorOmegas:[...this.motorOmegas],
+      failureReason:this.failureReason,
+      impactSpeedMps:this.impactSpeedMps,
     };
   }
 

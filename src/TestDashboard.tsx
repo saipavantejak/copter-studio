@@ -3,6 +3,8 @@ import { Settings, Wind, Battery, AlertTriangle, Box, Activity, Wifi } from 'luc
 import { PhysicsConfig, TestModules } from './PhysicsEngine';
 import { DroneType } from './UniversalMixer';
 import { SensorConfig } from './SensorNoise';
+import { assertValidConfig } from './configValidation';
+import { AIRCRAFT_PROFILES, propulsionEvidence, editHardware } from './AircraftProfiles';
 
 interface TestDashboardProps {
   config: PhysicsConfig;
@@ -15,12 +17,14 @@ interface TestDashboardProps {
 }
 
 export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, setSensorCfg, telemetry }: TestDashboardProps) => {
+  const [configDraft, setConfigDraft] = useState('');
+  const [configError, setConfigError] = useState('');
   const [hoverMetrics, setHoverMetrics] = useState({ gpsDrift: 0, angularJitter: 0, samples: 0 });
 
   useEffect(() => {
     if (telemetry) {
       setHoverMetrics(prev => {
-        const dz = telemetry.z - 1.0;
+        const dz = telemetry.z - (tests.mission?.targetAltitudeM ?? 1);
         const drift = Math.sqrt(telemetry.x**2 + telemetry.y**2 + dz**2);
         const jitter = Math.sqrt(telemetry.phi**2 + telemetry.theta**2);
         const n2 = prev.samples + 1;
@@ -40,10 +44,38 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
           <Settings className="w-4 h-4 text-emerald-400" /> Universal Architect
         </h2>
 
+        <p className="text-xs text-amber-400 mb-3">Experimental model. Hardware inputs and simulated success are not independent flight validation.</p>
+        <label className="block text-xs mb-2">Load reference aircraft
+          <select aria-label="Load reference aircraft" value="" onChange={e=>{
+            const profile=AIRCRAFT_PROFILES.find(p=>p.id===e.target.value);
+            if(profile){setConfig({...profile.config});setConfigError('');}
+          }} className="w-full bg-zinc-950 p-2">
+            <option value="">Choose a reference configuration</option>
+            {AIRCRAFT_PROFILES.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
+        <p className="text-xs text-amber-400">Propulsion: {propulsionEvidence(config).status}. Energy and dynamics remain approximate.</p>
+        {propulsionEvidence(config).sources.map(url=><a key={url} href={url} target="_blank" rel="noreferrer" className="block text-xs underline">Manufacturer reference: {new URL(url).pathname}</a>)}
+        <details className="mb-3 text-xs">
+          <summary>Advanced configuration: battery, payload, inertia, measured propulsion</summary>
+          <button type="button" onClick={()=>setConfigDraft(JSON.stringify(config,null,2))} className="my-2 underline">Copy current configuration into editor</button>
+          <textarea aria-label="Advanced aircraft configuration JSON" rows={8} value={configDraft} onChange={e=>setConfigDraft(e.target.value)}
+            placeholder='{"batteryCapacity":350,"payloadMassKg":0,"maxThrustPerMotorN":0.2943}'
+            className="w-full bg-zinc-950 text-zinc-200 p-2 font-mono" />
+          <p className="text-zinc-500">JSON patch preserves unspecified fields. Units: batteryCapacity mAh, payloadMassKg kg, maxThrustPerMotorN N, inertiaOverride kg·m². propulsionCurve: ordered command/thrustN/powerW points spanning -1 to 1 at nominal voltage. Curves are not automatically validated.</p>
+          <button type="button" className="mt-2 underline" onClick={()=>{
+            try {
+              const patch=JSON.parse(configDraft);
+              if(!patch||typeof patch!=='object'||Array.isArray(patch))throw new Error('Expected an object');
+              const next=editHardware(config,patch);assertValidConfig(next);setConfig(next);setConfigError('');
+            }catch(e){setConfigError(e instanceof Error?e.message:String(e));}
+          }}>Validate and apply configuration</button>
+          {configError&&<p role="alert" className="text-red-400">{configError}</p>}
+        </details>
         <div className="space-y-3">
           <div>
             <label className="block text-xs text-zinc-500 mb-1">Drone Type</label>
-            <select value={config.droneType} onChange={e=>setConfig({...config,droneType:e.target.value as DroneType})}
+            <select value={config.droneType} onChange={e=>setConfig(editHardware(config,{droneType:e.target.value as DroneType}))}
               className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-emerald-500">
               <option value="bicopter">Bi-Copter Swashplate</option>
               <option value="quadcopter">Standard Quadcopter</option>
@@ -66,7 +98,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
                 { label: 'Cargo Quad', cfg: { droneType: 'quadcopter' as DroneType, mass: 8.0, propDiameter: 18, batteryVoltage: 22.2, armLength: 0.6 } },
                 { label: 'Heavy Hex', cfg: { droneType: 'hexacopter' as DroneType, mass: 15.0, propDiameter: 22, batteryVoltage: 44.4, armLength: 0.8 } },
               ].map(p => (
-                <button key={p.label} onClick={() => setConfig(c => ({ ...c, ...p.cfg }))}
+                <button key={p.label} onClick={() => setConfig(c => editHardware(c,p.cfg))}
                   className="px-2 py-1 text-[10px] bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded text-zinc-400 hover:text-zinc-200 transition-colors">
                   {p.label}
                 </button>
@@ -74,15 +106,15 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
             </div>
           </div>
           {[
-            ['mass','Mass (kg)',0.02,20,0.01,3,'Nano 0.02-0.2kg (Crazyflie), 2-5kg (small), 5-10kg (cargo), 10-20kg (heavy-lift)'] as const,
-            ['propDiameter','Prop Ø (in)',1.0,30,0.5,1,'Typical: 1.5" (nano), 5" (racing), 10-15" (general), 18-30" (heavy-lift)'] as const,
-            ['batteryVoltage','Battery (V)',3.7,50,0.1,1,'Common: 3.7V (1S nano), 11.1V (3S), 14.8V (4S), 22.2V (6S), 44.4V (12S)'] as const,
-            ['armLength','Arm length (m)',0.03,1.5,0.01,2,'Motor-to-center distance. 0.03-0.1m (nano), 0.15-0.5m (small-med), 0.5-1m (heavy)'] as const,
+            ['mass','Mass (kg)',0.02,100,0.01,3,'Nano 0.02-0.2kg (Crazyflie), 2-5kg (small), 5-10kg (cargo), 10-20kg (heavy-lift)'] as const,
+            ['propDiameter','Prop Ø (in)',0.5,60,0.5,1,'Typical: 1.5" (nano), 5" (racing), 10-15" (general), 18-30" (heavy-lift)'] as const,
+            ['batteryVoltage','Battery (V)',1,100,0.1,1,'Common: 3.7V (1S nano), 11.1V (3S), 14.8V (4S), 22.2V (6S), 44.4V (12S)'] as const,
+            ['armLength','Arm length (m)',0.01,5,0.01,2,'Motor-to-center distance. 0.03-0.1m (nano), 0.15-0.5m (small-med), 0.5-1m (heavy)'] as const,
           ].map(([k,lbl,mn,mx,st,prec,hint])=>(
             <div key={k}>
               <label className="block text-xs text-zinc-500 mb-1">{lbl}: <span className="text-zinc-300">{(config as any)[k].toFixed(prec)}</span></label>
               <input type="range" min={mn} max={mx} step={st} value={(config as any)[k]}
-                onChange={e=>setConfig({...config,[k]:parseFloat(e.target.value)})}
+                onChange={e=>setConfig(editHardware(config,{[k]:parseFloat(e.target.value)}))}
                 className="w-full accent-emerald-500" />
               <div className="text-[9px] text-zinc-600 mt-0.5">{hint}</div>
             </div>

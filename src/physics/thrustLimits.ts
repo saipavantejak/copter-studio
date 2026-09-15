@@ -1,26 +1,6 @@
-// src/physics/thrustLimits.ts
-// Per-motor physical thrust / torque ceilings.
-//
-// Calibrated against published static-thrust data for APC Thin Electric /
-// APC-MR propellers and typical hobby BLDC motors on LiPo packs:
-//
-//   propDiameter  battery   measured max thrust     our estimate
-//   ─────────────────────────────────────────────────────────────
-//   1.5"  (crazyflie)  3.7V   ~0.15 N / motor       0.19 N / motor
-//   5"    (racer)      14.8V  ~4 N   / motor        4.1 N / motor
-//   10"   (2216/900KV) 14.8V  ~15 N  / motor        13.8 N / motor
-//   15"   (5010/450KV) 22.2V  ~35 N  / motor        31.0 N / motor
-//   18"   (U8/170KV)   44.4V  ~70 N  / motor        57.0 N / motor
-//   22"   (U11/90KV)   44.4V  ~130 N / motor        99.0 N / motor
-//
-// Formula (static, sea-level, WOT, no forward velocity):
-//
-//   T_max ≈ K_T · D^1.5 · sqrt(V / V_ref)
-//
-// with K_T = 0.55, V_ref = 14.8 V. This under-predicts high-KV racing setups
-// but over-predicts dirty/heavy bell-style motors — a safe middle that keeps
-// the simulator from granting infinite thrust authority under domain
-// randomization while still letting every real-world configuration fly.
+// Generic maximum-thrust estimate. NOT a calibrated motor/propeller dataset.
+// Use PhysicsConfig.propulsionCurve or maxThrustPerMotorN for explicit measured inputs.
+// No guarantee that a real aircraft is represented by diameter and voltage alone.
 
 export const MAX_THRUST_K         = 0.55;   // empirical constant (N)
 export const MAX_THRUST_V_REF     = 14.8;   // reference voltage (V)

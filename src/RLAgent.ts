@@ -4,6 +4,9 @@
 // The worker can now benchmark the real RL policy, not just heuristic PD.
 
 import * as tf from '@tensorflow/tfjs';
+import { VehicleController } from './VehicleController';
+import type { PhysicsConfig } from './PhysicsEngine';
+import type { MissionSpec } from './MissionSpec';
 import { DroneType } from './UniversalMixer';
 import { DroneState } from './PhysicsEngine';
 import {
@@ -23,6 +26,7 @@ export interface SerializedModel {
 }
 
 export class RLAgent {
+  private vehicleController = new VehicleController();
   private actorNet: tf.Sequential;
   private criticNet: tf.Sequential;
   private userModel: tf.LayersModel | null = null;
@@ -72,7 +76,7 @@ export class RLAgent {
   }
 
   /** Predict action from noisy OR clean observation array */
-  public predictAction(state: number[], droneType: DroneType = 'bicopter', missionPreset = 'none', mass = 5.0): number[] {
+  public predictAction(state: number[], droneType: DroneType = 'bicopter', missionPreset = 'none', mass: number | PhysicsConfig = 5.0, mission?: MissionSpec): number[] {
     if (this.isUsingUserModel && this.userModel) {
       return tf.tidy(() => {
         const t = tf.tensor2d([state]);
@@ -84,6 +88,9 @@ export class RLAgent {
         }
         return arr;
       });
+    }
+    if (typeof mass === 'object') {
+      return this.vehicleController.action({x:state[0],y:state[1],z:state[2],x_dot:state[3],y_dot:state[4],z_dot:state[5],phi:state[6],theta:state[7],psi:state[8],p:state[9],q:state[10],r:state[11]}, mass, mission ?? (missionPreset === 'long-range' || missionPreset === 'high-speed' ? { mode:'velocity',targetAltitudeM:1,forwardVelocityMps:5,durationSeconds:16 } : undefined));
     }
     return this.heuristicActionArray(state, droneType, missionPreset, mass);
   }
@@ -138,6 +145,11 @@ export class RLAgent {
     const model = await tf.loadLayersModel(
       tf.io.fromMemory(data.topology, data.weightSpecs, data.weightData)
     );
+    const expected = data.droneType === 'quadcopter' ? 4 : 6;
+    if (model.inputs[0].shape.at(-1) !== this.stateDim || model.outputs[0].shape.at(-1) !== expected) {
+      model.dispose();
+      throw new Error('Worker policy dimensions are incompatible with aircraft');
+    }
     this.userModel        = model;
     this.isUsingUserModel = true;
   }
@@ -160,10 +172,13 @@ export class RLAgent {
   public resetIntegral(): void {
     this.altIntegral = 0;
     this.lastHeuristicTime = 0;
+    this.vehicleController.reset();
   }
 
   /** Dispose TF.js model to free GPU/CPU memory. Call on unmount or model swap. */
   public dispose(): void {
+    this.actorNet.dispose();
+    this.criticNet.dispose();
     this.userModel?.dispose();
     this.userModel = null;
     this.isUsingUserModel = false;
@@ -178,198 +193,13 @@ export class RLAgent {
    * push the motors as high as physics allows, rather than silently returning
    * an infeasible bias.
    */
-  private computeHoverTc(numMotors: number, propDiamIn: number, mass: number): number {
-    const key = `${numMotors}_${propDiamIn}_${mass.toFixed(4)}`;
-    const cached = this.cachedHoverTc.get(key);
-    if (cached !== undefined) return cached;
-
-    const mg = Math.max(1e-4, mass) * GRAVITY;
-
-    // Feasibility check — BET thrust at tc = +1, scaled by numMotors
-    const thrustAt = (tc: number): number => {
-      const omega = OMEGA_IDLE + Math.max(0, (tc + 1) / 2) * (OMEGA_MAX - OMEGA_IDLE);
-      const R  = (propDiamIn * INCHES_TO_METRES) / 2;
-      const A  = Math.PI * R * R;
-      const thetaDeg = BET_THETA_MIN_DEG + ((tc + 1) / 2) * (BET_THETA_MAX_DEG - BET_THETA_MIN_DEG);
-      const theta = thetaDeg * Math.PI / 180;
-      const CT = Math.max(0, (BET_NB * BET_CHORD * BET_LIFT * theta * R) / (4 * A));
-      const vTip = omega * R;
-      return numMotors * CT * AIR_DENSITY * A * vTip * vTip;
-    };
-
-    if (thrustAt(1) < mg) {
-      this.cachedHoverTc.set(key, 1);
-      return 1;
-    }
-    if (thrustAt(-1) > mg) {
-      // Overpowered — hover well below idle; clamp to a safe floor
-      this.cachedHoverTc.set(key, -0.5);
-      return -0.5;
-    }
-
-    let lo = -1, hi = 1;
-    for (let i = 0; i < 40; i++) {
-      const mid = (lo + hi) / 2;
-      if (thrustAt(mid) > mg) hi = mid; else lo = mid;
-    }
-    const hoverTc = (lo + hi) / 2;
-    this.cachedHoverTc.set(key, hoverTc);
-    return hoverTc;
+  /** Backward-compatible entry point. Pass PhysicsConfig for faithful hardware inputs.
+   * Numeric-only legacy callers use the documented demo defaults, not inferred hardware. */
+  public heuristicAction(state: Partial<DroneState>, droneType: DroneType, missionPreset: string, mass: number | PhysicsConfig = 5, mission?: MissionSpec): number[] {
+    const config: PhysicsConfig = typeof mass === 'object' ? mass :
+      {droneType,mass,propDiameter:15,batteryVoltage:22.2,armLength:0.5};
+    return this.vehicleController.action(state,config,mission ?? (missionPreset === 'long-range' || missionPreset === 'high-speed'
+      ? {mode:'velocity',targetAltitudeM:1,forwardVelocityMps:5,durationSeconds:16}:undefined));
   }
 
-  public heuristicAction(state: Partial<DroneState>, droneType: DroneType, missionPreset: string, mass = 5.0): number[] {
-    const {x=0,y=0,z=0,x_dot:xd=0,y_dot:yd=0,z_dot:zd=0,phi=0,theta=0,psi=0,p=0,q=0,r=0}=state;
-    let xt=0, yt=0, zt=1.0;
-    if (missionPreset==='long-range') xt=10000;
-    else if (missionPreset==='high-speed') xt=1000;
-
-    const hasMissionTarget = (missionPreset !== 'none' && (xt !== 0 || yt !== 0));
-    // Guard nano-drone path: 20 g Crazyflie has mass=0.027 kg — all gains below
-    // must stay finite and integrator must not wind up unbounded.
-    const mass_eff = Math.max(0.02, mass);
-
-    // ── Config-dependent parameters ──────────────────────────────────────
-    const numMotors = droneType === 'hexacopter' ? 6 : droneType === 'quadcopter' ? 4 : 2;
-    const estPropDiam = droneType === 'hexacopter' ? 22 : droneType === 'quadcopter' ? 18 : 15;
-
-    // ── Gain scheduling ─────────────────────────────────────────────────
-    // Thrust authority varies hugely across configs (betThrust ∝ N_motors × D^4).
-    // Scale altitude gains inversely with thrust authority so all drones have
-    // similar closed-loop altitude response.
-    const thrustAuthority = (numMotors / 2) * Math.pow(estPropDiam / 15, 4);
-    const massRatio = mass_eff / 5.0;
-    // altScale: heavier → need more tc, more thrust authority → need less tc
-    const altScale = massRatio / Math.max(1e-6, thrustAuthority);
-
-    const refInertia = 5.0 * 0.5 * 0.5;
-    const estArmLength = droneType === 'hexacopter' ? 0.8 : droneType === 'quadcopter' ? 0.5 : 0.5;
-    const estInertia = mass_eff * estArmLength * estArmLength;
-    const inertiaRatio = estInertia / refInertia;
-
-    // PID gains — D term scaled separately from P to keep damping ratio ~0.7
-    // across the full mass range (20 g nano → 20 kg heavy).
-    const Kp_alt  = 0.8;
-    const Kd_alt  = 0.5;
-    const Ki_alt  = 0.4;
-    const Kp_att  = 0.15 * inertiaRatio;
-    const Kd_att  = 0.08 * inertiaRatio;
-    const Kp_yaw  = 0.1;
-    const Kd_yaw  = 0.05;
-
-    // ── Altitude PID with gravity feed-forward ────────────────────────────
-    //
-    //   tc = hoverBias(mg)                        ← FEED-FORWARD (cancels mg)
-    //      + K_p · (z_ref - z)                    ← PROPORTIONAL
-    //      + K_d · (-ż)                           ← DERIVATIVE (damps motion)
-    //      + K_i · ∫(z_ref - z) dt                ← INTEGRAL  (kills SS error)
-    //
-    // The feed-forward converts `mass·g` into the collective that produces
-    // exactly mg total thrust (via BET binary search), so at z = z_ref, ż=0,
-    // the integral stays at 0 and the drone sits at rest. The SS error term
-    // that plagued the old PD loop (≈1 m offset) is eliminated entirely by
-    // the feed-forward; the integral only corrects for disturbances.
-    const hoverBias = this.computeHoverTc(numMotors, estPropDiam, mass_eff);
-
-    const altError = zt - z;
-    const dt = DT;
-
-    // Trapezoid integral with CONDITIONAL anti-windup:
-    // Only accumulate when the raw command isn't already saturating in the
-    // direction of the error — this prevents the integrator from charging up
-    // while the actuator is clipped and then overshooting on release.
-    const clamp = (v:number, lo=-1, hi=1) => Math.max(lo, Math.min(hi, v));
-    const rawPD  = altError * Kp_alt + (-zd) * Kd_alt;
-    const rawCmd = hoverBias + rawPD + this.altIntegral * Ki_alt;
-    const willSaturate =
-      (rawCmd >  1 && altError > 0) ||
-      (rawCmd < -1 && altError < 0);
-    if (!willSaturate) {
-      this.altIntegral = clamp(this.altIntegral + altError * dt, -5, 5);
-    }
-
-    const correction = rawPD + this.altIntegral * Ki_alt;
-    let tc = clamp(hoverBias + correction);
-
-    // ── Horizontal position PD (when mission target exists) ───────────────
-    let pitchTarget = 0;   // desired pitch angle for forward (x) motion
-    let rollTarget  = 0;   // desired roll angle for lateral (y) motion
-
-    if (hasMissionTarget) {
-      const posKp = 0.3;   // position proportional gain
-      const posKd = 0.8;   // position derivative (velocity damping) gain
-      const maxVCmd = 5;    // max commanded velocity m/s
-      const maxAttCmd = 0.3; // max attitude command radians (~17 deg)
-      const vBrake = 0.05;  // velocity braking gain
-
-      // Outer loop: position error -> commanded velocity, clamped
-      const vx_cmd = Math.max(-maxVCmd, Math.min(maxVCmd, posKp * (xt - x)));
-      const vy_cmd = Math.max(-maxVCmd, Math.min(maxVCmd, posKp * (yt - y)));
-
-      // Inner loop: velocity error -> attitude command (pitch for x, roll for y)
-      pitchTarget = Math.max(-maxAttCmd, Math.min(maxAttCmd, posKd * (vx_cmd - xd)));
-      rollTarget  = Math.max(-maxAttCmd, Math.min(maxAttCmd, posKd * (vy_cmd - yd)));
-
-      // Anti-windup: horizontal velocity braking when exceeding 10 m/s
-      if (Math.abs(xd) > 10) pitchTarget -= Math.max(-maxAttCmd, Math.min(maxAttCmd, vBrake * xd));
-      if (Math.abs(yd) > 10) rollTarget  -= Math.max(-maxAttCmd, Math.min(maxAttCmd, vBrake * yd));
-
-      pitchTarget = Math.max(-maxAttCmd, Math.min(maxAttCmd, pitchTarget));
-      rollTarget  = Math.max(-maxAttCmd, Math.min(maxAttCmd, rollTarget));
-    }
-
-    // ── Attitude stabilization ────────────────────────────────────────────
-    // When a mission target exists, track the commanded attitude from the
-    // horizontal position controller instead of raw position error.
-    let rc: number, pc: number;
-    if (hasMissionTarget) {
-      rc = clamp((rollTarget - phi) * Kp_att - p * Kd_att);
-      pc = clamp((pitchTarget - theta) * Kp_att - q * Kd_att);
-    } else {
-      // Cascaded position → attitude control (same structure as mission mode)
-      // Outer loop: position error → attitude target, clamped to prevent tip-over
-      const posKpFree  = 0.2;   // softer than mission mode
-      const posKdFree  = 0.5;
-      const maxAttFree = 0.25;  // ~14° max lean for station-keeping
-
-      const rollCmd  = Math.max(-maxAttFree, Math.min(maxAttFree, posKpFree * (yt - y) - posKdFree * yd));
-      const pitchCmd = Math.max(-maxAttFree, Math.min(maxAttFree, posKpFree * (xt - x) - posKdFree * xd));
-
-      // Inner loop: track commanded attitude
-      rc = clamp((rollCmd - phi) * Kp_att - p * Kd_att);
-      pc = clamp((pitchCmd - theta) * Kp_att - q * Kd_att);
-    }
-
-    const yc = clamp((-psi) * Kp_yaw - r * Kd_yaw);
-
-    if (droneType==='bicopter')
-      return [tc+yc, rc, pc, tc-yc, rc, pc];
-
-    if (droneType==='quadcopter') {
-      // X-config quad mixer — must match UniversalMixer moment equations:
-      //   L = (t0+t3-t1-t2)*d*0.707  →  needs t0,t3 ∝ +rc, t1,t2 ∝ -rc
-      //   M = (t1+t3-t0-t2)*d*0.707  →  needs t1,t3 ∝ +pc, t0,t2 ∝ -pc
-      //   N = (t0+t1-t2-t3)*0.05     →  needs t0,t1 ∝ +yc, t2,t3 ∝ -yc
-      return [
-        tc + rc - pc + yc,  // motor 0
-        tc - rc + pc + yc,  // motor 1
-        tc - rc - pc - yc,  // motor 2
-        tc + rc + pc - yc,  // motor 3
-        0, 0,
-      ];
-    }
-
-    // Hexacopter — motors at [30°, 90°, 150°, 210°, 270°, 330°], dirs [CW,CCW,CW,CCW,CW,CCW]
-    //   L = Σ t_i * d * sin(θ_i)  →  motor_i needs sin(θ_i) coefficient for rc
-    //   M = Σ t_i * d * cos(θ_i)  →  motor_i needs cos(θ_i) coefficient for pc
-    //   N = Σ t_i * dir_i * 0.05  →  motor_i needs dir_i coefficient for yc
-    const s30 = 0.5, c30 = 0.866;
-    return [
-      tc + s30*rc + c30*pc + yc,    // motor 0: 30°, CW
-      tc +     rc          - yc,    // motor 1: 90°, CCW
-      tc + s30*rc - c30*pc + yc,    // motor 2: 150°, CW
-      tc - s30*rc - c30*pc - yc,    // motor 3: 210°, CCW
-      tc -     rc          + yc,    // motor 4: 270°, CW
-      tc - s30*rc + c30*pc - yc,    // motor 5: 330°, CCW
-    ];
-  }
 }

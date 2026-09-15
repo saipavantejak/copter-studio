@@ -16,7 +16,8 @@ interface RobustnessPanelProps {
 }
 
 function classifyFailureMode(r: EpisodeResult): string {
-  if (!r.crashed) return 'Success';
+  if (r.outcome) return r.outcome;
+  if (!r.crashed) return 'Unverified survival';
   if (r.maxRoll > 0.8 && r.maxPitch < 0.4) return 'Roll Divergence';
   if (r.maxPitch > 0.8 && r.maxRoll < 0.4) return 'Pitch Divergence';
   if (r.maxRoll > 0.5 && r.maxPitch > 0.5) return 'Total Attitude Failure';
@@ -61,7 +62,7 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
 
   const survivalHist = useMemo(() => {
     if (!stats) return [];
-    const maxT = 16;
+    const maxT = stats.durationSeconds ?? 16;
     const bins = new Array(8).fill(0);
     for (const r of stats.episodes) {
       const bin = Math.min(7, Math.floor(r.survivalTime/maxT*8));
@@ -85,7 +86,7 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
     );
   }
 
-  const robustnessScore = Math.round((1-stats.crashRate)*100);
+  const robustnessScore = Math.round((stats.successRate ?? 0)*100);
   const scoreColor = robustnessScore >= 80 ? '#34a840' : robustnessScore >= 50 ? '#fbbf24' : '#f87171';
 
   return (
@@ -102,7 +103,7 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
         </div>
         <div className="text-2xl font-mono font-bold" style={{color:scoreColor}}>
           {robustnessScore}%
-          <span className="text-xs text-zinc-500 ml-1 font-normal">robust</span>
+          <span className="text-xs text-zinc-500 ml-1 font-normal">mission success</span>
         </div>
       </div>
 
@@ -114,7 +115,7 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
             ['Crash Rate',   `${(stats.crashRate*100).toFixed(1)}%`,          stats.crashRate>0.3?'red':'emerald'],
             ['Mean Alt Err', `${stats.meanAltError.toFixed(3)}m`,             'zinc'],
             ['Mean Survival',`${stats.meanSurvivalTime.toFixed(1)}s`,         'zinc'],
-            ['Mean SEC',     stats.meanSEC>0?`${stats.meanSEC.toFixed(3)}`:'—','amber'],
+            ['Conditional SEC',     stats.meanSEC>0?`${stats.meanSEC.toFixed(3)}`:'—','amber'],
             ['Std SEC',      stats.stdSEC>0?`±${stats.stdSEC.toFixed(3)}`:'—','zinc'],
             ['Best SEC',     stats.bestSEC>0?`${stats.bestSEC.toFixed(3)}`:'—','emerald'],
             ['Worst SEC',    stats.worstSEC>0?`${stats.worstSEC.toFixed(3)}`:'—','red'],
@@ -185,11 +186,11 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
         <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-xs text-zinc-400 space-y-1">
           <div className="font-bold text-zinc-300 mb-2">Interpretation</div>
           {stats.crashRate > 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}90% — the heuristic PD controller cannot stabilize this configuration. <span className="text-zinc-400">Try: (1) Load a trained RL model via the Model Loader, (2) Reduce mass or increase prop diameter, (3) Disable fault modules (motor-out, wind) to establish a baseline.</span></div>}
-          {stats.crashRate > 0.5 && stats.crashRate <= 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}50% — controller is not robust. <span className="text-zinc-400">Try: train an RL policy via the Gym Bridge, or adjust physics parameters for a more stable platform.</span></div>}
+          {stats.crashRate > 0.5 && stats.crashRate <= 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}50% — simulation failures require diagnosis. <span className="text-zinc-400">Check executed inputs, propulsion/inertia calibration, controller compatibility and recorded failure events before tuning or RL training.</span></div>}
           {stats.stdSEC > stats.meanSEC * 0.5 && stats.meanSEC > 0 && <div className="text-amber-400">⚠ High SEC variance (±{(stats.stdSEC/stats.meanSEC*100).toFixed(0)}%) — policy is inconsistent across conditions.</div>}
           {stats.crashRate >= 0.1 && stats.crashRate <= 0.5 && <div className="text-amber-400">Moderate crash rate — consider enabling domain randomization or training a dedicated RL policy for better robustness.</div>}
           {stats.crashRate < 0.1 && <div className="text-emerald-400">✓ Low crash rate — consider more aggressive domain randomization to stress-test further.</div>}
-          {!isDomainRandEnabled && <div className="text-zinc-500 italic">Enable Domain Randomization for real robustness testing. Without it, all episodes use identical physics parameters.</div>}
+          {!isDomainRandEnabled && <div className="text-zinc-500 italic">Domain randomization explores assumed variation; it does not establish real-world robustness. Without it, all episodes use identical physics parameters.</div>}
         </div>
       </div>
     </div>

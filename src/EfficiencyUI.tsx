@@ -14,48 +14,46 @@ export const EfficiencyUI = ({ metrics, historyData }: EfficiencyUIProps) => {
       <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
         <Zap className="w-4 h-4" /> Live Efficiency Engine
       </h3>
-      
+
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         <MetricCard
           label="Specific Energy (SEC)"
-          value={metrics.sec === 0 && metrics.hoverPowerW > 0
-            ? `Hover: ${metrics.hoverPowerW.toFixed(0)} W`
-            : metrics.sec.toFixed(2)}
-          unit={metrics.sec === 0 && metrics.hoverPowerW > 0 ? '' : 'J/g·km'}
+          value={metrics.secApplicable ? metrics.sec.toFixed(2) : 'N/A'}
+          unit={metrics.secApplicable ? 'J/(g payload·km)' : ''}
           icon={<Zap className="w-3 h-3 text-amber-400" />}
-          tooltip="Energy consumed per gram of drone per kilometer flown. Lower = more efficient. Typical range: 5-15 J/g·km."
+          tooltip="Energy per explicit gram of payload per kilometre. N/A without payload and at least 10 m travel. Experimental estimate."
         />
         <MetricCard
-          label="Stability-Power (SPT)"
+          label="Legacy actuator ratio (SPT)"
           value={metrics.spt.toFixed(3)}
           unit="Ratio"
           icon={<Activity className="w-3 h-3 text-blue-400" />}
-          tooltip="Ratio of attitude stability to power consumption. Higher = better stability per watt. Values near 1.0 indicate efficient hover."
+          tooltip="Actuator variation divided by attitude variation. Dimensionless legacy diagnostic, not a validated stability or power score."
           badge={metrics.sptGrade}
         />
-        <MetricCard 
-          label="Optimal Cargo" 
-          value={metrics.optimalCargoWeight.toFixed(1)} 
-          unit="kg" 
-          icon={<Scale className="w-3 h-3 text-emerald-400" />} 
+        <MetricCard
+          label="Estimated extra cargo"
+          value={metrics.optimalCargoWeight.toFixed(1)}
+          unit="kg"
+          icon={<Scale className="w-3 h-3 text-emerald-400" />}
         />
-        <MetricCard 
-          label="Point of No Return" 
-          value={metrics.pointOfNoReturn.toFixed(2)} 
-          unit="km" 
-          icon={<MapPin className="w-3 h-3 text-red-400" />} 
+        <MetricCard
+          label="Estimated half-range"
+          value={metrics.pointOfNoReturn.toFixed(2)}
+          unit="km"
+          icon={<MapPin className="w-3 h-3 text-red-400" />}
         />
-        <MetricCard 
-          label="Target Deviation" 
-          value={metrics.targetDeviation.toFixed(1)} 
-          unit="cm" 
-          icon={<Target className="w-3 h-3 text-purple-400" />} 
+        <MetricCard
+          label="Target Deviation"
+          value={metrics.targetDeviation.toFixed(1)}
+          unit="cm"
+          icon={<Target className="w-3 h-3 text-purple-400" />}
         />
-        <MetricCard 
-          label="Structural Stress" 
-          value={metrics.structuralStress.toFixed(2)} 
-          unit="MPa" 
-          icon={<ShieldAlert className="w-3 h-3 text-orange-400" />} 
+        <MetricCard
+          label="Structural Stress"
+          value={metrics.structuralStress.toFixed(2)}
+          unit="MPa"
+          icon={<ShieldAlert className="w-3 h-3 text-orange-400" />}
         />
       </div>
 
@@ -66,7 +64,7 @@ export const EfficiencyUI = ({ metrics, historyData }: EfficiencyUIProps) => {
             <XAxis dataKey="time" hide />
             <YAxis yAxisId="left" stroke="#237227" fontSize={10} tickFormatter={(v) => v.toFixed(1)} />
             <YAxis yAxisId="right" orientation="right" stroke="#f59e0b" fontSize={10} tickFormatter={(v) => v.toFixed(1)} />
-            <Tooltip 
+            <Tooltip
               contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', fontSize: '12px' }}
               itemStyle={{ color: '#e4e4e7' }}
             />
