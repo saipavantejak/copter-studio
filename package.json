@@ -17,6 +17,8 @@
     "clean": "rm -rf dist",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:reliability": "vitest run src/__tests__/reliability.test.ts",
+    "ci:reliability": "tsx scripts/reliability-benchmark.ts",
     "lint": "tsc --noEmit",
     "gym-bridge": "tsx server/gymBridge.ts",
     "hil-bridge": "tsx server/mavlinkHILBridge.ts",

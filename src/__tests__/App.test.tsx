@@ -32,7 +32,7 @@ vi.mock('three', () => ({
   Vector3: class { normalize() { return this; } },
 }));
 vi.mock('@tensorflow/tfjs', () => ({
-  sequential: () => ({ add: vi.fn() }),
+  sequential: () => ({ add: vi.fn(), dispose: vi.fn() }),
   layers: { dense: () => ({}) },
   tensor2d: () => ({ dataSync: () => new Float32Array(6) }),
   tidy: (fn: any) => fn(),
@@ -110,7 +110,8 @@ describe('App — Integration Tests', () => {
     act(() => { vi.advanceTimersByTime(1500); });
 
     await waitFor(() => {
-      expect(screen.getByText('COPTER STUDIO')).toBeTruthy();
+      expect(screen.queryByText('INITIALISE MISSION')).toBeNull();
+      expect(screen.getByText('Simulation')).toBeTruthy();
     });
   });
 

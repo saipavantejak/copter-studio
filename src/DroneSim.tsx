@@ -214,11 +214,20 @@ const DroneModel = ({
 
       if (phys.getState().time < 0.02 && histRef.current.length > 0) histRef.current = [];
       // Reset the local crash latch on episode reset (physics time goes back to 0)
-      if (phys.getState().time < 0.02) crashedRef.current = false;
+      if (phys.getState().time === 0) {
+        crashedRef.current = false;
+        agentRef.current.resetIntegral();
+        pdAgentRef.current.resetIntegral();
+      }
+      if (tests.mission && phys.getState().time >= tests.mission.durationSeconds) {
+        isRunningRef.current = false;
+        onTelemetryUpdate(phys.getState());
+        return;
+      }
 
       const obs      = phys.getObservation();
       const stateArr = [obs.x,obs.y,obs.z,obs.x_dot,obs.y_dot,obs.z_dot,obs.phi,obs.theta,obs.psi,obs.p,obs.q,obs.r];
-      const action   = agentRef.current.predictAction(stateArr, obs.droneType, tests.missionPreset, config.mass);
+      const action   = agentRef.current.predictAction(stateArr, obs.droneType, tests.missionPreset, config, tests.mission);
       const ns       = phys.step(action);
 
       if (groupRef.current) {
@@ -237,7 +246,7 @@ const DroneModel = ({
       if (comparisonMode) {
         const gObs = ghost.getObservation();
         const gArr = [gObs.x,gObs.y,gObs.z,gObs.x_dot,gObs.y_dot,gObs.z_dot,gObs.phi,gObs.theta,gObs.psi,gObs.p,gObs.q,gObs.r];
-        const gAct = pdAgentRef.current.heuristicAction(gObs, gObs.droneType, tests.missionPreset);
+        const gAct = pdAgentRef.current.predictAction(gArr, gObs.droneType, tests.missionPreset, config, tests.mission);
         const gNs  = ghost.step(gAct as number[]);
         if (ghostGroupRef.current) {
           ghostGroupRef.current.position.set(gNs.x, Math.max(0, gNs.z), -gNs.y);
@@ -271,6 +280,11 @@ const DroneModel = ({
       histRef.current.push(entry);
       if (histRef.current.length > 500) histRef.current.shift();
 
+      if (ns.failureReason && !crashedRef.current) {
+        crashedRef.current = true;
+        isRunningRef.current = false;
+        onCrash({reason: ns.failureReason,telemetry:entry});
+      }
       if (ns.z < 0.1 && (Math.abs(ns.phi) > 0.5 || Math.abs(ns.theta) > 0.5) && !crashedRef.current) {
         crashedRef.current = true;
         isRunningRef.current = false;

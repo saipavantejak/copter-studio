@@ -236,6 +236,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (crashData && latestMetrics.current)
       saveFlight({
+        successful: false,
         duration: latestTelemetry.current?.time || 0,
         metrics: latestMetrics.current,
         controller: controllerStatus,
@@ -247,23 +248,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const serializedModel = await agentRef.current.serializeForWorker(config.droneType);
     const cfg: EpisodeBenchmarkConfig = {
       numEpisodes:         epNumEpisodes.current,
-      maxStepsPerEpisode:  1000,
+      maxStepsPerEpisode:  Math.ceil((tests.mission?.durationSeconds ?? 16) / 0.016),
       randomizeIC:         true,
       icAltRange:          [0.5, 1.5],
       icAttRange:          [-0.2, 0.2],
       physicsConfig:       config,
+      sensorConfig:        sensorCfg,
       testModules:         tests,
       masterSeed,
       domainRandConfig:    domainRandCfg,
       serializedModel,
     };
     runWorker(cfg);
-  }, [config, tests, masterSeed, domainRandCfg, runWorker]);
+  }, [config, tests, sensorCfg, masterSeed, domainRandCfg, runWorker]);
 
   const handleRunSimulation = useCallback(async (intent: SimulationIntent) => {
+    if (intent.ambiguities.some(a => a.level === 'error')) throw new Error('Cannot execute an invalid simulation intent');
     setConfig(intent.config);
     setTests(intent.tests);
-    if (intent.sensorCfg) setSensorCfg(intent.sensorCfg);
+    if (intent.sensorRequested) setSensorCfg(intent.sensorCfg);
 
     if (intent.type === 'live') {
       setActiveTab('simulation');
@@ -272,27 +275,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } else {
       if (intent.numEpisodes) epNumEpisodes.current = intent.numEpisodes;
       if (intent.masterSeed !== undefined) setMasterSeed(intent.masterSeed);
-      if (intent.domainRandEnabled !== undefined)
+      if (intent.domainRandRequested)
         setDomainRandCfg(c => ({ ...c, enabled: intent.domainRandEnabled }));
       setActiveTab('benchmark');
       setTimeout(async () => {
         const serializedModel = await agentRef.current.serializeForWorker(intent.config.droneType);
         const cfg: EpisodeBenchmarkConfig = {
           numEpisodes:        intent.numEpisodes ?? 50,
-          maxStepsPerEpisode: 1000,
+          maxStepsPerEpisode: Math.ceil((intent.tests.mission?.durationSeconds ?? 16) / 0.016),
           randomizeIC:        true,
           icAltRange:         [0.5, 1.5],
           icAttRange:         [-0.2, 0.2],
           physicsConfig:      intent.config,
+          sensorConfig:       intent.sensorRequested ? intent.sensorCfg : sensorCfg,
           testModules:        intent.tests,
           masterSeed:         intent.masterSeed ?? 42,
-          domainRandConfig:   { ...domainRandCfg, enabled: intent.domainRandEnabled ?? false },
+          domainRandConfig:   { ...domainRandCfg, enabled: intent.domainRandRequested ? intent.domainRandEnabled : domainRandCfg.enabled },
           serializedModel,
         };
         runWorker(cfg);
       }, 150);
     }
-  }, [runWorker, domainRandCfg]);
+  }, [runWorker, domainRandCfg, sensorCfg]);
 
   const bestFlight = getBestFlight('sec');
 

@@ -6,6 +6,31 @@ export interface MixerOutput {
 }
 
 export class UniversalMixer {
+  /** Moments from actual rotor forces; same axes/order as the existing allocator. */
+  static fromThrusts(type: DroneType, thrusts: number[], action: number[], d: number): MixerOutput {
+    let L = 0, M = 0, N = 0;
+    if (type === 'quadcopter') {
+      const [a,b,c,e] = thrusts;
+      L = (a+e-b-c)*d*Math.SQRT1_2;
+      M = (b+e-a-c)*d*Math.SQRT1_2;
+      N = (a+b-c-e)*0.05;
+    } else if (type === 'hexacopter') {
+      thrusts.forEach((t,i) => {
+        const angle = Math.PI/6 + i*Math.PI/3;
+        L += t*d*Math.sin(angle);
+        M += t*d*Math.cos(angle);
+        N += t*(i%2 === 0 ? 1 : -1)*0.05;
+      });
+    } else {
+      // Legacy swashplate approximation, NOT a validated tilting-rotor bicopter.
+      const [left,right] = thrusts;
+      L = (left-right)*d + (action[1]*left + action[4]*right)*d;
+      M = (action[2]*left + action[5]*right)*d;
+      N = (left-right)*0.05 + (action[2]*left-action[5]*right)*d;
+    }
+    return { thrusts: [...thrusts], moments: { L, M, N } };
+  }
+
   /**
    * @param armLength  Distance from CG to rotor hub (m). Default 0.5.
    *                   Was previously hardcoded; now threaded through from PhysicsConfig.

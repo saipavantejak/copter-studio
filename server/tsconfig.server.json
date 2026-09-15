@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "target":           "ES2022",
-    "module":           "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module":           "ESNext",
+    "moduleResolution": "Bundler",
     "lib":              ["ES2022"],
     "skipLibCheck":     true,
     "allowJs":          true,
     "resolveJsonModule": true,
     "strict":           false,
-    "outDir":           "../dist-server",
+    "noEmit":           true,
     "rootDir":          "..",
     "esModuleInterop":  true
   },
@@ -22,6 +22,7 @@
   ],
   "exclude": [
     "../src/workers",
+    "../src/**/*.test.ts",
     "../src/*.tsx"
   ]
 }

@@ -1,7 +1,11 @@
+import { thrustLimit, motorCount } from './physics/propulsion';
 import { DroneState, PhysicsConfig } from './PhysicsEngine';
 
 export interface MissionMetrics {
   sec: number;
+  /** Legacy numeric field is zero when inapplicable; consumers MUST check this flag. */
+  secApplicable?: boolean;
+  metricWarnings?: string[];
   hoverPowerW: number;
   spt: number;
   sptGrade: string;
@@ -30,16 +34,15 @@ export class MissionLogic {
     totalEnergyConsumed: number,
     totalDistance: number
   ): MissionMetrics {
-    // Payload mass = total mass minus a 2.0 kg "airframe reference". For
-    // nano drones (Crazyflie, 27 g) the airframe subtraction yields a
-    // negative number — we floor to 10 g so SEC remains finite and any
-    // benchmark can interpret it as "per-gram" specific energy.
-    const payloadMassGrams = Math.max(10, (config.mass - 2.0) * 1000);
+    // Explicit payload only. Legacy SEC units remain J/(g payload·km).
+    // secApplicable=false means consumers must display N/A, never rank zero as best.
+    const payloadMassGrams = (config.payloadMassKg ?? 0) * 1000;
     const distanceKm = Math.max(0, totalDistance) / 1000;
 
+    const secApplicable = payloadMassGrams > 0 && distanceKm >= 0.01;
     let sec = 0;
     let hoverPowerW = 0;
-    if (distanceKm < 0.01) {
+    if (!secApplicable) {
       // Hover → report instantaneous power draw (J·kg/W/m-independent metric)
       if (history.length >= 2) {
         const last = history[history.length - 1];
@@ -77,13 +80,13 @@ export class MissionLogic {
       }
     }
 
-    const sptGrade = spt < 5 ? 'excellent' : spt < 20 ? 'good' : spt < 50 ? 'fair' : 'poor';
+    const sptGrade = 'unvalidated legacy ratio';
 
     const propFactor = Math.pow(config.propDiameter / 15, 4);
     const numMotors = config.droneType === 'quadcopter' ? 4 : config.droneType === 'hexacopter' ? 6 : 2;
-    const maxThrust = 40 * (config.batteryVoltage / 22.2) * propFactor * numMotors;
+    const maxThrust = thrustLimit(config) * motorCount(config);
     const optimalTotalMass = (maxThrust * 0.6) / this.GRAVITY;
-    const computedCargo = Math.max(0, optimalTotalMass - 2.0);
+    const computedCargo = Math.max(0, optimalTotalMass - config.mass);
 
     // Cap by disc loading limit (typical multirotor max ~50 kg/m^2)
     const discLoadingMax = 50; // kg/m^2
@@ -123,6 +126,8 @@ export class MissionLogic {
 
     return {
       sec,
+      secApplicable,
+      metricWarnings: ['Experimental estimates, not independently validated', ...(!secApplicable ? ['SEC requires explicit payload and at least 10 m travel'] : []), 'SPT is not a validated stability score', 'Range, cargo and stress estimates are not safety limits'],
       hoverPowerW,
       spt,
       sptGrade,

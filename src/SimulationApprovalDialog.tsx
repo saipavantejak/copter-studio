@@ -128,11 +128,14 @@ export const SimulationApprovalDialog: React.FC<Props> = ({
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
               <ConfigCard label="Drone Type" value={config.droneType} highlight />
-              <ConfigCard label="Mass"        value={`${config.mass.toFixed(1)} kg`} />
+              <ConfigCard label="Mass"        value={`${config.mass} kg`} />
               <ConfigCard label="Prop Ø"      value={`${config.propDiameter}"`} />
               <ConfigCard label="Battery"     value={`${config.batteryVoltage}V`} />
               <ConfigCard label="Arm Length"  value={`${config.armLength}m`} />
             </div>
+            {tests.mission && <div className="mt-2 text-xs text-zinc-300">
+              Mission: {tests.mission.mode} · target {tests.mission.targetAltitudeM} m · forward {tests.mission.forwardVelocityMps} m/s · duration {tests.mission.durationSeconds} s
+            </div>}
             {tests.missionPreset !== 'none' && (
               <div className="mt-2">
                 <ConfigCard label="Mission Preset" value={tests.missionPreset} icon={Play} highlight />

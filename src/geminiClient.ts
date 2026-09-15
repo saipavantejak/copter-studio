@@ -96,14 +96,15 @@ export function createGeminiClient(): GeminiClient {
     },
 
     async isAvailable(): Promise<boolean> {
+      if (isAirGapped()) return false;
       try {
         const resp = await fetch(PROXY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: 'gemini-2.5-flash', payload: { contents: [{ role: 'user', parts: [{ text: 'ping' }] }] } }),
         });
-        // 503 = proxy up but no API key; 200/400 = key present and proxy routing
-        return resp.status !== 404;
+        // Only successful HTTP responses indicate availability.
+        return resp.ok;
       } catch {
         return false;
       }

@@ -226,11 +226,13 @@ export function applyGroundContact(sv: Vec): Vec {
 export function computeInertia(
   propDiameter: number, mass: number, armLength: number
 ): { Ixx: number; Iyy: number; Izz: number } {
-  const sf  = Math.pow(propDiameter / 15, 2) * (mass / 5.0);
-  const arm = armLength;
+  // Explicit uncalibrated surrogate: half the vehicle mass on a rotor-radius ring,
+  // half concentrated at the centre. Inertia scales as mass × length², not D² × mass × length².
+  // Supply inertiaOverride for measured/CAD-derived principal moments.
+  const radialMoment = 0.25 * mass * armLength * armLength;
   return {
-    Ixx: 0.1 * sf * (arm / 0.5) ** 2,
-    Iyy: 0.1 * sf * (arm / 0.5) ** 2,
-    Izz: 0.2 * sf * (arm / 0.5) ** 2,
+    Ixx: radialMoment,
+    Iyy: radialMoment,
+    Izz: 2 * radialMoment,
   };
 }
