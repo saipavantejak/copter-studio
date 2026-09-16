@@ -2,6 +2,8 @@
 
 The application includes a Supabase PostgreSQL integration for authenticated benchmark history and aircraft configurations. Database provisioning is separate from deploying the application. Without its environment variables, the UI explicitly reports that cloud storage is not connected.
 
+Production uses the free-tier `copter-studios` project (`othnlwcfflvtjgttotcf`). The schema has been applied, transactional owner/cross-account/anonymous access checks passed, and the security advisor reported no findings. Public client configuration in `src/productionDatabase.ts` applies only on `copterstudios.com` and `www.copterstudios.com`; environment variables override it. Preview and local hosts require their own configuration. No service-role or secret key is included. Authentication callback/email delivery and real-user save/load still require end-to-end verification.
+
 ## Deployment
 
 1. Create or select the owner's Supabase project. Apply `supabase/migrations/20260916124922_cloud_history.sql` once through the project's migration workflow.
