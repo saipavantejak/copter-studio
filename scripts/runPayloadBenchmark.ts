@@ -32,7 +32,7 @@ async function main() {
     console.log(`Episodes: ${stats.numEpisodes}`);
     console.log(`Crash Rate: ${(stats.crashRate * 100).toFixed(1)}%`);
     console.log(`Mean Survival Time: ${stats.meanSurvivalTime.toFixed(2)}s`);
-    console.log(`Average Specific Energy Consumption (SEC): ${stats.meanSEC.toFixed(4)} J/g·km`);
+    console.log(`Average Specific Energy Consumption (SEC): ${stats.meanSEC == null ? 'N/A' : stats.meanSEC.toFixed(4)+' J/g·km'}`);
     console.log(`Average Stability-Power Ratio (SPT): ${stats.meanSPT.toFixed(4)}`);
     console.log("-----------------------------------------");
     

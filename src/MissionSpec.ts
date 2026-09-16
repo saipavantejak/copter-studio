@@ -9,6 +9,18 @@ export const DEFAULT_MISSION: MissionSpec = {
   mode: 'hover', targetAltitudeM: 1, forwardVelocityMps: 0, durationSeconds: 16,
 };
 
+/** One interpretation shared by controller, runner and recorded evidence. */
+export function resolveMission(tests: {mission?: MissionSpec; missionPreset?: string}, duration = 16): MissionSpec {
+  if (tests.mission) return {...tests.mission};
+  const velocity=tests.missionPreset==='long-range'||tests.missionPreset==='high-speed';
+  return {...DEFAULT_MISSION,durationSeconds:duration,mode:velocity?'velocity':'hover',forwardVelocityMps:velocity?5:0};
+}
+
+export function isTrackingMission(s: {z:number;x:number;y:number;x_dot:number;y_dot:number}, m:MissionSpec):boolean {
+  return Math.abs(s.z-m.targetAltitudeM)<=.1 && Math.abs(s.y)<=.25 && Math.abs(s.y_dot)<=.5 &&
+    (m.mode==='hover' ? Math.abs(s.x)<=.25 && Math.abs(s.x_dot)<=.5 : Math.abs(s.x_dot-m.forwardVelocityMps)<=.5);
+}
+
 export function missionErrors(m: MissionSpec): string[] {
   const errors: string[] = [];
   if (!['hover', 'velocity'].includes(m.mode)) errors.push('Unsupported mission mode');

@@ -1,8 +1,29 @@
 # Reliability upgrade: implementation and release gates
 
+## Third pass: integration and cloud history
+
+- Aether routes quad/hex and plural episode commands through the validated parser.
+  Recorded benchmark audits are deterministic, use actual SPT variation, preserve
+  unavailable SEC as null/N/A and interpret both confidence interval endpoints.
+- Simulation/Aether stay mounted across tab changes. Parsing updates its own message
+  instead of replacing the latest asynchronous response. The episode selector reflects
+  executed state; seed zero remains zero. Unsupported weight-based training advice is removed.
+- Controller, live view and benchmark share legacy mission interpretation. Live missions
+  stop at their configured duration (16 seconds by default). Hover success requires final
+  horizontal position within 0.25 m and horizontal speed within 0.5 m/s, in addition to
+  altitude tolerance. Velocity missions require cross-track position/speed and forward
+  speed tracking. Randomized true aircraft parameters are withheld from the controller.
+- Optional Supabase Auth and PostgreSQL history support explicit saves, retrieval and
+  downloads. Owner-only RLS migration is included. Connection setup and verification are
+  documented in DATABASE_SETUP.md; code deployment alone does not provision a database.
+- Local checks: 109 tests passed; 1,050 catalog flights and 50 sixty-second hovers
+  succeeded. The 100 negative controls and 100 fault flights failed as expected/reported.
+  Exact headless outputs are in reports/reliability-v3.json. Cloud authentication and
+  database isolation require testing against the connected project before use.
+
 This change is a software reliability upgrade, NOT a claim of a 10/10 simulator,
 independent aircraft validation, or authorization to fly a physical aircraft.
-The live production deployment has not been changed by this work.
+Production releases are tracked through the repository pull requests and deployment checks.
 
 ## Implemented
 
@@ -39,7 +60,7 @@ The live production deployment has not been changed by this work.
 ## Intentional Aether tradeoff
 
 Execution parsing now uses the deterministic supported grammar; Gemini remains
-the conversational/audit backend. This reduces open-ended command coverage to avoid
+the conversational backend; recorded benchmark audits use deterministic statistics. This reduces open-ended command coverage to avoid
 allowing an LLM to invent executable values. It is not a general natural-language
 mission planner. Review the complete interpreted configuration before approval.
 Arbitrary unsupported phrasing still needs a stricter grammar/coverage review.

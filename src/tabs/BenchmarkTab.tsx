@@ -2,6 +2,7 @@
 
 import { useAppContext } from '../context/AppContext';
 import { RobustnessPanel } from '../RobustnessPanel';
+import { CloudHistory } from '../CloudHistory';
 import { Cpu, Shield, Play, Bookmark, Download } from 'lucide-react';
 
 export function BenchmarkTab() {
@@ -9,7 +10,7 @@ export function BenchmarkTab() {
     config, tests, controllerStatus,
     masterSeed, setMasterSeed,
     setTests,
-    epNumEpisodes,
+    epNumEpisodes, setEpNumEpisodes,
     domainRandCfg, setDomainRandCfg,
     epRunning, epProgress, epTotal, epResults,
     batchStats, benchController,
@@ -18,6 +19,7 @@ export function BenchmarkTab() {
 
   return (
     <main className="max-w-[1400px] mx-auto p-5 space-y-5">
+      <CloudHistory />
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-xl font-bold">Episode Benchmark</h2>
@@ -38,14 +40,14 @@ export function BenchmarkTab() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-zinc-500">Seed:</span>
-            <input type="number" value={masterSeed} onChange={e => setMasterSeed(parseInt(e.target.value) || 42)}
+            <input aria-label="Benchmark seed" type="number" min={0} max={4294967295} step={1} value={masterSeed} onChange={e => { const n=e.target.valueAsNumber;if(Number.isSafeInteger(n)&&n>=0&&n<=4294967295)setMasterSeed(n); }}
               className="w-20 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-sm text-zinc-200 font-mono focus:outline-none focus:border-emerald-500" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-zinc-500">Episodes:</span>
-            <select defaultValue={50} onChange={e => { epNumEpisodes.current = parseInt(e.target.value); }}
+            <select aria-label="Benchmark episodes" value={epNumEpisodes} onChange={e => setEpNumEpisodes(Number(e.target.value))}
               className="bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-sm text-zinc-200 focus:outline-none focus:border-emerald-500">
-              {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
+              {[...new Set([10,25,50,100,epNumEpisodes])].sort((a,b)=>a-b).map(n => <option key={n} value={n}>{n}</option>)}
             </select>
           </div>
           {epRunning
@@ -82,7 +84,7 @@ export function BenchmarkTab() {
             <button key={p.label} onClick={() => {
               setTests(t => ({...t,missionPreset:'none',mission:undefined,windEnabled:p.label==='Wind stress'||p.dr,payloadShiftEnabled:p.dr,batterySagEnabled:p.dr,motorOutEnabled:p.dr}));
               setMasterSeed(p.seed);
-              epNumEpisodes.current = p.eps;
+              setEpNumEpisodes(p.eps);
               setDomainRandCfg(c => ({ ...c, enabled: p.dr }));
             }}
               title={p.desc}

@@ -7,6 +7,7 @@ import * as tf from '@tensorflow/tfjs';
 import { VehicleController } from './VehicleController';
 import type { PhysicsConfig } from './PhysicsEngine';
 import type { MissionSpec } from './MissionSpec';
+import { resolveMission } from './MissionSpec';
 import { DroneType } from './UniversalMixer';
 import { DroneState } from './PhysicsEngine';
 import {
@@ -90,7 +91,7 @@ export class RLAgent {
       });
     }
     if (typeof mass === 'object') {
-      return this.vehicleController.action({x:state[0],y:state[1],z:state[2],x_dot:state[3],y_dot:state[4],z_dot:state[5],phi:state[6],theta:state[7],psi:state[8],p:state[9],q:state[10],r:state[11]}, mass, mission ?? (missionPreset === 'long-range' || missionPreset === 'high-speed' ? { mode:'velocity',targetAltitudeM:1,forwardVelocityMps:5,durationSeconds:16 } : undefined));
+      return this.vehicleController.action({x:state[0],y:state[1],z:state[2],x_dot:state[3],y_dot:state[4],z_dot:state[5],phi:state[6],theta:state[7],psi:state[8],p:state[9],q:state[10],r:state[11]}, mass, resolveMission({mission,missionPreset}));
     }
     return this.heuristicActionArray(state, droneType, missionPreset, mass);
   }

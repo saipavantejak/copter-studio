@@ -1,0 +1,634 @@
+{
+  "simulatorVersion": "reliability-v3",
+  "date": "2026-09-16",
+  "scope": "Local headless software regression; no physical validation or database deployment claim",
+  "unitTestsPassed": 109,
+  "catalogEpisodes": 1050,
+  "additionalEpisodes": 250,
+  "catalog": [
+    {
+      "name": "29g nano, supplied 60g thrust ceiling",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02884824697388008,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2198.8404887254856,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "29g nano, supplied 60g thrust ceiling",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.024851505315604903,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2198.830819328857,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "29g nano, supplied 60g thrust ceiling",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.029577170303395493,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2198.849774233042,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "44g nano payload fixture",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.044,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715,
+        "payloadMassKg": 0.015
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.028960617458828112,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 4074.696097139005,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "44g nano payload fixture",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.044,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715,
+        "payloadMassKg": 0.015
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02490353639238181,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 4074.682199166283,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "44g nano payload fixture",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.044,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715,
+        "payloadMassKg": 0.015
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.029670518351508773,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 4074.71358135845,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "32g nano, supplied 120g thrust ceiling",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.032,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.028669992689505968,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2087.3176706253525,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "32g nano, supplied 120g thrust ceiling",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.032,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.024770701905499876,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2087.309405439594,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "32g nano, supplied 120g thrust ceiling",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.032,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02942961905043111,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 2087.326361368751,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "72g nano payload fixture",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.072,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943,
+        "payloadMassKg": 0.04
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.028907836385942996,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 6949.975649534814,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "72g nano payload fixture",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.072,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943,
+        "payloadMassKg": 0.04
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.024878964937917174,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 6949.9437002278,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "72g nano payload fixture",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.072,
+        "propDiameter": 2.1653543307086616,
+        "batteryVoltage": 3.7,
+        "armLength": 0.05,
+        "batteryCapacity": 350,
+        "maxThrustPerMotorN": 0.2943,
+        "payloadMassKg": 0.04
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.029626638728931728,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 6950.00548695517,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "958g representative quad",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.958,
+        "propDiameter": 9.4,
+        "batteryVoltage": 15.4,
+        "armLength": 0.19
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02846912329893696,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 77289.49443296228,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "958g representative quad",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.958,
+        "propDiameter": 9.4,
+        "batteryVoltage": 15.4,
+        "armLength": 0.19
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.024682373982157474,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 77289.21745221863,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "958g representative quad",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.958,
+        "propDiameter": 9.4,
+        "batteryVoltage": 15.4,
+        "armLength": 0.19
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02926395573388401,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 77289.8132352409,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "5kg swashplate approximation",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "bicopter",
+        "mass": 5,
+        "propDiameter": 15,
+        "batteryVoltage": 22.2,
+        "armLength": 0.5
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.028920840645338147,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 816435.14442702,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "5kg swashplate approximation",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "bicopter",
+        "mass": 5,
+        "propDiameter": 15,
+        "batteryVoltage": 22.2,
+        "armLength": 0.5
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02488528383390414,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 816430.3224113988,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "5kg swashplate approximation",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "bicopter",
+        "mass": 5,
+        "propDiameter": 15,
+        "batteryVoltage": 22.2,
+        "armLength": 0.5
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.029637650551902327,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 816438.2605580701,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "15.5kg representative hex",
+      "masterSeed": 42,
+      "config": {
+        "droneType": "hexacopter",
+        "mass": 15.5,
+        "propDiameter": 22,
+        "batteryVoltage": 44.4,
+        "armLength": 0.8
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.02867201902645917,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 1754074.2952242554,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "15.5kg representative hex",
+      "masterSeed": 2026,
+      "config": {
+        "droneType": "hexacopter",
+        "mass": 15.5,
+        "propDiameter": 22,
+        "batteryVoltage": 44.4,
+        "armLength": 0.8
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.024773263031566798,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 1754062.774440767,
+      "efficiencySampleCount": 0
+    },
+    {
+      "name": "15.5kg representative hex",
+      "masterSeed": 8675309,
+      "config": {
+        "droneType": "hexacopter",
+        "mass": 15.5,
+        "propDiameter": 22,
+        "batteryVoltage": 44.4,
+        "armLength": 0.8
+      },
+      "crashRate": 0,
+      "successRate": 1,
+      "successRate95CI": [
+        0.9286524008666414,
+        1
+      ],
+      "meanAltError": 0.029432119124240156,
+      "meanSurvivalTime": 16.000000000000004,
+      "totalEnergyJ": 1754078.5275697717,
+      "efficiencySampleCount": 0
+    }
+  ],
+  "additional": [
+    {
+      "name": "Insufficient thrust negative control",
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.001
+      },
+      "tests": {
+        "windEnabled": false,
+        "payloadShiftEnabled": false,
+        "batterySagEnabled": false,
+        "motorOutEnabled": false,
+        "missionPreset": "none"
+      },
+      "seed": 42,
+      "episodes": 50,
+      "durationSeconds": 16,
+      "successRate": 0,
+      "crashRate": 0,
+      "meanAltError": 1,
+      "meanSurvivalTime": 5.008000000000008,
+      "totalEnergyJ": 13.627242992102138,
+      "outcomes": {
+        "Failed takeoff": 50
+      }
+    },
+    {
+      "name": "Battery depletion negative control",
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 0.001,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "tests": {
+        "windEnabled": false,
+        "payloadShiftEnabled": false,
+        "batterySagEnabled": false,
+        "motorOutEnabled": false,
+        "missionPreset": "none"
+      },
+      "seed": 42,
+      "episodes": 50,
+      "durationSeconds": 16,
+      "successRate": 0,
+      "crashRate": 1,
+      "meanAltError": 1,
+      "meanSurvivalTime": 0.03200000000000002,
+      "totalEnergyJ": 0.666,
+      "outcomes": {
+        "Battery depletion": 50
+      }
+    },
+    {
+      "name": "Single motor failure stress",
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "tests": {
+        "windEnabled": false,
+        "payloadShiftEnabled": false,
+        "batterySagEnabled": false,
+        "motorOutEnabled": true,
+        "missionPreset": "none"
+      },
+      "seed": 42,
+      "episodes": 50,
+      "durationSeconds": 16,
+      "successRate": 0,
+      "crashRate": 1,
+      "meanAltError": 0.22093174911381866,
+      "meanSurvivalTime": 0.15584000000000012,
+      "totalEnergyJ": 12.6345888781804,
+      "outcomes": {
+        "Attitude/operating envelope failure": 50
+      }
+    },
+    {
+      "name": "All faults stress",
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "tests": {
+        "windEnabled": true,
+        "payloadShiftEnabled": true,
+        "batterySagEnabled": true,
+        "motorOutEnabled": true,
+        "missionPreset": "none"
+      },
+      "seed": 42,
+      "episodes": 50,
+      "durationSeconds": 16,
+      "successRate": 0,
+      "crashRate": 1,
+      "meanAltError": 0.2264273580354704,
+      "meanSurvivalTime": 0.19744000000000014,
+      "totalEnergyJ": 19.822432245223524,
+      "outcomes": {
+        "Attitude/operating envelope failure": 44,
+        "Numerical operating envelope exceeded": 6
+      }
+    },
+    {
+      "name": "60-second hover",
+      "config": {
+        "droneType": "quadcopter",
+        "mass": 0.029,
+        "propDiameter": 1.7716535433070868,
+        "batteryVoltage": 3.7,
+        "armLength": 0.046,
+        "batteryCapacity": 250,
+        "maxThrustPerMotorN": 0.14715
+      },
+      "tests": {
+        "windEnabled": false,
+        "payloadShiftEnabled": false,
+        "batterySagEnabled": false,
+        "motorOutEnabled": false,
+        "missionPreset": "none"
+      },
+      "seed": 42,
+      "episodes": 50,
+      "durationSeconds": 60,
+      "successRate": 1,
+      "crashRate": 0,
+      "meanAltError": 0.00825912328489329,
+      "meanSurvivalTime": 59.99999999999514,
+      "totalEnergyJ": 8237.779046300226,
+      "outcomes": {
+        "Successful mission": 50
+      }
+    }
+  ]
+}

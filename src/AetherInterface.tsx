@@ -19,6 +19,7 @@ import { DroneState, PhysicsConfig, TestModules } from './PhysicsEngine';
 import { exportSB3Script } from './TelemetryExport';
 import { parseSimulationIntent, isSimulationCommand, SimulationIntent } from './SimulationParser';
 import { SimulationApprovalDialog } from './SimulationApprovalDialog';
+import { benchmarkAudit } from './BenchmarkAudit';
 
 interface AetherInterfaceProps {
   telemetry:          DroneState | null;
@@ -34,6 +35,7 @@ interface AetherInterfaceProps {
 }
 
 interface Message {
+  id?: string;
   role:     'user' | 'assistant';
   content:  string;
   isError?: boolean;
@@ -62,7 +64,7 @@ function buildContext(
   if (telemetry) parts.push(`Telemetry: alt=${telemetry.z.toFixed(3)}m | roll=${(telemetry.phi*180/Math.PI).toFixed(1)}° | pitch=${(telemetry.theta*180/Math.PI).toFixed(1)}° | bat=${(telemetry.battery*100).toFixed(1)}% | t=${telemetry.time.toFixed(2)}s`);
   if (metrics)   parts.push(`Metrics: SEC=${metrics.secApplicable ? metrics.sec.toFixed(5) : 'N/A'} | SPT=${metrics.spt.toFixed(5)} (${metrics.sptGrade}) | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
   if (crashData) parts.push(`CRASH: ${crashData.reason ?? 'unknown'}`);
-  if (episodeStats) parts.push(`Batch: ${episodeStats.numEpisodes}eps | crashRate=${(episodeStats.crashRate*100).toFixed(1)}% | conditional meanSEC=${episodeStats.efficiencySampleCount ? episodeStats.meanSEC?.toFixed(4) : 'N/A'} | meanSPT=${episodeStats.meanSPT?.toFixed(4)}`);
+  if (episodeStats) parts.push(benchmarkAudit(episodeStats));
   const mods = Object.entries(activeTests).filter(([k,v])=>k!=='missionPreset'&&v===true).map(([k])=>k).join(', ');
   if (mods) parts.push(`Active: ${mods}`);
   if (activeTests.missionPreset !== 'none') parts.push(`Mission: ${activeTests.missionPreset}`);
@@ -320,11 +322,7 @@ export const AetherInterface = ({
   useEffect(() => {
     if (!episodeStats || episodeStats===lastEpStats || episodeStats.numEpisodes<5) return;
     setLastEpStats(episodeStats);
-    callAI(
-      `Batch benchmark done: ${episodeStats.numEpisodes}eps, crashRate=${(episodeStats.crashRate*100).toFixed(1)}%, ` +
-      `conditional meanSEC=${episodeStats.efficiencySampleCount ? episodeStats.meanSEC?.toFixed(5) : 'N/A'}, meanSPT=${episodeStats.meanSPT?.toFixed(5)}, stdSEC=${episodeStats.stdSEC?.toFixed(5)}. ` +
-      `3-bullet performance audit + one concrete improvement.`
-    ).then(text=>setMessages(p=>[...p,{role:'assistant',content:text}])).catch(()=>{});
+    setMessages(p=>[...p,{role:'assistant',content:benchmarkAudit(episodeStats)}]);
 
     if (episodeStats.crashRate > 0.5 && !trainingOffered) {
       setTrainingOffered(true);
@@ -334,10 +332,11 @@ export const AetherInterface = ({
 
   // Simulation command pipeline
   const handleSimCmd = useCallback(async (userMsg: string) => {
+    const requestId=crypto.randomUUID();
     setIsParsing(true);
     setMessages(p=>[...p,
       { role:'user', content:userMsg },
-      { role:'assistant', content:'🔍 Parsing simulation request…', isSim:true },
+      { id:requestId, role:'assistant', content:'🔍 Parsing simulation request…', isSim:true },
     ]);
     try {
       const intent = await parseSimulationIntent(userMsg, config, activeTests);
@@ -354,9 +353,9 @@ export const AetherInterface = ({
       const notable = intent.ambiguities.filter(a=>a.level!=='info');
       if (notable.length) summary += notable.map(a=>`- **${a.level.toUpperCase()}** \`${a.field}\`: ${a.issue} → *${a.assumed}*`).join('\n') + '\n\n';
       summary += '*Approval dialog is open — confirm to run.*';
-      setMessages(p=>{ const u=[...p]; u[u.length-1]={role:'assistant',content:summary,isSim:true}; return u; });
+      setMessages(p=>p.map(m=>m.id===requestId?{...m,content:summary}:m));
     } catch(err:any) {
-      setMessages(p=>{ const u=[...p]; u[u.length-1]={role:'assistant',content:`❌ Parse failed: ${err?.message??'unknown'}. Try rephrasing.`,isError:true}; return u; });
+      setMessages(p=>p.map(m=>m.id===requestId?{...m,content:`❌ Parse failed: ${err?.message??'unknown'}. Try rephrasing.`,isError:true}:m));
     } finally { setIsParsing(false); }
   }, [config, activeTests]);
 
@@ -364,6 +363,10 @@ export const AetherInterface = ({
     const msg = input.trim();
     if (!msg || isLoading || isParsing) return;
     setInput('');
+    if (episodeStats && /audit|performance|\bSEC\b|\bSPT\b|confidence|reliab|robust|benchmark results/i.test(msg) && !/\b(run|simulate|fly|start|launch)\b/i.test(msg)) {
+      setMessages(p=>[...p,{role:'user',content:msg},{role:'assistant',content:benchmarkAudit(episodeStats)}]);
+      return;
+    }
     if (isSimulationCommand(msg)) { await handleSimCmd(msg); return; }
     setMessages(p=>[...p,{role:'user',content:msg}]);
     setIsLoading(true);
@@ -373,7 +376,7 @@ export const AetherInterface = ({
     } catch(e:any) {
       setMessages(p=>[...p,{role:'assistant',content:`Error: ${e?.message??'unknown'}`,isError:true}]);
     } finally { setIsLoading(false); }
-  }, [input, isLoading, isParsing, callAI, handleSimCmd]);
+  }, [input, isLoading, isParsing, callAI, handleSimCmd, episodeStats]);
 
   const handleApprove = useCallback((intent: SimulationIntent) => {
     setPendingIntent(null);
@@ -399,17 +402,6 @@ export const AetherInterface = ({
           : 'Switch to **Simulation** tab to watch the flight.'),
     }]);
 
-    // After launching a live sim, suggest training if the heuristic is likely to fail (heavy drone)
-    if (intent.type === 'live' && intent.config.mass > 7) {
-      setTimeout(() => {
-        setMessages(p => [...p, {
-          role: 'assistant', isSim: true,
-          content: `💡 **Tip:** At ${intent.config.mass}kg, the default PD heuristic may struggle. ` +
-            `If the flight is unstable, I can generate a **Colab training notebook** to train a custom RL policy for this configuration. ` +
-            `Just say *"generate training notebook"* or click **Export Colab Notebook** below.`
-        }]);
-      }, 3000);
-    }
   }, [onRunSimulation]);
 
   const handleEdit = useCallback(async (prompt: string) => {

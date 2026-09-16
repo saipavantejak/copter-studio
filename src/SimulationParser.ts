@@ -273,7 +273,7 @@ export async function parseSimulationIntent(message: string, config: PhysicsConf
  *  Used in AetherInterface before spending time on full parsing. */
 export function isSimulationCommand(message: string): boolean {
   const runWords  = /\b(run|simulate|fly|test|launch|execute|start|trigger|benchmark|batch|train|tweak)\b/i;
-  const simTokens = /\b(sim|drone|flight|bicopter|quadcopter|hexacopter|wind|benchmark|episode|motor|payload|battery|stress[\s-]?test|long[\s-]?range|precision|high[\s-]?speed|policy|rl)\b/i;
+  const simTokens = /\b(sim|drone|flight|bicopter|quad(?:copter)?|hex(?:acopter)?|wind|benchmark|episodes?|times?|motor|payload|battery|stress[\s-]?test|long[\s-]?range|precision|high[\s-]?speed|policy|rl|crazyflie|dji|avata|mavic|matrice|anafi)\b/i;
   return /\b(hover|fly|simulate|benchmark)\b/i.test(message) || (runWords.test(message) && simTokens.test(message));
 }
 

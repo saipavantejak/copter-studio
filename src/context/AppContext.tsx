@@ -86,7 +86,8 @@ export interface AppContextType {
   // Refs
   agentRef: React.MutableRefObject<RLAgent>;
   pdAgentRef: React.MutableRefObject<RLAgent>;
-  epNumEpisodes: React.MutableRefObject<number>;
+  epNumEpisodes: number;
+  setEpNumEpisodes: React.Dispatch<React.SetStateAction<number>>;
 
   // Worker state
   epRunning: boolean;
@@ -176,7 +177,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [metricsTrayOpen, setMetricsTrayOpen] = useState(true);
 
   const [masterSeed, setMasterSeed]   = useState(42);
-  const epNumEpisodes = useRef(50);
+  const [epNumEpisodes,setEpNumEpisodes] = useState(50);
 
   const [config, setConfig] = useState<PhysicsConfig>(
     savedCfg.config ?? { droneType: 'bicopter', mass: 5.0, propDiameter: 15, batteryVoltage: 22.2, armLength: 0.5 }
@@ -247,7 +248,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const runBenchmark = useCallback(async () => {
     const serializedModel = await agentRef.current.serializeForWorker(config.droneType);
     const cfg: EpisodeBenchmarkConfig = {
-      numEpisodes:         epNumEpisodes.current,
+      numEpisodes:         epNumEpisodes,
       maxStepsPerEpisode:  Math.ceil((tests.mission?.durationSeconds ?? 16) / 0.016),
       randomizeIC:         true,
       icAltRange:          [0.5, 1.5],
@@ -260,7 +261,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       serializedModel,
     };
     runWorker(cfg);
-  }, [config, tests, sensorCfg, masterSeed, domainRandCfg, runWorker]);
+  }, [config, tests, sensorCfg, masterSeed, domainRandCfg, runWorker, epNumEpisodes]);
 
   const handleRunSimulation = useCallback(async (intent: SimulationIntent) => {
     if (intent.ambiguities.some(a => a.level === 'error')) throw new Error('Cannot execute an invalid simulation intent');
@@ -273,7 +274,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setSimStarted(true);
       setTimeout(() => setSimResetTrigger(t => t + 1), 150);
     } else {
-      if (intent.numEpisodes) epNumEpisodes.current = intent.numEpisodes;
+      if (intent.numEpisodes) setEpNumEpisodes(intent.numEpisodes);
       if (intent.masterSeed !== undefined) setMasterSeed(intent.masterSeed);
       if (intent.domainRandRequested)
         setDomainRandCfg(c => ({ ...c, enabled: intent.domainRandEnabled }));
@@ -307,7 +308,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     metrics, historyData, fullHistory,
     modelLoadTrigger, modelErrorTrigger, controllerStatus,
     showForensics, showReplay, comparisonMode, simResetTrigger,
-    agentRef, pdAgentRef, epNumEpisodes,
+    agentRef, pdAgentRef, epNumEpisodes, setEpNumEpisodes,
     epRunning, epProgress, epTotal, epResults, batchStats, benchController,
     bestFlight, sessionHistory,
     setActiveTab, setRightTab, setMetricsTrayOpen, setSimStarted,

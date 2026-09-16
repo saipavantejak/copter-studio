@@ -75,7 +75,7 @@ export function useEpisodeWorker(): UseEpisodeWorkerReturn {
           setResults(prev => [...prev, msg.result]);
           break;
         case 'done':
-          setStats(msg.stats);
+          setStats({...msg.stats,runId:crypto.randomUUID()});
           setRunning(false);
           break;
         case 'aborted':

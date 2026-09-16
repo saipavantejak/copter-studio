@@ -115,10 +115,10 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
             ['Crash Rate',   `${(stats.crashRate*100).toFixed(1)}%`,          stats.crashRate>0.3?'red':'emerald'],
             ['Mean Alt Err', `${stats.meanAltError.toFixed(3)}m`,             'zinc'],
             ['Mean Survival',`${stats.meanSurvivalTime.toFixed(1)}s`,         'zinc'],
-            ['Conditional SEC',     stats.meanSEC>0?`${stats.meanSEC.toFixed(3)}`:'—','amber'],
-            ['Std SEC',      stats.stdSEC>0?`±${stats.stdSEC.toFixed(3)}`:'—','zinc'],
-            ['Best SEC',     stats.bestSEC>0?`${stats.bestSEC.toFixed(3)}`:'—','emerald'],
-            ['Worst SEC',    stats.worstSEC>0?`${stats.worstSEC.toFixed(3)}`:'—','red'],
+            ['Conditional SEC',     stats.meanSEC!=null?`${stats.meanSEC.toFixed(3)}`:'N/A','amber'],
+            ['Std SEC',      stats.stdSEC!=null?`±${stats.stdSEC.toFixed(3)}`:'N/A','zinc'],
+            ['Best SEC',     stats.bestSEC!=null?`${stats.bestSEC.toFixed(3)}`:'N/A','emerald'],
+            ['Worst SEC',    stats.worstSEC!=null?`${stats.worstSEC.toFixed(3)}`:'N/A','red'],
           ].map(([l,v,c])=>(
             <div key={l as string} className="bg-zinc-950 border border-zinc-800 rounded-lg p-3">
               <div className="text-[10px] text-zinc-500 mb-0.5">{l as string}</div>

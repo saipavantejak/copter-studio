@@ -150,7 +150,7 @@ export function SimulationTab() {
         </button>
       </div>
       <div className="flex-1 min-h-0 overflow-hidden">
-        {rightTab === 'aether' ? (
+        <div hidden={rightTab !== 'aether'} className="h-full">
           <PanelErrorBoundary name="Aether AI">
             <AetherInterface telemetry={telemetry} crashData={crashData}
               modelLoadTrigger={modelLoadTrigger} modelErrorTrigger={modelErrorTrigger}
@@ -158,7 +158,8 @@ export function SimulationTab() {
               onShowForensics={() => setShowForensics(true)}
               onRunSimulation={handleRunSimulation} />
           </PanelErrorBoundary>
-        ) : (
+        </div>
+        {rightTab !== 'aether' && (
           <div className="flex flex-col gap-2 h-full overflow-y-auto">
             <PanelErrorBoundary name="Obs/Action Viz" compact>
               <ObsActionViz state={telemetry} action={lastAction} noisy={sensorCfg.enableNoise ? noisyState : null} />
