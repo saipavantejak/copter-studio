@@ -63,7 +63,7 @@ async function runTests() {
       const stats = await runner.run(agent, config);
       reportStr += `**Baseline PD Benchmark Results (5 episodes):**\n`;
       reportStr += `- Crash Rate: ${(stats.crashRate * 100).toFixed(1)}%\n`;
-      reportStr += `- Mean SEC: ${stats.meanSEC.toFixed(4)}\n`;
+      reportStr += `- Mean SEC: ${stats.meanSEC == null ? 'N/A' : stats.meanSEC.toFixed(4)}\n`;
       
       if (stats.crashRate > 0.5) {
          reportStr += `- *Aether Recommendation:* This highly unstable configuration requires Reinforcement Learning. Generating Cloud Auto-RL notebook suggestion.\n`;

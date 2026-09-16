@@ -2,7 +2,7 @@
 // v9 fix: masterRng.fork(ep) used for all episode seeds — consistent with SeededRandom contract.
 //         (Previously masterRng was created then never consumed.)
 
-import { DEFAULT_MISSION, missionErrors } from './MissionSpec';
+import { resolveMission, isTrackingMission, missionErrors } from './MissionSpec';
 import { DT } from './physics/constants';
 import { rateInterval } from './BenchmarkEvidence';
 import { propulsionEvidence } from './AircraftProfiles';
@@ -63,6 +63,7 @@ export interface EpisodeResult {
 }
 
 export interface BatchStats {
+  runId?: string;
   successRate95CI?: [number, number] | null;
   crashRate95CI?: [number, number] | null;
   cancelled?: boolean;
@@ -77,12 +78,12 @@ export interface BatchStats {
   meanSurvivalTime: number;
   meanAltError: number;
   stdAltError: number;
-  meanSEC: number;
-  stdSEC: number;
+  meanSEC: number | null;
+  stdSEC: number | null;
   meanSPT: number;
   stdSPT: number;
-  bestSEC: number;
-  worstSEC: number;
+  bestSEC: number | null;
+  worstSEC: number | null;
   masterSeed: number;
   episodes: EpisodeResult[];
 }
@@ -114,7 +115,7 @@ export class EpisodeRunner {
     }
     if (!Number.isInteger(cfg.numEpisodes) || cfg.numEpisodes < 1 || cfg.numEpisodes > 500) throw new Error('Episode count must be 1–500');
     if (!Number.isInteger(cfg.maxStepsPerEpisode) || cfg.maxStepsPerEpisode < 1 || cfg.maxStepsPerEpisode > 225000) throw new Error('Invalid step budget');
-    const mission = cfg.testModules.mission ?? {...DEFAULT_MISSION, durationSeconds:cfg.maxStepsPerEpisode*DT};
+    const mission = resolveMission(cfg.testModules,cfg.maxStepsPerEpisode*DT);
     const missionIssues = missionErrors(mission);
     if (missionIssues.length) throw new Error(missionIssues.join('; '));
     const maxSteps = Math.min(cfg.maxStepsPerEpisode, Math.ceil(mission.durationSeconds / DT));
@@ -170,7 +171,7 @@ export class EpisodeRunner {
         }
         const obs = phys.getObservation();
         const stateArr = [obs.x,obs.y,obs.z,obs.x_dot,obs.y_dot,obs.z_dot,obs.phi,obs.theta,obs.psi,obs.p,obs.q,obs.r];
-        const action = agent.predictAction(stateArr, cfg.physicsConfig.droneType, cfg.testModules.missionPreset, phys.config, cfg.testModules.mission);
+        const action = agent.predictAction(stateArr, cfg.physicsConfig.droneType, cfg.testModules.missionPreset, cfg.physicsConfig, mission);
         const ns = phys.step(action);
 
         history.push({ ...ns, servos: action });
@@ -208,9 +209,7 @@ export class EpisodeRunner {
       if (signal?.aborted) break;
       const finalState = phys.getState();
       const tail = history.filter(h => h.time > finalState.time - Math.min(2, finalState.time));
-      const trackingOK = tail.length > 0 && tail.every(h =>
-        Math.abs(h.z - mission.targetAltitudeM) <= 0.1 &&
-        (mission.mode !== 'velocity' || Math.abs(h.x_dot - mission.forwardVelocityMps) <= 0.5));
+      const trackingOK = tail.length > 0 && tail.every(h => isTrackingMission(h,mission));
       const completed = finalState.time + DT / 2 >= mission.durationSeconds;
       const successful = !crashed && completed && trackingOK;
       if (!crashed) outcome = successful ? 'Successful mission' : finalState.z < 0.1 ? 'Failed takeoff' : completed ? 'Tracking failure' : 'Time limit reached';
@@ -252,7 +251,7 @@ export class EpisodeRunner {
     const mAlt=mean(altErrs), mSEC=mean(secs), mSPT=mean(spts);
 
     return {
-      simulatorVersion: 'reliability-v2',
+      simulatorVersion: 'reliability-v3',
       requestedConfig: JSON.parse(JSON.stringify({...cfg,serializedModel:undefined})),
       cancelled: signal?.aborted ?? false,
       successRate95CI: rateInterval(results.filter(r=>r.successful).length,results.length),
@@ -265,10 +264,10 @@ export class EpisodeRunner {
       durationSeconds: mission.durationSeconds,
       meanSurvivalTime: mean(times),
       meanAltError: mAlt, stdAltError: std(altErrs, mAlt),
-      meanSEC: mSEC, stdSEC: std(secs, mSEC),
+      meanSEC: secs.length ? mSEC : null, stdSEC: secs.length>=2 ? std(secs, mSEC) : null,
       meanSPT: mSPT, stdSPT: std(spts, mSPT),
-      bestSEC:  secs.length ? Math.min(...secs) : 0,
-      worstSEC: secs.length ? Math.max(...secs) : 0,
+      bestSEC:  secs.length ? Math.min(...secs) : null,
+      worstSEC: secs.length ? Math.max(...secs) : null,
       masterSeed: cfg.masterSeed,
       episodes: results,
     };

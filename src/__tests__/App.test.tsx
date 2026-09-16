@@ -149,4 +149,22 @@ describe('App — Integration Tests', () => {
       expect(screen.getByText('Heuristic PD')).toBeTruthy();
     });
   });
+
+  it('preserves Aether input, episode count and zero seed across navigation', async () => {
+    render(<App />);
+    fireEvent.click(screen.getByText('INITIALISE MISSION'));
+    act(() => { vi.advanceTimersByTime(1500); });
+    const input=screen.getByPlaceholderText(/Ask or say/);
+    fireEvent.change(input,{target:{value:'Run a 2kg quad'}});
+    fireEvent.click(screen.getByText('Benchmark'));
+    expect((screen.getByLabelText('Benchmark episodes') as HTMLSelectElement).value).toBe('50');
+    fireEvent.change(screen.getByLabelText('Benchmark episodes'),{target:{value:'10'}});
+    fireEvent.change(screen.getByLabelText('Benchmark seed'),{target:{value:'0'}});
+    expect(screen.getByText(/Cloud database is not connected/)).toBeTruthy();
+    fireEvent.click(screen.getByText('Simulation'));
+    expect((screen.getByPlaceholderText(/Ask or say/) as HTMLInputElement).value).toBe('Run a 2kg quad');
+    fireEvent.click(screen.getByText('Benchmark'));
+    expect((screen.getByLabelText('Benchmark episodes') as HTMLSelectElement).value).toBe('10');
+    expect((screen.getByLabelText('Benchmark seed') as HTMLInputElement).value).toBe('0');
+  });
 });

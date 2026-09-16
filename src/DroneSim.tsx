@@ -17,6 +17,7 @@ import * as THREE from 'three';
 import { PhysicsEngine, PhysicsConfig, TestModules, DroneState } from './PhysicsEngine';
 import { SensorConfig } from './SensorNoise';
 import { RLAgent } from './RLAgent';
+import { resolveMission } from './MissionSpec';
 import { MissionLogic, MissionMetrics, TelemetryHistory } from './MissionLogic';
 
 interface DroneSimProps {
@@ -219,7 +220,7 @@ const DroneModel = ({
         agentRef.current.resetIntegral();
         pdAgentRef.current.resetIntegral();
       }
-      if (tests.mission && phys.getState().time >= tests.mission.durationSeconds) {
+      if (phys.getState().time >= resolveMission(tests).durationSeconds) {
         isRunningRef.current = false;
         onTelemetryUpdate(phys.getState());
         return;

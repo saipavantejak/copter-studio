@@ -90,7 +90,7 @@ function AppContent() {
         </header>
 
         {/* ── Tab Content ────────────────────────────────────────────── */}
-        {activeTab === 'simulation'   && <SimulationTab />}
+        <div hidden={activeTab !== 'simulation'}><SimulationTab /></div>
         {activeTab === 'benchmark'    && <BenchmarkTab />}
         {activeTab === 'policy-xray'  && <PolicyXRayTab />}
         {activeTab === 'digital-twin' && <DigitalTwinTab />}

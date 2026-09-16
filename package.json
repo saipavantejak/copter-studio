@@ -5,7 +5,17 @@
   "author": "saipavantejak",
   "license": "MIT",
   "type": "module",
-  "keywords": ["drone", "simulator", "bicopter", "quadcopter", "reinforcement-learning", "tensorflow", "threejs", "react", "physics-engine"],
+  "keywords": [
+    "drone",
+    "simulator",
+    "bicopter",
+    "quadcopter",
+    "reinforcement-learning",
+    "tensorflow",
+    "threejs",
+    "react",
+    "physics-engine"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/saipavantejak/copter-studio.git"
@@ -32,6 +42,7 @@
     "@google/genai": "^1.29.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@supabase/supabase-js": "2.116.0",
     "@tailwindcss/vite": "^4.1.14",
     "@tensorflow/tfjs": "^4.22.0",
     "@vitejs/plugin-react": "^5.0.4",
