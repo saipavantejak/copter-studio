@@ -185,10 +185,10 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
         {/* Interpretation */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-xs text-zinc-400 space-y-1">
           <div className="font-bold text-zinc-300 mb-2">Interpretation</div>
-          {stats.crashRate > 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}90% — the heuristic PD controller cannot stabilize this configuration. <span className="text-zinc-400">Try: (1) Load a trained RL model via the Model Loader, (2) Reduce mass or increase prop diameter, (3) Disable fault modules (motor-out, wind) to establish a baseline.</span></div>}
+          {stats.crashRate > 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}90% — inspect the recorded failure events and executed inputs. <span className="text-zinc-400">The crash rate alone cannot distinguish controller, propulsion, battery, numerical or injected-fault causes. Establish a baseline before changing parameters.</span></div>}
           {stats.crashRate > 0.5 && stats.crashRate <= 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}50% — simulation failures require diagnosis. <span className="text-zinc-400">Check executed inputs, propulsion/inertia calibration, controller compatibility and recorded failure events before tuning or RL training.</span></div>}
-          {stats.stdSEC > stats.meanSEC * 0.5 && stats.meanSEC > 0 && <div className="text-amber-400">⚠ High SEC variance (±{(stats.stdSEC/stats.meanSEC*100).toFixed(0)}%) — policy is inconsistent across conditions.</div>}
-          {stats.crashRate >= 0.1 && stats.crashRate <= 0.5 && <div className="text-amber-400">Moderate crash rate — consider enabling domain randomization or training a dedicated RL policy for better robustness.</div>}
+          {stats.stdSEC!=null && stats.meanSEC!=null && stats.stdSEC > stats.meanSEC * 0.5 && stats.meanSEC > 0 && <div className="text-amber-400">⚠ High conditional SEC variation (±{(stats.stdSEC/stats.meanSEC*100).toFixed(0)}%) among applicable successful episodes. Inspect conditions and sample count before attributing a cause.</div>}
+          {stats.crashRate >= 0.1 && stats.crashRate <= 0.5 && <div className="text-amber-400">Moderate crash rate — compare failure events and executed conditions before selecting a remedy.</div>}
           {stats.crashRate < 0.1 && <div className="text-emerald-400">✓ Low crash rate — consider more aggressive domain randomization to stress-test further.</div>}
           {!isDomainRandEnabled && <div className="text-zinc-500 italic">Domain randomization explores assumed variation; it does not establish real-world robustness. Without it, all episodes use identical physics parameters.</div>}
         </div>
