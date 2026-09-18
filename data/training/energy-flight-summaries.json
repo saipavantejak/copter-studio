@@ -1,0 +1,3006 @@
+{
+  "source": "https://raw.githubusercontent.com/thiago-a-rod/energy_consumption/3058a25a7092633e05a3fe169c6ae3b967636b9d/MLModel/data/data_clean_cruise.csv",
+  "sha256": "9e480aa860f701ad2c6769948fc3c1be20ac1c591122ca73afc3ca6b5587a21a",
+  "features": [
+    "payloadKg",
+    "meanGroundSpeedMps",
+    "meanAbsVerticalSpeedMps",
+    "meanOnboardAirflowMps",
+    "stdOnboardAirflowMps",
+    "meanAltitudeM"
+  ],
+  "records": [
+    {
+      "flightId": 1,
+      "samples": 854,
+      "features": [
+        0.0,
+        3.723540431625662,
+        0.30782436200731034,
+        4.976313524556216,
+        1.3683716231605052,
+        23.526040058799854
+      ],
+      "meanPowerW": 462.77881362078335,
+      "observedCruiseDurationSeconds": 127.89999999999999,
+      "integratedCruiseEnergyJ": 59189.41026209819,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 2,
+      "samples": 882,
+      "features": [
+        0.0,
+        3.664044994612385,
+        0.3107983546362636,
+        4.7646290657693555,
+        1.803935640875938,
+        48.98053554254079
+      ],
+      "meanPowerW": 465.20675045238625,
+      "observedCruiseDurationSeconds": 132.10000000000002,
+      "integratedCruiseEnergyJ": 61453.81173476023,
+      "largestSamplingGapSeconds": 0.28999999999999204
+    },
+    {
+      "flightId": 3,
+      "samples": 641,
+      "features": [
+        0.0,
+        5.170046886798779,
+        0.6998006120228798,
+        6.975718756715455,
+        2.647087237546333,
+        23.58302104413509
+      ],
+      "meanPowerW": 453.27433353772204,
+      "observedCruiseDurationSeconds": 96.0,
+      "integratedCruiseEnergyJ": 43514.33601962132,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 4,
+      "samples": 541,
+      "features": [
+        0.0,
+        5.859294539778608,
+        1.1212277845053151,
+        7.290969146328208,
+        3.0826602903163693,
+        22.977139179029585
+      ],
+      "meanPowerW": 446.1273871885532,
+      "observedCruiseDurationSeconds": 81.0,
+      "integratedCruiseEnergyJ": 36136.31836227281,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 5,
+      "samples": 644,
+      "features": [
+        0.0,
+        3.7009453173606515,
+        0.2538681022119647,
+        5.233611408737658,
+        1.4285622150179678,
+        26.864240039049655
+      ],
+      "meanPowerW": 444.1063888291782,
+      "observedCruiseDurationSeconds": 96.5,
+      "integratedCruiseEnergyJ": 42856.26652201569,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 6,
+      "samples": 750,
+      "features": [
+        0.0,
+        3.6421103229131853,
+        0.28205440152963906,
+        5.331739252100264,
+        1.6425138752366932,
+        23.708396950030544
+      ],
+      "meanPowerW": 442.6083904599934,
+      "observedCruiseDurationSeconds": 112.29,
+      "integratedCruiseEnergyJ": 49700.496164752665,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 7,
+      "samples": 815,
+      "features": [
+        0.0,
+        3.6836008689563813,
+        0.28203263115892824,
+        5.885923958151241,
+        1.2845751859132921,
+        23.963948742659085
+      ],
+      "meanPowerW": 467.9396622632819,
+      "observedCruiseDurationSeconds": 122.3,
+      "integratedCruiseEnergyJ": 57229.02069479937,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 8,
+      "samples": 812,
+      "features": [
+        0.0,
+        3.7226590265600183,
+        0.20428299741825456,
+        4.523026307740887,
+        1.0477526311661813,
+        23.518740560898657
+      ],
+      "meanPowerW": 497.9032987401442,
+      "observedCruiseDurationSeconds": 121.6,
+      "integratedCruiseEnergyJ": 60545.04112680153,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 10,
+      "samples": 577,
+      "features": [
+        0.0,
+        5.208456647291772,
+        0.554405518996363,
+        6.47040852374907,
+        2.389851511235485,
+        24.695991293939276
+      ],
+      "meanPowerW": 470.8972309144513,
+      "observedCruiseDurationSeconds": 86.41,
+      "integratedCruiseEnergyJ": 40690.22972331774,
+      "largestSamplingGapSeconds": 0.22999999999999687
+    },
+    {
+      "flightId": 12,
+      "samples": 397,
+      "features": [
+        0.0,
+        7.480605913664963,
+        1.4919024985817047,
+        9.187668369615116,
+        2.772740432106351,
+        24.519849021988687
+      ],
+      "meanPowerW": 449.84097959733583,
+      "observedCruiseDurationSeconds": 59.4,
+      "integratedCruiseEnergyJ": 26720.554188081747,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 14,
+      "samples": 363,
+      "features": [
+        0.25,
+        8.012663262934627,
+        2.1487300172781794,
+        9.60762868283645,
+        4.147262868898027,
+        23.480853514636273
+      ],
+      "meanPowerW": 554.9746863460812,
+      "observedCruiseDurationSeconds": 54.4,
+      "integratedCruiseEnergyJ": 30190.622937226817,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 15,
+      "samples": 392,
+      "features": [
+        0.25,
+        7.466232573640361,
+        1.5796851717290528,
+        8.81697952556122,
+        3.2765539159206325,
+        23.92846916706488
+      ],
+      "meanPowerW": 505.49504217941444,
+      "observedCruiseDurationSeconds": 58.599999999999994,
+      "integratedCruiseEnergyJ": 29622.00947171368,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 16,
+      "samples": 421,
+      "features": [
+        0.25,
+        6.363720598367991,
+        1.0813587245094836,
+        7.827805102259334,
+        2.9306976668296816,
+        23.651450396305396
+      ],
+      "meanPowerW": 495.80740389588067,
+      "observedCruiseDurationSeconds": 63.00999999999999,
+      "integratedCruiseEnergyJ": 31240.824519479436,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 17,
+      "samples": 570,
+      "features": [
+        0.25,
+        5.25116071189142,
+        0.5707349292477562,
+        6.641088996489098,
+        1.9003020338835732,
+        23.935275700360283
+      ],
+      "meanPowerW": 493.66738660480536,
+      "observedCruiseDurationSeconds": 85.4,
+      "integratedCruiseEnergyJ": 42159.19481605038,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 18,
+      "samples": 804,
+      "features": [
+        0.25,
+        3.7591721892829173,
+        0.2866122443582605,
+        5.8162282205369955,
+        2.475295232323536,
+        24.60711494980017
+      ],
+      "meanPowerW": 517.1980320428617,
+      "observedCruiseDurationSeconds": 120.49999999999999,
+      "integratedCruiseEnergyJ": 62322.362861164824,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 20,
+      "samples": 450,
+      "features": [
+        0.25,
+        6.618154163137845,
+        1.0306112790679525,
+        8.026747272495419,
+        2.355504698058413,
+        50.49697151600138
+      ],
+      "meanPowerW": 506.4721493235231,
+      "observedCruiseDurationSeconds": 67.38999999999999,
+      "integratedCruiseEnergyJ": 34131.158142912216,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 23,
+      "samples": 332,
+      "features": [
+        0.25,
+        8.061187088379988,
+        2.000058362590812,
+        9.8174446621891,
+        3.872472832041553,
+        49.83142391791046
+      ],
+      "meanPowerW": 533.3256655411188,
+      "observedCruiseDurationSeconds": 49.699999999999996,
+      "integratedCruiseEnergyJ": 26506.285577393603,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 59,
+      "samples": 388,
+      "features": [
+        0.25,
+        7.350221174330989,
+        1.739616590567786,
+        9.501437168667113,
+        3.3971647869418735,
+        50.1460429400975
+      ],
+      "meanPowerW": 544.0259205686015,
+      "observedCruiseDurationSeconds": 58.10000000000001,
+      "integratedCruiseEnergyJ": 31607.905985035748,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 60,
+      "samples": 345,
+      "features": [
+        0.25,
+        7.96510032783989,
+        2.1591503948917414,
+        9.613759710714797,
+        3.8380601935950125,
+        77.3593952782395
+      ],
+      "meanPowerW": 546.8720730201744,
+      "observedCruiseDurationSeconds": 51.6,
+      "integratedCruiseEnergyJ": 28218.598967841,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 68,
+      "samples": 358,
+      "features": [
+        0.25,
+        7.928175797872586,
+        2.1203319458192578,
+        9.326275951239657,
+        3.5381594184810674,
+        99.67060036231845
+      ],
+      "meanPowerW": 562.3400134087739,
+      "observedCruiseDurationSeconds": 53.489999999999995,
+      "integratedCruiseEnergyJ": 30079.567317235313,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 76,
+      "samples": 798,
+      "features": [
+        0.75,
+        3.745789109675286,
+        0.2709104399523744,
+        5.624878969176584,
+        1.7339160751169536,
+        26.235985546319032
+      ],
+      "meanPowerW": 581.5703888304063,
+      "observedCruiseDurationSeconds": 119.80000000000001,
+      "integratedCruiseEnergyJ": 69672.13258188267,
+      "largestSamplingGapSeconds": 0.28999999999999204
+    },
+    {
+      "flightId": 77,
+      "samples": 370,
+      "features": [
+        0.0,
+        7.620877288809276,
+        2.246735563127844,
+        9.743312289224203,
+        3.5723654073570477,
+        25.58484611425159
+      ],
+      "meanPowerW": 520.5866287744086,
+      "observedCruiseDurationSeconds": 55.400000000000006,
+      "integratedCruiseEnergyJ": 28840.499234102237,
+      "largestSamplingGapSeconds": 0.22000000000000597
+    },
+    {
+      "flightId": 78,
+      "samples": 581,
+      "features": [
+        0.0,
+        5.142189436815644,
+        0.6695614008012235,
+        7.878398388179383,
+        2.378622522242257,
+        52.93145097878716
+      ],
+      "meanPowerW": 464.83076243659633,
+      "observedCruiseDurationSeconds": 87.10000000000001,
+      "integratedCruiseEnergyJ": 40486.75940822755,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 79,
+      "samples": 382,
+      "features": [
+        0.0,
+        7.49435327302549,
+        1.697198698768606,
+        10.00776225270091,
+        2.4029310848127516,
+        48.82501764464209
+      ],
+      "meanPowerW": 448.6996049336779,
+      "observedCruiseDurationSeconds": 57.199999999999996,
+      "integratedCruiseEnergyJ": 25665.617402206375,
+      "largestSamplingGapSeconds": 0.23999999999999488
+    },
+    {
+      "flightId": 80,
+      "samples": 407,
+      "features": [
+        0.0,
+        7.202379487885655,
+        1.724581873668692,
+        10.100820895467287,
+        3.588246202322372,
+        48.40435787535344
+      ],
+      "meanPowerW": 527.2614525607142,
+      "observedCruiseDurationSeconds": 60.910000000000004,
+      "integratedCruiseEnergyJ": 32115.495075473103,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 81,
+      "samples": 554,
+      "features": [
+        0.0,
+        5.15040944807153,
+        0.6148417356905209,
+        7.5257268795303816,
+        1.6209565690215169,
+        72.99143594547267
+      ],
+      "meanPowerW": 454.63650990629776,
+      "observedCruiseDurationSeconds": 82.89,
+      "integratedCruiseEnergyJ": 37684.82030613302,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 82,
+      "samples": 466,
+      "features": [
+        0.0,
+        6.318686860897247,
+        1.2644503618480216,
+        9.578685369779325,
+        2.9351247299589978,
+        73.28433568165906
+      ],
+      "meanPowerW": 482.2742144419673,
+      "observedCruiseDurationSeconds": 69.6,
+      "integratedCruiseEnergyJ": 33566.28532516092,
+      "largestSamplingGapSeconds": 0.22999999999998977
+    },
+    {
+      "flightId": 83,
+      "samples": 319,
+      "features": [
+        0.0,
+        7.109824959816362,
+        1.4511808307953624,
+        9.018173270705457,
+        3.0708290414342923,
+        71.57463059318214
+      ],
+      "meanPowerW": 466.7525227443149,
+      "observedCruiseDurationSeconds": 47.79,
+      "integratedCruiseEnergyJ": 22306.10306195081,
+      "largestSamplingGapSeconds": 0.2400000000000091
+    },
+    {
+      "flightId": 84,
+      "samples": 549,
+      "features": [
+        0.0,
+        5.136622900611827,
+        0.6762310733121357,
+        9.127281013950524,
+        2.355153731760867,
+        96.49487617648143
+      ],
+      "meanPowerW": 477.4571995486463,
+      "observedCruiseDurationSeconds": 82.19999999999999,
+      "integratedCruiseEnergyJ": 39246.98180289872,
+      "largestSamplingGapSeconds": 0.29000000000002046
+    },
+    {
+      "flightId": 85,
+      "samples": 428,
+      "features": [
+        0.0,
+        6.8746821738133965,
+        1.698141381802142,
+        11.14284375924617,
+        2.7602449267726317,
+        96.51047074913978
+      ],
+      "meanPowerW": 509.5423000224015,
+      "observedCruiseDurationSeconds": 64.00000000000001,
+      "integratedCruiseEnergyJ": 32610.707201433703,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 86,
+      "samples": 399,
+      "features": [
+        0.0,
+        7.191938160999628,
+        1.7798797204352472,
+        10.051892820275206,
+        3.2759042149472073,
+        97.00920248504359
+      ],
+      "meanPowerW": 460.16212659084795,
+      "observedCruiseDurationSeconds": 59.69999999999999,
+      "integratedCruiseEnergyJ": 27471.678957473618,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 87,
+      "samples": 806,
+      "features": [
+        0.25,
+        3.7304709422724285,
+        0.4920142448181004,
+        7.509507055971971,
+        2.9588712660101124,
+        98.85423808749682
+      ],
+      "meanPowerW": 491.6032248829226,
+      "observedCruiseDurationSeconds": 120.7,
+      "integratedCruiseEnergyJ": 59336.50924336875,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 88,
+      "samples": 460,
+      "features": [
+        0.25,
+        6.430794489563914,
+        1.1742116259072142,
+        8.422648764573612,
+        3.635315201207324,
+        97.86093029373788
+      ],
+      "meanPowerW": 487.00424525987324,
+      "observedCruiseDurationSeconds": 68.9,
+      "integratedCruiseEnergyJ": 33554.59249840527,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 91,
+      "samples": 354,
+      "features": [
+        0.5,
+        7.249279275274584,
+        1.5555040144342933,
+        8.809907197816779,
+        3.262027382565225,
+        74.8827345031842
+      ],
+      "meanPowerW": 540.2249876142869,
+      "observedCruiseDurationSeconds": 52.78999999999999,
+      "integratedCruiseEnergyJ": 28518.4770961582,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 92,
+      "samples": 363,
+      "features": [
+        0.5,
+        7.232683939824392,
+        2.029571497688723,
+        9.312725606697917,
+        4.0281550709001355,
+        75.48734256597733
+      ],
+      "meanPowerW": 583.6683922019698,
+      "observedCruiseDurationSeconds": 54.300000000000004,
+      "integratedCruiseEnergyJ": 31693.193696566967,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 93,
+      "samples": 566,
+      "features": [
+        0.5,
+        5.267620892165886,
+        0.6362636490453546,
+        7.019208978522909,
+        3.132708503509122,
+        50.48305474207281
+      ],
+      "meanPowerW": 561.6913191595448,
+      "observedCruiseDurationSeconds": 84.7,
+      "integratedCruiseEnergyJ": 47575.25473281345,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 94,
+      "samples": 801,
+      "features": [
+        0.5,
+        3.759935790822659,
+        0.24692613254744625,
+        5.191975887211507,
+        2.222975476362379,
+        49.67960941517809
+      ],
+      "meanPowerW": 561.6228180905013,
+      "observedCruiseDurationSeconds": 120.20000000000002,
+      "integratedCruiseEnergyJ": 67507.06273447826,
+      "largestSamplingGapSeconds": 0.28999999999999915
+    },
+    {
+      "flightId": 95,
+      "samples": 383,
+      "features": [
+        0.5,
+        7.493143971086906,
+        1.5041047411404886,
+        8.577827224619105,
+        3.246678731211105,
+        52.63841798700801
+      ],
+      "meanPowerW": 554.9358565359031,
+      "observedCruiseDurationSeconds": 57.3,
+      "integratedCruiseEnergyJ": 31797.824579507247,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 96,
+      "samples": 564,
+      "features": [
+        0.5,
+        5.213969433208768,
+        0.5963691716112648,
+        6.679540322094135,
+        2.35962204447634,
+        77.21587830802416
+      ],
+      "meanPowerW": 555.9871472959649,
+      "observedCruiseDurationSeconds": 84.41000000000001,
+      "integratedCruiseEnergyJ": 46930.8751032524,
+      "largestSamplingGapSeconds": 0.22000000000000597
+    },
+    {
+      "flightId": 97,
+      "samples": 793,
+      "features": [
+        0.5,
+        3.7457893617036486,
+        0.2297409106859795,
+        4.825492832569285,
+        1.292802499320266,
+        79.87322068969644
+      ],
+      "meanPowerW": 562.1599169428707,
+      "observedCruiseDurationSeconds": 118.69999999999999,
+      "integratedCruiseEnergyJ": 66728.38214111875,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 98,
+      "samples": 369,
+      "features": [
+        0.5,
+        7.808112020882623,
+        2.1183163732760035,
+        8.964662198170958,
+        4.266048901568457,
+        25.35807896351343
+      ],
+      "meanPowerW": 583.1879441831021,
+      "observedCruiseDurationSeconds": 55.21000000000001,
+      "integratedCruiseEnergyJ": 32197.806398349072,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 99,
+      "samples": 447,
+      "features": [
+        0.5,
+        6.462598970263816,
+        1.0472709664754978,
+        7.7481811617305905,
+        2.6727158400496616,
+        77.0401054727817
+      ],
+      "meanPowerW": 559.1681532385498,
+      "observedCruiseDurationSeconds": 66.8,
+      "integratedCruiseEnergyJ": 37352.43263633513,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 100,
+      "samples": 331,
+      "features": [
+        0.5,
+        7.848302494915395,
+        2.1224594629230173,
+        8.971194343299032,
+        4.1862491976501035,
+        50.81921906994911
+      ],
+      "meanPowerW": 571.7701078843755,
+      "observedCruiseDurationSeconds": 49.39999999999999,
+      "integratedCruiseEnergyJ": 28245.443329488146,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 101,
+      "samples": 449,
+      "features": [
+        0.5,
+        6.46394541406997,
+        1.066542131333245,
+        7.754657733786318,
+        2.558797672428121,
+        51.202567897524155
+      ],
+      "meanPowerW": 553.5751109172732,
+      "observedCruiseDurationSeconds": 67.2,
+      "integratedCruiseEnergyJ": 37200.24745364075,
+      "largestSamplingGapSeconds": 0.28999999999999915
+    },
+    {
+      "flightId": 102,
+      "samples": 750,
+      "features": [
+        0.5,
+        3.727758032799822,
+        0.2944692647873263,
+        5.589575905555059,
+        1.569290610109882,
+        101.4286721418585
+      ],
+      "meanPowerW": 561.7274452577802,
+      "observedCruiseDurationSeconds": 112.00000000000001,
+      "integratedCruiseEnergyJ": 62913.4738688714,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 105,
+      "samples": 554,
+      "features": [
+        0.5,
+        5.258482156104308,
+        0.6076812708172851,
+        6.537096405309367,
+        2.2589047125363333,
+        100.63824877338244
+      ],
+      "meanPowerW": 563.4559443160666,
+      "observedCruiseDurationSeconds": 83.0,
+      "integratedCruiseEnergyJ": 46766.843378233534,
+      "largestSamplingGapSeconds": 0.29000000000002046
+    },
+    {
+      "flightId": 106,
+      "samples": 408,
+      "features": [
+        0.5,
+        7.234715323042398,
+        1.5298532557309446,
+        8.686362911816248,
+        3.3341921800986944,
+        100.60716475558817
+      ],
+      "meanPowerW": 577.2581054178482,
+      "observedCruiseDurationSeconds": 61.01,
+      "integratedCruiseEnergyJ": 35218.51701154292,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 107,
+      "samples": 340,
+      "features": [
+        0.5,
+        7.763017380593448,
+        2.0625580529569585,
+        9.227952743104591,
+        4.043724853100879,
+        100.61015779127287
+      ],
+      "meanPowerW": 581.2639877540282,
+      "observedCruiseDurationSeconds": 50.8,
+      "integratedCruiseEnergyJ": 29528.210577904632,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 108,
+      "samples": 506,
+      "features": [
+        0.0,
+        5.1681452199378635,
+        0.6931837019645434,
+        7.101706354217556,
+        3.053116598462037,
+        26.743938035182854
+      ],
+      "meanPowerW": 449.12477559733753,
+      "observedCruiseDurationSeconds": 75.6,
+      "integratedCruiseEnergyJ": 33953.833035158714,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 109,
+      "samples": 814,
+      "features": [
+        0.5,
+        3.6850201384447825,
+        0.3117301299960886,
+        6.087930345512857,
+        2.8714112869535344,
+        76.33054641917349
+      ],
+      "meanPowerW": 548.0868530299464,
+      "observedCruiseDurationSeconds": 122.28999999999999,
+      "integratedCruiseEnergyJ": 67025.54125703214,
+      "largestSamplingGapSeconds": 1.0999999999999943
+    },
+    {
+      "flightId": 110,
+      "samples": 752,
+      "features": [
+        0.0,
+        3.742862489494439,
+        0.24013924598551262,
+        4.7240323878107064,
+        1.7241322898393392,
+        77.45475992471658
+      ],
+      "meanPowerW": 459.3249608929877,
+      "observedCruiseDurationSeconds": 114.19999999999999,
+      "integratedCruiseEnergyJ": 52454.910533979186,
+      "largestSamplingGapSeconds": 1.6999999999999886
+    },
+    {
+      "flightId": 111,
+      "samples": 337,
+      "features": [
+        0.25,
+        7.733547555219518,
+        1.9913888956695638,
+        8.498025794055254,
+        4.043509288010413,
+        26.789642010227098
+      ],
+      "meanPowerW": 530.4337194458362,
+      "observedCruiseDurationSeconds": 50.400000000000006,
+      "integratedCruiseEnergyJ": 26733.85946007015,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 112,
+      "samples": 569,
+      "features": [
+        0.5,
+        5.121246341297414,
+        0.6515912065503247,
+        6.900735290527344,
+        2.942242644604629,
+        74.45736248291242
+      ],
+      "meanPowerW": 565.7852514197822,
+      "observedCruiseDurationSeconds": 85.0,
+      "integratedCruiseEnergyJ": 48091.74637068149,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 113,
+      "samples": 351,
+      "features": [
+        0.25,
+        7.472564913800646,
+        2.2347844614844687,
+        9.646952353977023,
+        4.247038537211166,
+        101.09305492109344
+      ],
+      "meanPowerW": 556.5625615459487,
+      "observedCruiseDurationSeconds": 52.50000000000001,
+      "integratedCruiseEnergyJ": 29219.53448116231,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 114,
+      "samples": 372,
+      "features": [
+        0.0,
+        6.753925620385048,
+        1.765412165933449,
+        9.304056489268188,
+        3.7769858352849783,
+        75.3408047106867
+      ],
+      "meanPowerW": 510.77635640077943,
+      "observedCruiseDurationSeconds": 55.59,
+      "integratedCruiseEnergyJ": 28394.05765231933,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 115,
+      "samples": 470,
+      "features": [
+        0.5,
+        6.231580208002599,
+        1.0569005238345088,
+        8.197478642066319,
+        3.2434386075176818,
+        25.974849681161405
+      ],
+      "meanPowerW": 563.626975637995,
+      "observedCruiseDurationSeconds": 70.2,
+      "integratedCruiseEnergyJ": 39566.61368978725,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 116,
+      "samples": 396,
+      "features": [
+        0.0,
+        7.3236460288249585,
+        2.2150841654062505,
+        9.641353651835834,
+        4.410554248624677,
+        25.65374031252466
+      ],
+      "meanPowerW": 521.9692696544848,
+      "observedCruiseDurationSeconds": 59.1,
+      "integratedCruiseEnergyJ": 30848.38383658005,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 117,
+      "samples": 373,
+      "features": [
+        0.0,
+        7.394835066099806,
+        1.7355234127204104,
+        9.494041218210722,
+        3.8715381559639233,
+        49.623471000630374
+      ],
+      "meanPowerW": 479.58617095957686,
+      "observedCruiseDurationSeconds": 55.8,
+      "integratedCruiseEnergyJ": 26760.90833954439,
+      "largestSamplingGapSeconds": 0.3200000000000074
+    },
+    {
+      "flightId": 118,
+      "samples": 808,
+      "features": [
+        0.25,
+        3.686918067468684,
+        0.43317506779379267,
+        7.029161883086185,
+        3.6994577847421284,
+        98.88193839428703
+      ],
+      "meanPowerW": 514.4303805337379,
+      "observedCruiseDurationSeconds": 121.7,
+      "integratedCruiseEnergyJ": 62606.17731095591,
+      "largestSamplingGapSeconds": 0.8000000000000114
+    },
+    {
+      "flightId": 119,
+      "samples": 450,
+      "features": [
+        0.0,
+        6.4414386338704634,
+        1.1288689368574332,
+        8.180563801845386,
+        3.315535394947663,
+        49.047432755468854
+      ],
+      "meanPowerW": 478.07609829016235,
+      "observedCruiseDurationSeconds": 67.4,
+      "integratedCruiseEnergyJ": 32222.329024756946,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 120,
+      "samples": 405,
+      "features": [
+        0.25,
+        7.134471443393721,
+        1.6279221610349173,
+        8.951806230576366,
+        3.7512851587907496,
+        27.151943452957227
+      ],
+      "meanPowerW": 497.48204759835755,
+      "observedCruiseDurationSeconds": 60.9,
+      "integratedCruiseEnergyJ": 30296.656698739975,
+      "largestSamplingGapSeconds": 0.5100000000000051
+    },
+    {
+      "flightId": 121,
+      "samples": 529,
+      "features": [
+        0.0,
+        5.158547245685077,
+        0.7155255004148443,
+        7.440441902335548,
+        3.579799809888629,
+        49.88281419903342
+      ],
+      "meanPowerW": 461.5435486779537,
+      "observedCruiseDurationSeconds": 79.19999999999999,
+      "integratedCruiseEnergyJ": 36554.24905529393,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 122,
+      "samples": 415,
+      "features": [
+        0.5,
+        7.050577216155017,
+        1.5152432743233937,
+        9.068930857952006,
+        2.9737560583375497,
+        76.13245117281028
+      ],
+      "meanPowerW": 560.3137571014493,
+      "observedCruiseDurationSeconds": 62.2,
+      "integratedCruiseEnergyJ": 34851.51569171015,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 123,
+      "samples": 562,
+      "features": [
+        0.25,
+        5.160773219058568,
+        0.814904497279698,
+        8.351601880192055,
+        4.464657101162211,
+        103.29345921765227
+      ],
+      "meanPowerW": 552.296998891841,
+      "observedCruiseDurationSeconds": 84.9,
+      "integratedCruiseEnergyJ": 46890.015205917305,
+      "largestSamplingGapSeconds": 0.5999999999999943
+    },
+    {
+      "flightId": 124,
+      "samples": 430,
+      "features": [
+        0.0,
+        6.540600955079474,
+        1.0473176057185876,
+        8.326846267808275,
+        2.337761102899768,
+        26.221287962650806
+      ],
+      "meanPowerW": 469.4673512634469,
+      "observedCruiseDurationSeconds": 64.59,
+      "integratedCruiseEnergyJ": 30322.896218106038,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 125,
+      "samples": 777,
+      "features": [
+        0.25,
+        3.715281640545859,
+        0.38222108690891643,
+        6.730621385715104,
+        2.808353504409859,
+        79.36289289242032
+      ],
+      "meanPowerW": 500.87861236399914,
+      "observedCruiseDurationSeconds": 119.41,
+      "integratedCruiseEnergyJ": 59809.91510238514,
+      "largestSamplingGapSeconds": 1.0
+    },
+    {
+      "flightId": 126,
+      "samples": 796,
+      "features": [
+        0.5,
+        3.636314966951192,
+        0.4754473639130365,
+        7.946868869554802,
+        2.78086362349329,
+        100.74226415822739
+      ],
+      "meanPowerW": 574.3624355603476,
+      "observedCruiseDurationSeconds": 122.0,
+      "integratedCruiseEnergyJ": 70072.21713836241,
+      "largestSamplingGapSeconds": 1.0
+    },
+    {
+      "flightId": 127,
+      "samples": 468,
+      "features": [
+        0.25,
+        6.309816074523508,
+        1.1388136434468192,
+        8.352521302127704,
+        3.4891020398206205,
+        51.01483541699973
+      ],
+      "meanPowerW": 543.0686450243353,
+      "observedCruiseDurationSeconds": 70.4,
+      "integratedCruiseEnergyJ": 38232.032609713206,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 128,
+      "samples": 449,
+      "features": [
+        0.0,
+        6.295591655137961,
+        1.2194255000093241,
+        9.243252230349892,
+        4.875273564881773,
+        100.38900799104242
+      ],
+      "meanPowerW": 500.1536686844923,
+      "observedCruiseDurationSeconds": 67.80000000000001,
+      "integratedCruiseEnergyJ": 33910.418736808584,
+      "largestSamplingGapSeconds": 0.5899999999999892
+    },
+    {
+      "flightId": 129,
+      "samples": 490,
+      "features": [
+        0.5,
+        5.615757798722448,
+        1.5750313570264347,
+        9.581623998051386,
+        3.5123119931446687,
+        75.34531016079883
+      ],
+      "meanPowerW": 610.1489884816939,
+      "observedCruiseDurationSeconds": 74.2,
+      "integratedCruiseEnergyJ": 45273.05494534169,
+      "largestSamplingGapSeconds": 0.39000000000000057
+    },
+    {
+      "flightId": 130,
+      "samples": 386,
+      "features": [
+        0.5,
+        7.048180577386879,
+        1.614949275888835,
+        9.326802415946949,
+        3.912681022348822,
+        48.423656936865335
+      ],
+      "meanPowerW": 594.1152031171264,
+      "observedCruiseDurationSeconds": 57.7,
+      "integratedCruiseEnergyJ": 34280.44721985819,
+      "largestSamplingGapSeconds": 0.22000000000000597
+    },
+    {
+      "flightId": 131,
+      "samples": 798,
+      "features": [
+        0.0,
+        3.7233384342641114,
+        0.3576229527236323,
+        7.322402972775389,
+        2.8331318371225156,
+        102.22621388992535
+      ],
+      "meanPowerW": 450.592052297572,
+      "observedCruiseDurationSeconds": 121.1,
+      "integratedCruiseEnergyJ": 54566.69753323597,
+      "largestSamplingGapSeconds": 0.3999999999999915
+    },
+    {
+      "flightId": 134,
+      "samples": 351,
+      "features": [
+        0.5,
+        7.941649901897342,
+        2.148832317339544,
+        9.872076175076623,
+        3.6914874033115868,
+        50.71314109161922
+      ],
+      "meanPowerW": 565.9326002516914,
+      "observedCruiseDurationSeconds": 52.5,
+      "integratedCruiseEnergyJ": 29711.461513213795,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 135,
+      "samples": 720,
+      "features": [
+        0.25,
+        3.7274586432318815,
+        0.2734613548929323,
+        5.3337983202255845,
+        2.0509254900758522,
+        24.92995142466019
+      ],
+      "meanPowerW": 534.772430192484,
+      "observedCruiseDurationSeconds": 107.89,
+      "integratedCruiseEnergyJ": 57696.597493467096,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 136,
+      "samples": 452,
+      "features": [
+        0.25,
+        6.403495861658728,
+        0.9450689619680844,
+        7.420062240750229,
+        2.230827451312292,
+        27.02845490199582
+      ],
+      "meanPowerW": 517.2575858295127,
+      "observedCruiseDurationSeconds": 67.49000000000001,
+      "integratedCruiseEnergyJ": 34909.714467633814,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 137,
+      "samples": 458,
+      "features": [
+        0.25,
+        6.347805953283361,
+        1.210088351272189,
+        9.255255103841122,
+        2.522824109029477,
+        102.91752850193062
+      ],
+      "meanPowerW": 533.3223374727778,
+      "observedCruiseDurationSeconds": 68.6,
+      "integratedCruiseEnergyJ": 36585.912350632556,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 138,
+      "samples": 396,
+      "features": [
+        0.5,
+        6.202041298569269,
+        1.387208188175791,
+        11.075076007299328,
+        3.3114978710306673,
+        101.45799202113537
+      ],
+      "meanPowerW": 608.4971449963722,
+      "observedCruiseDurationSeconds": 59.2,
+      "integratedCruiseEnergyJ": 36023.03098378523,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 139,
+      "samples": 395,
+      "features": [
+        0.0,
+        7.321859677767312,
+        1.8863393335365999,
+        9.525520396083316,
+        3.2445463436805277,
+        53.29990044388996
+      ],
+      "meanPowerW": 502.12605891134706,
+      "observedCruiseDurationSeconds": 59.09,
+      "integratedCruiseEnergyJ": 29670.6288210715,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 140,
+      "samples": 764,
+      "features": [
+        0.5,
+        3.7344994768723274,
+        0.3126219590324168,
+        6.056580777438968,
+        2.2666869703971178,
+        28.029298731708113
+      ],
+      "meanPowerW": 575.8429496626078,
+      "observedCruiseDurationSeconds": 114.5,
+      "integratedCruiseEnergyJ": 65934.0177363686,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 141,
+      "samples": 407,
+      "features": [
+        0.0,
+        7.218945897231893,
+        1.8942693971250963,
+        10.744597704109104,
+        2.8758654405990978,
+        76.98743938561927
+      ],
+      "meanPowerW": 504.25555434487273,
+      "observedCruiseDurationSeconds": 60.89999999999999,
+      "integratedCruiseEnergyJ": 30709.163259602745,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 142,
+      "samples": 441,
+      "features": [
+        0.25,
+        6.516467549623052,
+        1.0895876485937286,
+        7.6298363994439615,
+        2.4589829833531223,
+        76.39820990073393
+      ],
+      "meanPowerW": 525.4143220512658,
+      "observedCruiseDurationSeconds": 66.01,
+      "integratedCruiseEnergyJ": 34682.599398604056,
+      "largestSamplingGapSeconds": 0.22000000000001307
+    },
+    {
+      "flightId": 143,
+      "samples": 367,
+      "features": [
+        0.0,
+        7.764652572954181,
+        2.1147521763972117,
+        9.121196955534728,
+        4.29604946337877,
+        79.95738601493453
+      ],
+      "meanPowerW": 485.64392652585195,
+      "observedCruiseDurationSeconds": 54.89,
+      "integratedCruiseEnergyJ": 26656.995127004015,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 144,
+      "samples": 459,
+      "features": [
+        0.5,
+        6.375907807353895,
+        1.1033611988525411,
+        8.06844024018713,
+        2.496349451042502,
+        53.794710530206
+      ],
+      "meanPowerW": 535.3809347650798,
+      "observedCruiseDurationSeconds": 68.6,
+      "integratedCruiseEnergyJ": 36727.132124884476,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 145,
+      "samples": 507,
+      "features": [
+        0.5,
+        5.207466138090144,
+        0.6059836502918031,
+        6.825115286397802,
+        1.6959457584473001,
+        102.71375898934214
+      ],
+      "meanPowerW": 554.4103775439704,
+      "observedCruiseDurationSeconds": 75.91,
+      "integratedCruiseEnergyJ": 42085.29175936279,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 146,
+      "samples": 411,
+      "features": [
+        0.0,
+        7.125654071541753,
+        1.5247242917923325,
+        8.238367740608119,
+        3.3951416354480415,
+        25.403997999500458
+      ],
+      "meanPowerW": 472.6885360678992,
+      "observedCruiseDurationSeconds": 61.50999999999999,
+      "integratedCruiseEnergyJ": 29075.071853536476,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 147,
+      "samples": 557,
+      "features": [
+        0.25,
+        5.156080173365992,
+        0.6114344397284478,
+        6.4513371015341265,
+        1.7216371170026934,
+        75.76306953640604
+      ],
+      "meanPowerW": 524.3035771203328,
+      "observedCruiseDurationSeconds": 83.38999999999999,
+      "integratedCruiseEnergyJ": 43721.67529606454,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 148,
+      "samples": 757,
+      "features": [
+        0.0,
+        3.7420575164554446,
+        0.21816361455200559,
+        4.928776406753861,
+        0.9706390893342022,
+        49.963682421832026
+      ],
+      "meanPowerW": 452.19634548193307,
+      "observedCruiseDurationSeconds": 113.60000000000001,
+      "integratedCruiseEnergyJ": 51369.5048467476,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 149,
+      "samples": 383,
+      "features": [
+        0.25,
+        7.424884592314304,
+        1.565934873170209,
+        8.602360621022019,
+        3.1807928200302324,
+        76.11861958293964
+      ],
+      "meanPowerW": 527.5424399377393,
+      "observedCruiseDurationSeconds": 57.4,
+      "integratedCruiseEnergyJ": 30280.936052426237,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 150,
+      "samples": 312,
+      "features": [
+        0.0,
+        7.420430540120067,
+        2.002769851042967,
+        9.031742110934745,
+        4.207406777594405,
+        101.82235664480923
+      ],
+      "meanPowerW": 474.64961171249047,
+      "observedCruiseDurationSeconds": 46.61,
+      "integratedCruiseEnergyJ": 22123.41840191918,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 151,
+      "samples": 362,
+      "features": [
+        0.25,
+        7.889156510202125,
+        2.0333664002947986,
+        9.119038825213579,
+        3.8644194098279843,
+        50.9844256151626
+      ],
+      "meanPowerW": 551.294985921961,
+      "observedCruiseDurationSeconds": 54.1,
+      "integratedCruiseEnergyJ": 29825.058738378095,
+      "largestSamplingGapSeconds": 0.2400000000000091
+    },
+    {
+      "flightId": 152,
+      "samples": 408,
+      "features": [
+        0.5,
+        7.161969199307929,
+        1.4981872609357185,
+        8.508297868680248,
+        3.011244862429206,
+        101.63122591429956
+      ],
+      "meanPowerW": 575.16348003851,
+      "observedCruiseDurationSeconds": 61.099999999999994,
+      "integratedCruiseEnergyJ": 35142.48863035296,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 153,
+      "samples": 399,
+      "features": [
+        0.25,
+        7.353332331017579,
+        1.4712698562750874,
+        8.632814066553832,
+        3.1012625600286623,
+        102.25694189904567
+      ],
+      "meanPowerW": 502.36630449685214,
+      "observedCruiseDurationSeconds": 59.7,
+      "integratedCruiseEnergyJ": 29991.268378462075,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 154,
+      "samples": 557,
+      "features": [
+        0.25,
+        5.257107387958213,
+        0.5920210685817425,
+        6.570372155748783,
+        1.460720936523159,
+        50.74213552640982
+      ],
+      "meanPowerW": 527.0607571187838,
+      "observedCruiseDurationSeconds": 83.3,
+      "integratedCruiseEnergyJ": 43904.1610679947,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 155,
+      "samples": 395,
+      "features": [
+        0.5,
+        7.301829318186489,
+        1.9578674901456738,
+        9.398696915674462,
+        3.5083354624919463,
+        100.62162149826025
+      ],
+      "meanPowerW": 589.4802618409137,
+      "observedCruiseDurationSeconds": 59.09,
+      "integratedCruiseEnergyJ": 34832.38867217959,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 156,
+      "samples": 778,
+      "features": [
+        0.5,
+        3.7749707184342154,
+        0.24492912637976527,
+        5.1156512391751106,
+        1.3870664695812212,
+        50.6077387719657
+      ],
+      "meanPowerW": 573.0901849339139,
+      "observedCruiseDurationSeconds": 116.69999999999999,
+      "integratedCruiseEnergyJ": 66879.62458178774,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 157,
+      "samples": 393,
+      "features": [
+        0.25,
+        7.405170784848795,
+        1.5007387444341258,
+        8.541959587322022,
+        3.3251888613786886,
+        50.9730716019054
+      ],
+      "meanPowerW": 502.8687462105194,
+      "observedCruiseDurationSeconds": 58.89,
+      "integratedCruiseEnergyJ": 29613.940464337487,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 158,
+      "samples": 304,
+      "features": [
+        0.25,
+        7.522173890268561,
+        2.0496341523730868,
+        8.745659348493094,
+        4.220435869886344,
+        77.5449431156326
+      ],
+      "meanPowerW": 554.9250442657709,
+      "observedCruiseDurationSeconds": 45.50000000000001,
+      "integratedCruiseEnergyJ": 25249.089514092582,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 159,
+      "samples": 583,
+      "features": [
+        0.25,
+        5.099483416142854,
+        0.603484004156242,
+        6.186849923839821,
+        1.7860452572895886,
+        24.574192610693682
+      ],
+      "meanPowerW": 515.8055351957771,
+      "observedCruiseDurationSeconds": 87.3,
+      "integratedCruiseEnergyJ": 45029.82322259134,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 160,
+      "samples": 761,
+      "features": [
+        0.25,
+        3.732042985636277,
+        0.25029593903591635,
+        5.089978091576766,
+        1.6670561402938318,
+        50.612845976576274
+      ],
+      "meanPowerW": 517.1958469015124,
+      "observedCruiseDurationSeconds": 114.1,
+      "integratedCruiseEnergyJ": 59012.04613146256,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 162,
+      "samples": 379,
+      "features": [
+        0.5,
+        5.958157142900065,
+        0.9345258192230637,
+        7.319400351304014,
+        2.03567807476168,
+        76.19588285741348
+      ],
+      "meanPowerW": 564.0569753244257,
+      "observedCruiseDurationSeconds": 56.7,
+      "integratedCruiseEnergyJ": 31982.03050089494,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 163,
+      "samples": 537,
+      "features": [
+        0.0,
+        5.275603549633893,
+        0.6397399988023142,
+        7.4425093122446775,
+        1.2837606506270989,
+        75.53734983128791
+      ],
+      "meanPowerW": 441.12055704097236,
+      "observedCruiseDurationSeconds": 80.5,
+      "integratedCruiseEnergyJ": 35510.20484179827,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 164,
+      "samples": 385,
+      "features": [
+        0.0,
+        7.399013279418789,
+        1.7686039863396943,
+        9.366223976761104,
+        2.792377209161597,
+        101.77039530807072
+      ],
+      "meanPowerW": 452.1349834000243,
+      "observedCruiseDurationSeconds": 57.599999999999994,
+      "integratedCruiseEnergyJ": 26042.975043841398,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 165,
+      "samples": 397,
+      "features": [
+        0.0,
+        6.331278047312035,
+        1.2343764093694596,
+        8.82299998852385,
+        2.2822872145203874,
+        76.046675212223
+      ],
+      "meanPowerW": 461.6114671497869,
+      "observedCruiseDurationSeconds": 59.49999999999999,
+      "integratedCruiseEnergyJ": 27465.882295412317,
+      "largestSamplingGapSeconds": 0.22000000000001307
+    },
+    {
+      "flightId": 166,
+      "samples": 555,
+      "features": [
+        0.5,
+        5.194871450723445,
+        0.5905111952610848,
+        6.565693828628902,
+        2.0626817290798565,
+        49.50369229906661
+      ],
+      "meanPowerW": 544.3190265669612,
+      "observedCruiseDurationSeconds": 83.09,
+      "integratedCruiseEnergyJ": 45227.467917448805,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 167,
+      "samples": 412,
+      "features": [
+        0.5,
+        7.1693188578717235,
+        1.4621708506263398,
+        8.494886351067137,
+        3.2005932060980933,
+        25.124640636629877
+      ],
+      "meanPowerW": 565.6102261259706,
+      "observedCruiseDurationSeconds": 61.6,
+      "integratedCruiseEnergyJ": 34841.58992935979,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 168,
+      "samples": 395,
+      "features": [
+        0.25,
+        7.146364069551649,
+        1.4032575592722971,
+        8.484376561327082,
+        3.36858343734981,
+        74.63352475165715
+      ],
+      "meanPowerW": 522.7680664638629,
+      "observedCruiseDurationSeconds": 59.11,
+      "integratedCruiseEnergyJ": 30900.820408678934,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 169,
+      "samples": 559,
+      "features": [
+        0.0,
+        5.27709759179095,
+        0.6048114638833547,
+        6.7505077233865345,
+        1.5603901191494276,
+        50.79741440070971
+      ],
+      "meanPowerW": 475.42042387378484,
+      "observedCruiseDurationSeconds": 83.71,
+      "integratedCruiseEnergyJ": 39797.44368247453,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 170,
+      "samples": 558,
+      "features": [
+        0.0,
+        5.30484514922906,
+        0.5926241508698915,
+        6.8588732021067065,
+        1.780496129191372,
+        25.10371759964631
+      ],
+      "meanPowerW": 466.1303802903663,
+      "observedCruiseDurationSeconds": 83.50999999999999,
+      "integratedCruiseEnergyJ": 38926.54805804849,
+      "largestSamplingGapSeconds": 0.23999999999999488
+    },
+    {
+      "flightId": 171,
+      "samples": 322,
+      "features": [
+        0.0,
+        8.020745656101896,
+        2.1216305059610976,
+        9.191234449578516,
+        3.864618057423685,
+        25.775189756061028
+      ],
+      "meanPowerW": 497.24666621306375,
+      "observedCruiseDurationSeconds": 48.199999999999996,
+      "integratedCruiseEnergyJ": 23967.28931146967,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 172,
+      "samples": 566,
+      "features": [
+        0.0,
+        5.250989774420055,
+        0.5060500286514613,
+        6.444769519553399,
+        1.6784462738069457,
+        101.33581171086496
+      ],
+      "meanPowerW": 447.83505640222995,
+      "observedCruiseDurationSeconds": 84.6,
+      "integratedCruiseEnergyJ": 37886.84577162865,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 173,
+      "samples": 519,
+      "features": [
+        0.25,
+        5.262914503866341,
+        0.6069352393439084,
+        6.70538038075208,
+        1.8714438882429523,
+        100.94788415779679
+      ],
+      "meanPowerW": 530.8358441894399,
+      "observedCruiseDurationSeconds": 77.69,
+      "integratedCruiseEnergyJ": 41240.63673507758,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 174,
+      "samples": 356,
+      "features": [
+        0.25,
+        8.086715318211967,
+        2.102377040329154,
+        9.3068655113122,
+        4.028849234311986,
+        76.21561806876359
+      ],
+      "meanPowerW": 541.3603265304824,
+      "observedCruiseDurationSeconds": 53.31,
+      "integratedCruiseEnergyJ": 28859.91900734002,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 175,
+      "samples": 555,
+      "features": [
+        0.0,
+        5.314555897184072,
+        0.5754054835561984,
+        6.84699399237173,
+        1.682839874054103,
+        76.71532744982157
+      ],
+      "meanPowerW": 449.88263806047416,
+      "observedCruiseDurationSeconds": 83.00000000000001,
+      "integratedCruiseEnergyJ": 37340.25895901936,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 176,
+      "samples": 455,
+      "features": [
+        0.0,
+        6.406806788601842,
+        1.0379435719499597,
+        7.788819593552571,
+        2.5428878641365436,
+        100.28341633911931
+      ],
+      "meanPowerW": 477.04086152664706,
+      "observedCruiseDurationSeconds": 68.11,
+      "integratedCruiseEnergyJ": 32491.25307857993,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 177,
+      "samples": 399,
+      "features": [
+        0.0,
+        7.415308791624311,
+        1.5508166681775364,
+        8.823411768023707,
+        2.9370229852954814,
+        25.230065293928156
+      ],
+      "meanPowerW": 480.8134655775908,
+      "observedCruiseDurationSeconds": 59.5,
+      "integratedCruiseEnergyJ": 28608.401201866654,
+      "largestSamplingGapSeconds": 0.30999999999998806
+    },
+    {
+      "flightId": 178,
+      "samples": 325,
+      "features": [
+        0.5,
+        7.070532751313232,
+        1.5557790428841303,
+        8.392597922455405,
+        3.700254197825672,
+        25.161286276910772
+      ],
+      "meanPowerW": 568.7833421992434,
+      "observedCruiseDurationSeconds": 48.50000000000001,
+      "integratedCruiseEnergyJ": 27585.992096663307,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 179,
+      "samples": 513,
+      "features": [
+        0.5,
+        5.108332006194726,
+        0.7490832358197566,
+        7.53939452804625,
+        3.4636897435582794,
+        100.84109475662311
+      ],
+      "meanPowerW": 576.1342682563427,
+      "observedCruiseDurationSeconds": 76.80000000000001,
+      "integratedCruiseEnergyJ": 44247.11180208712,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 180,
+      "samples": 400,
+      "features": [
+        0.5,
+        7.209494484963952,
+        1.683042884604315,
+        9.221505005443374,
+        3.8784322244622786,
+        75.70333806710897
+      ],
+      "meanPowerW": 566.554643842186,
+      "observedCruiseDurationSeconds": 59.800000000000004,
+      "integratedCruiseEnergyJ": 33879.967701762725,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 181,
+      "samples": 539,
+      "features": [
+        0.25,
+        5.200038816806478,
+        0.6513458701904766,
+        6.883790325630392,
+        2.444862378835409,
+        52.04758025889952
+      ],
+      "meanPowerW": 513.0655146422503,
+      "observedCruiseDurationSeconds": 80.6,
+      "integratedCruiseEnergyJ": 41353.080480165365,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 182,
+      "samples": 459,
+      "features": [
+        0.5,
+        6.390310155522926,
+        1.0886467621207028,
+        7.969169097495846,
+        2.88725078378176,
+        49.79511812831496
+      ],
+      "meanPowerW": 563.7740206690776,
+      "observedCruiseDurationSeconds": 68.6,
+      "integratedCruiseEnergyJ": 38674.897817898716,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 183,
+      "samples": 337,
+      "features": [
+        0.5,
+        7.660324771835309,
+        2.07114580687138,
+        8.985466269462828,
+        4.097886125625922,
+        25.330203374226894
+      ],
+      "meanPowerW": 578.1672358063944,
+      "observedCruiseDurationSeconds": 50.39999999999999,
+      "integratedCruiseEnergyJ": 29139.628684642274,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 184,
+      "samples": 776,
+      "features": [
+        0.5,
+        3.7310720868693155,
+        0.2988656919357621,
+        5.493403624534197,
+        1.8328483315138295,
+        100.2802859238626
+      ],
+      "meanPowerW": 570.0400932151659,
+      "observedCruiseDurationSeconds": 116.2,
+      "integratedCruiseEnergyJ": 66238.65883160228,
+      "largestSamplingGapSeconds": 0.29999999999998295
+    },
+    {
+      "flightId": 185,
+      "samples": 386,
+      "features": [
+        0.25,
+        7.396304828021586,
+        1.632526975447863,
+        8.713313182332524,
+        3.461447869425353,
+        50.44138137254746
+      ],
+      "meanPowerW": 518.1461338323663,
+      "observedCruiseDurationSeconds": 57.800000000000004,
+      "integratedCruiseEnergyJ": 29948.846535510776,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 186,
+      "samples": 337,
+      "features": [
+        0.0,
+        7.675718189060808,
+        2.1882115206217994,
+        8.976443168568817,
+        4.413056524959089,
+        76.11832476357486
+      ],
+      "meanPowerW": 519.328934972505,
+      "observedCruiseDurationSeconds": 50.41,
+      "integratedCruiseEnergyJ": 26179.371611963972,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 187,
+      "samples": 339,
+      "features": [
+        0.25,
+        7.797767404267308,
+        2.1593949470295404,
+        8.901788554749942,
+        4.14519532164054,
+        26.733745921364946
+      ],
+      "meanPowerW": 527.9965591057631,
+      "observedCruiseDurationSeconds": 50.599999999999994,
+      "integratedCruiseEnergyJ": 26716.625890751613,
+      "largestSamplingGapSeconds": 0.30999999999999517
+    },
+    {
+      "flightId": 188,
+      "samples": 750,
+      "features": [
+        0.0,
+        3.7438340512797414,
+        0.2908186750943178,
+        5.329637042468218,
+        1.8522690024900232,
+        100.91611156927267
+      ],
+      "meanPowerW": 456.0096761215833,
+      "observedCruiseDurationSeconds": 112.41000000000001,
+      "integratedCruiseEnergyJ": 51260.04769282718,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 189,
+      "samples": 471,
+      "features": [
+        0.25,
+        6.363602214821365,
+        1.0755096346247166,
+        7.692632277812237,
+        2.56962645025966,
+        28.544265313162995
+      ],
+      "meanPowerW": 496.04655391559504,
+      "observedCruiseDurationSeconds": 70.50999999999999,
+      "integratedCruiseEnergyJ": 34976.2425165886,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 190,
+      "samples": 393,
+      "features": [
+        0.25,
+        7.2112828072957464,
+        1.5823562104169202,
+        8.263624791742789,
+        3.599948156114277,
+        100.12607017640141
+      ],
+      "meanPowerW": 531.0088582343935,
+      "observedCruiseDurationSeconds": 58.9,
+      "integratedCruiseEnergyJ": 31276.421750005775,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 191,
+      "samples": 339,
+      "features": [
+        0.25,
+        8.041296015149458,
+        2.177652020509832,
+        9.304181473941725,
+        4.024225265272933,
+        98.85829054686798
+      ],
+      "meanPowerW": 519.648062542113,
+      "observedCruiseDurationSeconds": 50.7,
+      "integratedCruiseEnergyJ": 26346.156770885133,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 192,
+      "samples": 362,
+      "features": [
+        0.0,
+        7.984887756919353,
+        2.0656204957746116,
+        9.0494741988468,
+        4.041257457873166,
+        49.20572331136442
+      ],
+      "meanPowerW": 466.7363046848815,
+      "observedCruiseDurationSeconds": 54.199999999999996,
+      "integratedCruiseEnergyJ": 25297.107713920574,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 193,
+      "samples": 797,
+      "features": [
+        0.5,
+        3.748730131070176,
+        0.26269715846625685,
+        4.926871875737181,
+        1.0621744919467595,
+        47.630290082111976
+      ],
+      "meanPowerW": 531.9946811542081,
+      "observedCruiseDurationSeconds": 119.4,
+      "integratedCruiseEnergyJ": 63520.16492981246,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 194,
+      "samples": 359,
+      "features": [
+        0.0,
+        8.007621783342865,
+        2.0499047830153136,
+        9.287346375887623,
+        3.8657440170080877,
+        100.26460065779523
+      ],
+      "meanPowerW": 457.8305314326003,
+      "observedCruiseDurationSeconds": 53.699999999999996,
+      "integratedCruiseEnergyJ": 24585.499537930635,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 195,
+      "samples": 459,
+      "features": [
+        0.25,
+        6.464416755376355,
+        1.0867073810288297,
+        7.854016019920913,
+        2.461904165007451,
+        96.80692135915378
+      ],
+      "meanPowerW": 496.82935936361923,
+      "observedCruiseDurationSeconds": 68.6,
+      "integratedCruiseEnergyJ": 34082.49405234428,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 196,
+      "samples": 359,
+      "features": [
+        0.25,
+        7.983837761188004,
+        2.121400483874643,
+        9.115646587865834,
+        4.023509552695237,
+        48.33563525718936
+      ],
+      "meanPowerW": 533.8709934692479,
+      "observedCruiseDurationSeconds": 53.589999999999996,
+      "integratedCruiseEnergyJ": 28610.14654001699,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 197,
+      "samples": 395,
+      "features": [
+        0.25,
+        7.36133675836515,
+        1.54746355647846,
+        8.470747996312667,
+        3.324149149760752,
+        23.097025576269676
+      ],
+      "meanPowerW": 504.7008006281203,
+      "observedCruiseDurationSeconds": 59.09,
+      "integratedCruiseEnergyJ": 29822.77030911563,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 198,
+      "samples": 405,
+      "features": [
+        0.0,
+        7.244405822657599,
+        1.484157888993578,
+        8.40342408919295,
+        3.234485285472088,
+        48.318639630138286
+      ],
+      "meanPowerW": 460.89939466410726,
+      "observedCruiseDurationSeconds": 60.6,
+      "integratedCruiseEnergyJ": 27930.5033166449,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 199,
+      "samples": 748,
+      "features": [
+        0.25,
+        3.7495350087637127,
+        0.25932111357127086,
+        4.627374758538066,
+        0.8819506471957618,
+        50.739326276228994
+      ],
+      "meanPowerW": 493.98491899203526,
+      "observedCruiseDurationSeconds": 111.80000000000001,
+      "integratedCruiseEnergyJ": 55227.51394330955,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 200,
+      "samples": 804,
+      "features": [
+        0.5,
+        3.7530257315970275,
+        0.2718995433390033,
+        4.9447219797486595,
+        0.9313221419647849,
+        24.031001436403624
+      ],
+      "meanPowerW": 538.4775728251024,
+      "observedCruiseDurationSeconds": 120.5,
+      "integratedCruiseEnergyJ": 64886.54752542483,
+      "largestSamplingGapSeconds": 0.22000000000002728
+    },
+    {
+      "flightId": 201,
+      "samples": 800,
+      "features": [
+        0.25,
+        3.765948608192258,
+        0.2627609811668793,
+        4.889070967902793,
+        1.0085380162842437,
+        75.37918039587458
+      ],
+      "meanPowerW": 509.18340568002407,
+      "observedCruiseDurationSeconds": 119.91,
+      "integratedCruiseEnergyJ": 61056.182175091686,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 202,
+      "samples": 799,
+      "features": [
+        0.25,
+        3.7441046759199863,
+        0.25555464356341717,
+        4.758350098451774,
+        0.9170045332003974,
+        23.74532482580733
+      ],
+      "meanPowerW": 509.98173643534824,
+      "observedCruiseDurationSeconds": 119.7,
+      "integratedCruiseEnergyJ": 61044.813851311184,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 203,
+      "samples": 440,
+      "features": [
+        0.0,
+        6.4838779780670714,
+        0.9815383063540446,
+        7.65709741876588,
+        2.3336096484447837,
+        24.32842052075435
+      ],
+      "meanPowerW": 452.6295461184847,
+      "observedCruiseDurationSeconds": 66.01,
+      "integratedCruiseEnergyJ": 29878.07633928118,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 204,
+      "samples": 573,
+      "features": [
+        0.25,
+        5.145188388970746,
+        0.6136118685124595,
+        6.3217386262071855,
+        1.700005835456363,
+        25.016668090519854
+      ],
+      "meanPowerW": 503.0998849375775,
+      "observedCruiseDurationSeconds": 85.7,
+      "integratedCruiseEnergyJ": 43115.660139150394,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 205,
+      "samples": 571,
+      "features": [
+        0.5,
+        5.214633446363474,
+        0.6137609355872313,
+        6.470151881762197,
+        1.7728796092096752,
+        23.763950799892992
+      ],
+      "meanPowerW": 554.0799898782603,
+      "observedCruiseDurationSeconds": 85.60000000000001,
+      "integratedCruiseEnergyJ": 47429.24713357909,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 206,
+      "samples": 432,
+      "features": [
+        0.25,
+        6.532640474849543,
+        1.016318237080444,
+        7.749814262035828,
+        2.564751550620109,
+        74.53609997310873
+      ],
+      "meanPowerW": 499.20918664044655,
+      "observedCruiseDurationSeconds": 64.6,
+      "integratedCruiseEnergyJ": 32248.913456972845,
+      "largestSamplingGapSeconds": 0.21000000000000085
+    },
+    {
+      "flightId": 207,
+      "samples": 444,
+      "features": [
+        0.0,
+        6.483731577423128,
+        1.0446933922143957,
+        7.643109970108927,
+        2.547266303020692,
+        50.683746433258044
+      ],
+      "meanPowerW": 453.1390063140559,
+      "observedCruiseDurationSeconds": 66.4,
+      "integratedCruiseEnergyJ": 30088.430019253316,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 208,
+      "samples": 537,
+      "features": [
+        0.25,
+        5.2981950522177055,
+        0.6258681522813565,
+        6.788567005145934,
+        1.7997239861168586,
+        75.83291373619666
+      ],
+      "meanPowerW": 500.4032016674683,
+      "observedCruiseDurationSeconds": 80.6,
+      "integratedCruiseEnergyJ": 40332.49805439794,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 209,
+      "samples": 571,
+      "features": [
+        0.5,
+        5.220192879975552,
+        0.5657765341854832,
+        6.387068670748939,
+        1.8739571599040585,
+        50.750281504656584
+      ],
+      "meanPowerW": 562.9966450375327,
+      "observedCruiseDurationSeconds": 85.49000000000001,
+      "integratedCruiseEnergyJ": 48130.58318425868,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 210,
+      "samples": 794,
+      "features": [
+        0.25,
+        3.740938677345109,
+        0.24688243797226522,
+        4.772845005377039,
+        1.070364450400123,
+        99.37013863514694
+      ],
+      "meanPowerW": 511.74850725715066,
+      "observedCruiseDurationSeconds": 118.91,
+      "integratedCruiseEnergyJ": 60852.01499794779,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 225,
+      "samples": 436,
+      "features": [
+        0.25,
+        6.573774098579045,
+        1.0463997640829512,
+        8.103165141540929,
+        2.6420133660462635,
+        75.72919246720251
+      ],
+      "meanPowerW": 517.3656163291497,
+      "observedCruiseDurationSeconds": 65.4,
+      "integratedCruiseEnergyJ": 33835.711307926395,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 226,
+      "samples": 457,
+      "features": [
+        0.5,
+        6.472902941839465,
+        1.0692142845183743,
+        7.974751132124513,
+        2.641392592538384,
+        77.09771866197991
+      ],
+      "meanPowerW": 555.0390784202243,
+      "observedCruiseDurationSeconds": 68.30000000000001,
+      "integratedCruiseEnergyJ": 37909.169056101324,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 227,
+      "samples": 561,
+      "features": [
+        0.0,
+        5.251503905737767,
+        0.5797754911265763,
+        6.495756865655992,
+        1.5053547332312258,
+        101.38110044448679
+      ],
+      "meanPowerW": 476.3199292157865,
+      "observedCruiseDurationSeconds": 83.89999999999999,
+      "integratedCruiseEnergyJ": 39963.24206120448,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 228,
+      "samples": 350,
+      "features": [
+        0.5,
+        7.340033405656674,
+        1.5137049375791227,
+        8.673240904324825,
+        3.160690659567734,
+        102.01540507292434
+      ],
+      "meanPowerW": 554.8818994838671,
+      "observedCruiseDurationSeconds": 52.3,
+      "integratedCruiseEnergyJ": 29020.323343006246,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 229,
+      "samples": 398,
+      "features": [
+        0.0,
+        7.380930481951876,
+        1.4943865493631208,
+        8.702533569671965,
+        3.1823459558185117,
+        51.84556630761838
+      ],
+      "meanPowerW": 452.33095261684184,
+      "observedCruiseDurationSeconds": 59.6,
+      "integratedCruiseEnergyJ": 26958.924775963773,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 230,
+      "samples": 578,
+      "features": [
+        0.5,
+        5.1696437274770926,
+        0.6100251548481734,
+        6.7928868379934295,
+        2.103352703780052,
+        24.823261360731184
+      ],
+      "meanPowerW": 560.2502199822284,
+      "observedCruiseDurationSeconds": 86.6,
+      "integratedCruiseEnergyJ": 48517.66905046097,
+      "largestSamplingGapSeconds": 0.30000000000000426
+    },
+    {
+      "flightId": 231,
+      "samples": 427,
+      "features": [
+        0.5,
+        6.393690970026794,
+        1.0344472133091793,
+        7.678228849882615,
+        2.2856553512785385,
+        101.00057688835648
+      ],
+      "meanPowerW": 580.9760150249755,
+      "observedCruiseDurationSeconds": 63.8,
+      "integratedCruiseEnergyJ": 37066.26975859344,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 232,
+      "samples": 354,
+      "features": [
+        0.5,
+        8.074149605740324,
+        2.0508607936128778,
+        9.429820068304739,
+        3.8977363279378676,
+        107.08397033142322
+      ],
+      "meanPowerW": 591.7353447785586,
+      "observedCruiseDurationSeconds": 52.800000000000004,
+      "integratedCruiseEnergyJ": 31243.626204307893,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 233,
+      "samples": 796,
+      "features": [
+        0.0,
+        3.757803748244258,
+        0.27314983348129246,
+        5.240310164589094,
+        1.472620059058821,
+        50.82817664306801
+      ],
+      "meanPowerW": 455.6097114167325,
+      "observedCruiseDurationSeconds": 119.30000000000001,
+      "integratedCruiseEnergyJ": 54354.2385720162,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 234,
+      "samples": 389,
+      "features": [
+        0.0,
+        7.552233809841395,
+        1.5754004935089905,
+        8.872039606977454,
+        3.0572946345284056,
+        100.531270799128
+      ],
+      "meanPowerW": 454.75554267519493,
+      "observedCruiseDurationSeconds": 58.099999999999994,
+      "integratedCruiseEnergyJ": 26421.297029428824,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 235,
+      "samples": 297,
+      "features": [
+        0.5,
+        7.375222264832205,
+        1.8941728799461919,
+        8.259301812557485,
+        3.7607008135040183,
+        26.16604778745153
+      ],
+      "meanPowerW": 574.4625471921995,
+      "observedCruiseDurationSeconds": 44.400000000000006,
+      "integratedCruiseEnergyJ": 25506.13709533366,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 236,
+      "samples": 363,
+      "features": [
+        0.5,
+        7.902001817300237,
+        2.022927069003105,
+        9.306361638551431,
+        3.714959924598754,
+        54.041879283067075
+      ],
+      "meanPowerW": 566.8701612871032,
+      "observedCruiseDurationSeconds": 54.31,
+      "integratedCruiseEnergyJ": 30786.718459502576,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 237,
+      "samples": 807,
+      "features": [
+        0.0,
+        3.734544932064478,
+        0.28585015657156904,
+        5.969789432165153,
+        1.755040448781065,
+        98.7050615117926
+      ],
+      "meanPowerW": 463.3090971008366,
+      "observedCruiseDurationSeconds": 121.1,
+      "integratedCruiseEnergyJ": 56106.73165891131,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 238,
+      "samples": 813,
+      "features": [
+        0.5,
+        3.720452201554098,
+        0.3802053405855622,
+        7.678887539446255,
+        1.733584189400584,
+        47.22396860764728
+      ],
+      "meanPowerW": 567.923266661503,
+      "observedCruiseDurationSeconds": 121.79999999999998,
+      "integratedCruiseEnergyJ": 69173.05387937106,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 239,
+      "samples": 800,
+      "features": [
+        0.5,
+        3.757603859210471,
+        0.48847670501712664,
+        8.58500835545274,
+        2.2026899089188428,
+        72.84304549494057
+      ],
+      "meanPowerW": 563.0303712202219,
+      "observedCruiseDurationSeconds": 119.80000000000001,
+      "integratedCruiseEnergyJ": 67451.0384721826,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 240,
+      "samples": 578,
+      "features": [
+        0.5,
+        5.160090790542955,
+        0.7034714697909754,
+        8.463700919806545,
+        2.8438863937440177,
+        73.37350655945562
+      ],
+      "meanPowerW": 561.9042120517075,
+      "observedCruiseDurationSeconds": 86.6,
+      "integratedCruiseEnergyJ": 48660.90476367787,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 241,
+      "samples": 348,
+      "features": [
+        0.0,
+        7.192955868639549,
+        1.7046785168046996,
+        8.901494251905271,
+        3.60037695924473,
+        78.3070014411005
+      ],
+      "meanPowerW": 484.08486004127417,
+      "observedCruiseDurationSeconds": 52.2,
+      "integratedCruiseEnergyJ": 25269.229694154514,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 242,
+      "samples": 399,
+      "features": [
+        0.5,
+        6.141247888580975,
+        1.1357510271511342,
+        8.202010420144026,
+        3.536443762838516,
+        102.32424753214335
+      ],
+      "meanPowerW": 584.3621355465345,
+      "observedCruiseDurationSeconds": 59.690000000000005,
+      "integratedCruiseEnergyJ": 34880.57587077265,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 243,
+      "samples": 758,
+      "features": [
+        0.5,
+        3.751631631128966,
+        0.26950904221315936,
+        5.147062452801928,
+        2.130504198551346,
+        27.570754980642537
+      ],
+      "meanPowerW": 556.4857321730937,
+      "observedCruiseDurationSeconds": 113.69999999999999,
+      "integratedCruiseEnergyJ": 63272.42774808074,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 246,
+      "samples": 468,
+      "features": [
+        0.0,
+        6.422676455284321,
+        1.1042804974205793,
+        8.435422043193222,
+        2.9415349772939585,
+        100.70453487827373
+      ],
+      "meanPowerW": 473.34398493434196,
+      "observedCruiseDurationSeconds": 69.89999999999999,
+      "integratedCruiseEnergyJ": 33086.7445469105,
+      "largestSamplingGapSeconds": 0.23000000000000398
+    },
+    {
+      "flightId": 247,
+      "samples": 432,
+      "features": [
+        0.0,
+        6.562434757037758,
+        1.0849546671586725,
+        8.582624819533388,
+        2.5482979547968956,
+        74.91078380252864
+      ],
+      "meanPowerW": 465.6792974378517,
+      "observedCruiseDurationSeconds": 64.69,
+      "integratedCruiseEnergyJ": 30124.793751254623,
+      "largestSamplingGapSeconds": 0.22000000000000597
+    },
+    {
+      "flightId": 248,
+      "samples": 782,
+      "features": [
+        0.25,
+        3.7641710849708665,
+        0.3107598307998237,
+        6.170375753914974,
+        1.6820315007029216,
+        75.60837388657586
+      ],
+      "meanPowerW": 502.261206040198,
+      "observedCruiseDurationSeconds": 117.1,
+      "integratedCruiseEnergyJ": 58814.78722730718,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 249,
+      "samples": 451,
+      "features": [
+        0.0,
+        6.543358826341598,
+        1.1018033907469589,
+        8.283887230271047,
+        2.4967818987102324,
+        53.01239267739769
+      ],
+      "meanPowerW": 448.531608555268,
+      "observedCruiseDurationSeconds": 67.4,
+      "integratedCruiseEnergyJ": 30231.030416625064,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 250,
+      "samples": 379,
+      "features": [
+        0.25,
+        7.523796105546824,
+        1.660300229314086,
+        9.180440951024414,
+        3.612607314634117,
+        99.22290016913122
+      ],
+      "meanPowerW": 515.0870278902611,
+      "observedCruiseDurationSeconds": 56.699999999999996,
+      "integratedCruiseEnergyJ": 29205.4344813778,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 251,
+      "samples": 461,
+      "features": [
+        0.25,
+        6.434552263021978,
+        1.0358029184050654,
+        7.799811311626293,
+        3.4402247790295,
+        48.892894212938366
+      ],
+      "meanPowerW": 520.6254215839197,
+      "observedCruiseDurationSeconds": 68.9,
+      "integratedCruiseEnergyJ": 35871.09154713207,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 252,
+      "samples": 349,
+      "features": [
+        0.5,
+        8.074362403733167,
+        2.007752296875998,
+        9.552954696017668,
+        4.041284303776233,
+        74.98574341165904
+      ],
+      "meanPowerW": 587.8495942898855,
+      "observedCruiseDurationSeconds": 52.29,
+      "integratedCruiseEnergyJ": 30738.655285418117,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 253,
+      "samples": 395,
+      "features": [
+        0.5,
+        7.451147197291866,
+        1.5297861446222782,
+        8.73856418536523,
+        3.287920802567285,
+        23.408957368558326
+      ],
+      "meanPowerW": 569.6994830829412,
+      "observedCruiseDurationSeconds": 59.2,
+      "integratedCruiseEnergyJ": 33726.209398510124,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 254,
+      "samples": 407,
+      "features": [
+        0.5,
+        7.329104122071602,
+        1.470827081128645,
+        8.725004094988622,
+        3.311845976980357,
+        50.440480041414
+      ],
+      "meanPowerW": 560.9404580050052,
+      "observedCruiseDurationSeconds": 60.989999999999995,
+      "integratedCruiseEnergyJ": 34211.75853372527,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 255,
+      "samples": 585,
+      "features": [
+        0.5,
+        5.162077710722797,
+        0.6191618578632296,
+        6.552197256877182,
+        1.8783628155714809,
+        23.16512721646039
+      ],
+      "meanPowerW": 554.1160131273305,
+      "observedCruiseDurationSeconds": 87.60999999999999,
+      "integratedCruiseEnergyJ": 48546.10391008541,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 256,
+      "samples": 388,
+      "features": [
+        0.25,
+        7.496575063568511,
+        1.5863265930075892,
+        8.825155191534552,
+        3.344666629816279,
+        75.83333601885828
+      ],
+      "meanPowerW": 513.6117887456937,
+      "observedCruiseDurationSeconds": 58.00000000000001,
+      "integratedCruiseEnergyJ": 29789.483747250237,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 257,
+      "samples": 568,
+      "features": [
+        0.25,
+        5.245907300040718,
+        0.6351633760510738,
+        6.678562236314929,
+        2.040116739221595,
+        73.62276321823049
+      ],
+      "meanPowerW": 504.82703380139907,
+      "observedCruiseDurationSeconds": 85.19999999999999,
+      "integratedCruiseEnergyJ": 43011.2632798792,
+      "largestSamplingGapSeconds": 0.21999999999999886
+    },
+    {
+      "flightId": 258,
+      "samples": 804,
+      "features": [
+        0.25,
+        3.7683455818158587,
+        0.28063980212019785,
+        5.075563861817665,
+        1.0325747099339946,
+        49.1142471691467
+      ],
+      "meanPowerW": 514.2316707440419,
+      "observedCruiseDurationSeconds": 120.60000000000001,
+      "integratedCruiseEnergyJ": 62016.339491731465,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 260,
+      "samples": 795,
+      "features": [
+        0.0,
+        3.733704412080024,
+        0.2409066671697152,
+        4.8039369548519115,
+        1.3435754529898232,
+        75.5131528827923
+      ],
+      "meanPowerW": 466.25060553140605,
+      "observedCruiseDurationSeconds": 119.0,
+      "integratedCruiseEnergyJ": 55483.82205823732,
+      "largestSamplingGapSeconds": 0.29999999999999716
+    },
+    {
+      "flightId": 261,
+      "samples": 571,
+      "features": [
+        0.25,
+        5.201617788539815,
+        0.6166581991853436,
+        6.56040936023171,
+        1.8613344337184983,
+        49.93920355940859
+      ],
+      "meanPowerW": 510.3876854332155,
+      "observedCruiseDurationSeconds": 85.5,
+      "integratedCruiseEnergyJ": 43638.14710453992,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 262,
+      "samples": 403,
+      "features": [
+        0.0,
+        7.292958906362612,
+        1.4580446452447204,
+        8.547011595086149,
+        3.3637335001957975,
+        77.7620348153525
+      ],
+      "meanPowerW": 465.409772130285,
+      "observedCruiseDurationSeconds": 60.4,
+      "integratedCruiseEnergyJ": 28110.750236669213,
+      "largestSamplingGapSeconds": 0.21000000000000796
+    },
+    {
+      "flightId": 263,
+      "samples": 819,
+      "features": [
+        0.0,
+        3.687469085214708,
+        0.2559157197716844,
+        4.911348846902086,
+        1.0019827530679868,
+        75.11776383807234
+      ],
+      "meanPowerW": 456.9885046310434,
+      "observedCruiseDurationSeconds": 122.7,
+      "integratedCruiseEnergyJ": 56072.48951822903,
+      "largestSamplingGapSeconds": 0.30000000000001137
+    },
+    {
+      "flightId": 264,
+      "samples": 558,
+      "features": [
+        0.25,
+        5.242699259676357,
+        0.5993929660751743,
+        6.740843281620427,
+        1.725649080509671,
+        100.43266698047876
+      ],
+      "meanPowerW": 493.42875730221243,
+      "observedCruiseDurationSeconds": 83.6,
+      "integratedCruiseEnergyJ": 41250.64411046496,
+      "largestSamplingGapSeconds": 0.3100000000000023
+    },
+    {
+      "flightId": 267,
+      "samples": 451,
+      "features": [
+        0.5,
+        6.413220578774768,
+        1.0416741804884047,
+        7.892765673912595,
+        2.5682146501296885,
+        24.88884818567808
+      ],
+      "meanPowerW": 528.634413650524,
+      "observedCruiseDurationSeconds": 68.69999999999999,
+      "integratedCruiseEnergyJ": 36317.18421779099,
+      "largestSamplingGapSeconds": 0.8900000000000006
+    },
+    {
+      "flightId": 275,
+      "samples": 456,
+      "features": [
+        0.5,
+        6.361880539092622,
+        1.0165295360164424,
+        7.681830490195852,
+        2.7916812081877467,
+        22.715261779619425
+      ],
+      "meanPowerW": 518.5409446787213,
+      "observedCruiseDurationSeconds": 70.2,
+      "integratedCruiseEnergyJ": 36401.57431644624,
+      "largestSamplingGapSeconds": 0.8999999999999986
+    }
+  ]
+}

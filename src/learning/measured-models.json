@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "datasetSha256": "80acf6a9226d766b005219c97bf886b255c345b262e8a14abc7caf94864fe803",
+  "measuredRows": 80,
+  "testSessions": 5,
+  "trainRows": 60,
+  "heldOutRows": 20,
+  "trainIndices": [
+    0,
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    15
+  ],
+  "testIndices": [
+    2,
+    6,
+    10,
+    14
+  ],
+  "evaluation": "Within-sweep interpolation only. No independent session or aircraft validation. Models are NOT refitted on held-out rows.",
+  "independentValidation": false,
+  "gustEnduranceSamples": 0,
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "sklearn": "1.8.0"
+  },
+  "supervised": [
+    {
+      "id": "bitcraze-2015-bench",
+      "input": "pwmPercent",
+      "inputScale": 100,
+      "range": [
+        0,
+        93.75
+      ],
+      "source": "https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/functional-areas/pwm-to-thrust/",
+      "targets": {
+        "thrustN": {
+          "coefficients": [
+            0.0,
+            0.35061567879934036,
+            0.26430064492566085
+          ],
+          "heldOut": {
+            "mae": 0.0006369096446908543,
+            "rmse": 0.0007516067010841012,
+            "maxAbsoluteError": 0.001064842257576304
+          },
+          "meanBaseline": {
+            "mae": 0.15352649999999998,
+            "rmse": 0.17437978273440988,
+            "maxAbsoluteError": 0.27108299999999996
+          }
+        },
+        "electricalPowerW": {
+          "coefficients": [
+            1.0092878569269965,
+            8.657481946873443,
+            6.141904340584214
+          ],
+          "heldOut": {
+            "mae": 0.075471571864414,
+            "rmse": 0.08107731493472882,
+            "maxAbsoluteError": 0.095895456763607
+          },
+          "meanBaseline": {
+            "mae": 3.6243749999999997,
+            "rmse": 4.1303792982606335,
+            "maxAbsoluteError": 6.413150000000001
+          }
+        }
+      },
+      "scope": "2015 whole-aircraft bench sweep; supply voltage covaries with PWM. No voltage-independent prediction."
+    },
+    {
+      "id": "ance_8.5x6_static_2848cm",
+      "input": "rpm",
+      "inputScale": 10000,
+      "range": [
+        2489.0,
+        6897.0
+      ],
+      "diameterIn": 8.5,
+      "source": "https://m-selig.ae.illinois.edu/props/volume-1/data/ance_8.5x6_static_2848cm.txt",
+      "targets": {
+        "Ct": {
+          "coefficients": [
+            0.10769862134506945,
+            -0.017312093921596428,
+            0.035351651796690094
+          ],
+          "heldOut": {
+            "mae": 0.0008774311087853572,
+            "rmse": 0.0009699091892709622,
+            "maxAbsoluteError": 0.001562134701898893
+          },
+          "meanBaseline": {
+            "mae": 0.0016958333333333304,
+            "rmse": 0.002235990334902585,
+            "maxAbsoluteError": 0.0032416666666666566
+          }
+        },
+        "Cp": {
+          "coefficients": [
+            0.06939329874477226,
+            -0.062039332682120765,
+            0.0495960040701103
+          ],
+          "heldOut": {
+            "mae": 0.00030966138605908154,
+            "rmse": 0.000379047149581221,
+            "maxAbsoluteError": 0.0005756156863470849
+          },
+          "meanBaseline": {
+            "mae": 0.0017416666666666657,
+            "rmse": 0.0019175360347186282,
+            "maxAbsoluteError": 0.002716666666666666
+          }
+        }
+      },
+      "scope": "Static isolated propeller. Cp represents shaft power, not electrical power. No wind/endurance prediction."
+    },
+    {
+      "id": "apcsf_8x3.8_static_2777rd",
+      "input": "rpm",
+      "inputScale": 10000,
+      "range": [
+        3030.0,
+        7015.0
+      ],
+      "diameterIn": 8,
+      "source": "https://m-selig.ae.illinois.edu/props/volume-1/data/apcsf_8x3.8_static_2777rd.txt",
+      "targets": {
+        "Ct": {
+          "coefficients": [
+            0.09054686182564033,
+            0.0026971650678380837,
+            0.04383245186607565
+          ],
+          "heldOut": {
+            "mae": 0.00027209598177472746,
+            "rmse": 0.0003241157709431261,
+            "maxAbsoluteError": 0.0005555934536505269
+          },
+          "meanBaseline": {
+            "mae": 0.004925000000000002,
+            "rmse": 0.005739380289814498,
+            "maxAbsoluteError": 0.009141666666666673
+          }
+        },
+        "Cp": {
+          "coefficients": [
+            0.040840508037147706,
+            -0.0054121204280173805,
+            0.02296955737092923
+          ],
+          "heldOut": {
+            "mae": 4.691841452711225e-05,
+            "rmse": 5.5272064137918306e-05,
+            "maxAbsoluteError": 9.571964037548286e-05
+          },
+          "meanBaseline": {
+            "mae": 0.0019749999999999993,
+            "rmse": 0.002240969532243677,
+            "maxAbsoluteError": 0.0035333333333333328
+          }
+        }
+      },
+      "scope": "Static isolated propeller. Cp represents shaft power, not electrical power. No wind/endurance prediction."
+    },
+    {
+      "id": "apcsf_8x6_static_2783rd",
+      "input": "rpm",
+      "inputScale": 10000,
+      "range": [
+        2485.0,
+        6611.0
+      ],
+      "diameterIn": 8,
+      "source": "https://m-selig.ae.illinois.edu/props/volume-1/data/apcsf_8x6_static_2783rd.txt",
+      "targets": {
+        "Ct": {
+          "coefficients": [
+            0.1371073010241238,
+            0.009597805482172213,
+            0.028855622377097323
+          ],
+          "heldOut": {
+            "mae": 0.0007347057216188502,
+            "rmse": 0.00091299765712706,
+            "maxAbsoluteError": 0.0015734408605697081
+          },
+          "meanBaseline": {
+            "mae": 0.004050000000000005,
+            "rmse": 0.00480806613931215,
+            "maxAbsoluteError": 0.006649999999999989
+          }
+        },
+        "Cp": {
+          "coefficients": [
+            0.08223807154460405,
+            -0.02319808593946656,
+            0.058477436430390245
+          ],
+          "heldOut": {
+            "mae": 0.0003979016616979976,
+            "rmse": 0.0005414761495992969,
+            "maxAbsoluteError": 0.00102769906731566
+          },
+          "meanBaseline": {
+            "mae": 0.003799999999999998,
+            "rmse": 0.004252646234992981,
+            "maxAbsoluteError": 0.0063
+          }
+        }
+      },
+      "scope": "Static isolated propeller. Cp represents shaft power, not electrical power. No wind/endurance prediction."
+    },
+    {
+      "id": "apcsf_9x4.7_static_kt1032",
+      "input": "rpm",
+      "inputScale": 10000,
+      "range": [
+        2763.0,
+        6768.0
+      ],
+      "diameterIn": 9,
+      "source": "https://m-selig.ae.illinois.edu/props/volume-1/data/apcsf_9x4.7_static_kt1032.txt",
+      "targets": {
+        "Ct": {
+          "coefficients": [
+            0.1073722519764851,
+            0.02808545070028088,
+            -0.01419731098105644
+          ],
+          "heldOut": {
+            "mae": 0.00017315946559285506,
+            "rmse": 0.00022804167620111177,
+            "maxAbsoluteError": 0.00040920491180405916
+          },
+          "meanBaseline": {
+            "mae": 0.0015499999999999993,
+            "rmse": 0.001723147153063583,
+            "maxAbsoluteError": 0.002191666666666689
+          }
+        },
+        "Cp": {
+          "coefficients": [
+            0.04810066476092278,
+            -0.000551648551061617,
+            0.001494922083949112
+          ],
+          "heldOut": {
+            "mae": 7.547856249527814e-05,
+            "rmse": 9.067739724345836e-05,
+            "maxAbsoluteError": 0.00015346758128596816
+          },
+          "meanBaseline": {
+            "mae": 0.00012500000000000185,
+            "rmse": 0.0001322875655532307,
+            "maxAbsoluteError": 0.0001999999999999988
+          }
+        }
+      },
+      "scope": "Static isolated propeller. Cp represents shaft power, not electrical power. No wind/endurance prediction."
+    }
+  ],
+  "unsupervised": {
+    "method": "K-means (3 clusters), measured propeller operating points; no target labels",
+    "features": [
+      "diameterIn",
+      "pitch/diameter",
+      "rpm/10000"
+    ],
+    "trainingRows": 48,
+    "mean": [
+      8.375,
+      0.6132761437908495,
+      0.47208749999999994
+    ],
+    "scale": [
+      0.414578098794425,
+      0.11691923644613397,
+      0.1292369136266802
+    ],
+    "centers": [
+      [
+        -0.9045340337332911,
+        -1.1826637599926075,
+        0.18728524217611708
+      ],
+      [
+        -0.30151134457776363,
+        0.9807199924074619,
+        -0.10955332293242238
+      ],
+      [
+        1.5075567228888178,
+        -0.7787762248223098,
+        0.031821403688729454
+      ]
+    ],
+    "distanceThreshold": 1.9014315007667433,
+    "clusterCounts": [
+      12,
+      24,
+      12
+    ],
+    "limitations": "Distance is a training-support heuristic, not calibrated confidence or proof of physical validity."
+  },
+  "promotion": {
+    "defaultPhysicsChanged": false,
+    "reason": "Independent measured validation and gust/endurance data missing."
+  }
+}

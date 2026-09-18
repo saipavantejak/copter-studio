@@ -19,6 +19,7 @@ import { DroneState, PhysicsConfig, TestModules } from './PhysicsEngine';
 import { exportSB3Script } from './TelemetryExport';
 import { parseSimulationIntent, isSimulationCommand, SimulationIntent } from './SimulationParser';
 import { SimulationApprovalDialog } from './SimulationApprovalDialog';
+import { learningEvidenceContext, trainingAudit } from './learning/MeasuredPrediction';
 import { benchmarkAudit } from './BenchmarkAudit';
 
 interface AetherInterfaceProps {
@@ -59,7 +60,7 @@ function buildContext(
   telemetry: DroneState | null, crashData: any, activeTests: TestModules,
   config: PhysicsConfig, metrics: MissionMetrics | null | undefined, episodeStats: any
 ): string {
-  const parts: string[] = [];
+  const parts: string[] = [learningEvidenceContext()];
   if (config)    parts.push(`Config: ${config.droneType} | mass=${config.mass}kg | prop=${config.propDiameter}in | ${config.batteryVoltage}V | arm=${config.armLength}m`);
   if (telemetry) parts.push(`Telemetry: alt=${telemetry.z.toFixed(3)}m | roll=${(telemetry.phi*180/Math.PI).toFixed(1)}° | pitch=${(telemetry.theta*180/Math.PI).toFixed(1)}° | bat=${(telemetry.battery*100).toFixed(1)}% | t=${telemetry.time.toFixed(2)}s`);
   if (metrics)   parts.push(`Metrics: SEC=${metrics.secApplicable ? metrics.sec.toFixed(5) : 'N/A'} | SPT=${metrics.spt.toFixed(5)} (${metrics.sptGrade}) | energy=${metrics.energyConsumed.toFixed(1)}J | dist=${metrics.distanceTraveled.toFixed(4)}km`);
@@ -363,6 +364,10 @@ export const AetherInterface = ({
     const msg = input.trim();
     if (!msg || isLoading || isParsing) return;
     setInput('');
+    if (/\b(training status|training results|trained data|backpropagation results|learning results)\b/i.test(msg) && !/\b(run|start|launch)\b/i.test(msg)) {
+      setMessages(p=>[...p,{role:'user',content:msg},{role:'assistant',content:trainingAudit()}]);
+      return;
+    }
     if (episodeStats && /audit|performance|\bSEC\b|\bSPT\b|confidence|reliab|robust|benchmark results/i.test(msg) && !/\b(run|simulate|fly|start|launch)\b/i.test(msg)) {
       setMessages(p=>[...p,{role:'user',content:msg},{role:'assistant',content:benchmarkAudit(episodeStats)}]);
       return;

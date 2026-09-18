@@ -1,7 +1,7 @@
 {
   "name": "copter-studios",
   "version": "1.0.0",
-  "description": "Copter Studios — Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
+  "description": "Copter Studios \u2014 Browser-based drone flight simulator with RL training, 3D visualization, and LLM-powered natural language interface",
   "author": "saipavantejak",
   "license": "MIT",
   "type": "module",
@@ -36,7 +36,10 @@
     "type-check:server": "tsc --project server/tsconfig.server.json --noEmit",
     "ci:benchmark": "tsx scripts/ci-benchmark.ts",
     "ci:benchmark:strict": "tsx scripts/ci-benchmark.ts --episodes=100 --threshold=0.3",
-    "sbom": "npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format JSON"
+    "sbom": "npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format JSON",
+    "train:measured": "python scripts/learning/train_measured.py",
+    "train:residual": "node --import tsx scripts/learning/train-residual.ts",
+    "train:energy": "python scripts/learning/train_energy.py"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
