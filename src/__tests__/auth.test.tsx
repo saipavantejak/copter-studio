@@ -60,7 +60,7 @@ describe('account interface',()=>{
   });
   it('requires confirmation when signup returns no session',async()=>{
     const c=client();render(<AuthForm client={c.instance}/>);
-    fireEvent.click(screen.getByRole('button',{name:'Sign up',exact:true}));fill();
+    fireEvent.click(screen.getByRole('button',{name:'Sign up'}));fill();
     fireEvent.click(screen.getByRole('button',{name:'Create account'}));
     await screen.findByText(/Check your email to confirm/);
     expect(c.auth.signUp).toHaveBeenCalled();expect(screen.queryByText('Account created and signed in.')).toBeNull();
