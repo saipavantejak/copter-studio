@@ -1,0 +1,839 @@
+{
+  "schemaVersion": 1,
+  "source": "https://raw.githubusercontent.com/thiago-a-rod/energy_consumption/3058a25a7092633e05a3fe169c6ae3b967636b9d/MLModel/data/data_clean_cruise.csv",
+  "sourceSha256": "9e480aa860f701ad2c6769948fc3c1be20ac1c591122ca73afc3ca6b5587a21a",
+  "attribution": "Thiago A. Rodrigues and collaborators, energy_consumption author repository; processed cruise dataset associated with Matrice 100 energy studies.",
+  "dataKind": "Author-processed measured performance; y used as author-provided power target in W. Not independently reconstructed from raw current/voltage.",
+  "sourceSamples": 95900,
+  "flightRecords": 187,
+  "features": [
+    "payloadKg",
+    "meanGroundSpeedMps",
+    "meanAbsVerticalSpeedMps",
+    "meanOnboardAirflowMps",
+    "stdOnboardAirflowMps",
+    "meanAltitudeM"
+  ],
+  "splitFlightIds": {
+    "train": [
+      247,
+      171,
+      8,
+      141,
+      260,
+      81,
+      130,
+      167,
+      209,
+      95,
+      156,
+      127,
+      181,
+      264,
+      76,
+      231,
+      234,
+      128,
+      96,
+      115,
+      114,
+      256,
+      12,
+      80,
+      257,
+      106,
+      230,
+      146,
+      91,
+      4,
+      85,
+      255,
+      111,
+      187,
+      10,
+      201,
+      137,
+      164,
+      210,
+      83,
+      267,
+      177,
+      242,
+      191,
+      243,
+      88,
+      5,
+      144,
+      154,
+      142,
+      110,
+      197,
+      3,
+      112,
+      126,
+      148,
+      84,
+      208,
+      196,
+      151,
+      186,
+      116,
+      16,
+      248,
+      206,
+      1,
+      189,
+      147,
+      122,
+      143,
+      160,
+      97,
+      175,
+      232,
+      254,
+      17,
+      226,
+      150,
+      6,
+      174,
+      108,
+      241,
+      166,
+      258,
+      193,
+      275,
+      195,
+      184,
+      237,
+      194,
+      145,
+      105,
+      152,
+      178,
+      60,
+      263,
+      140,
+      238,
+      170,
+      134,
+      262,
+      153
+    ],
+    "validation": [
+      163,
+      135,
+      169,
+      77,
+      188,
+      155,
+      157,
+      149,
+      233,
+      119,
+      125,
+      182,
+      162,
+      131,
+      228,
+      249,
+      82,
+      183,
+      246,
+      158,
+      253,
+      180,
+      136,
+      190,
+      14,
+      179,
+      198,
+      123
+    ],
+    "calibration": [
+      2,
+      100,
+      185,
+      59,
+      250,
+      113,
+      138,
+      227,
+      98,
+      129,
+      235,
+      192,
+      207,
+      168,
+      225,
+      15,
+      205,
+      101,
+      239,
+      121,
+      117,
+      229,
+      79,
+      236,
+      20,
+      120,
+      172,
+      200
+    ],
+    "test": [
+      87,
+      23,
+      102,
+      252,
+      92,
+      86,
+      118,
+      93,
+      139,
+      109,
+      7,
+      165,
+      202,
+      251,
+      99,
+      173,
+      78,
+      68,
+      240,
+      124,
+      107,
+      176,
+      203,
+      261,
+      18,
+      204,
+      94,
+      159,
+      199
+    ]
+  },
+  "splitSeed": 42,
+  "method": "6-input, 12-tanh-hidden, 1-linear-output neural network; analytic backpropagation + Adam",
+  "gradientCheckMaxAbsoluteError": 3.658002373230218e-11,
+  "epochsRun": 605,
+  "bestValidationEpoch": 355,
+  "optimizer": {
+    "learningRate": 0.005,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "weightDecayL2": 0.001,
+    "patience": 250,
+    "maxEpochs": 4000
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "trainRegularizedLoss": 2.274794431295037,
+      "validationMSE": 2.3906495941519013
+    },
+    {
+      "epoch": 50,
+      "trainRegularizedLoss": 0.18535802243664648,
+      "validationMSE": 0.2150431066634832
+    },
+    {
+      "epoch": 100,
+      "trainRegularizedLoss": 0.11341233188879385,
+      "validationMSE": 0.16198673904984615
+    },
+    {
+      "epoch": 150,
+      "trainRegularizedLoss": 0.10227218308554667,
+      "validationMSE": 0.15951307875961396
+    },
+    {
+      "epoch": 200,
+      "trainRegularizedLoss": 0.09210050193664525,
+      "validationMSE": 0.15276847449126296
+    },
+    {
+      "epoch": 250,
+      "trainRegularizedLoss": 0.08524731745410888,
+      "validationMSE": 0.14529733411891316
+    },
+    {
+      "epoch": 300,
+      "trainRegularizedLoss": 0.08149109226142703,
+      "validationMSE": 0.13984265947827473
+    },
+    {
+      "epoch": 350,
+      "trainRegularizedLoss": 0.07832042966619221,
+      "validationMSE": 0.13691909427888768
+    },
+    {
+      "epoch": 400,
+      "trainRegularizedLoss": 0.0744816436216932,
+      "validationMSE": 0.1398779593945578
+    },
+    {
+      "epoch": 450,
+      "trainRegularizedLoss": 0.07163847846887848,
+      "validationMSE": 0.1433168375305414
+    },
+    {
+      "epoch": 500,
+      "trainRegularizedLoss": 0.06978262110203105,
+      "validationMSE": 0.14463217090268118
+    },
+    {
+      "epoch": 550,
+      "trainRegularizedLoss": 0.06843006781576264,
+      "validationMSE": 0.14633390353552136
+    },
+    {
+      "epoch": 600,
+      "trainRegularizedLoss": 0.06738252564112826,
+      "validationMSE": 0.1482614976254621
+    }
+  ],
+  "featureMean": [
+    0.24754901960784315,
+    5.9435531003677635,
+    1.0709521315922186,
+    7.6067760188644655,
+    2.664631460612126,
+    61.996698848520495
+  ],
+  "featureScale": [
+    0.21435921964790416,
+    1.4825974136412676,
+    0.6416370199574933,
+    1.5911413287137255,
+    0.9583204569607509,
+    28.881943759498757
+  ],
+  "targetMeanW": 516.1805270418823,
+  "targetScaleW": 42.20335416730833,
+  "weights": {
+    "w1": [
+      [
+        -0.6019848674861172,
+        0.1394992719575288,
+        0.21478756393025683,
+        0.6441820956755779,
+        0.5253402880626536,
+        -0.19978338863593215,
+        -0.6232930060633268,
+        -0.5408821438112437,
+        0.47182641054779517,
+        -0.8515925906136877,
+        0.648403745185889,
+        0.49331554681120376
+      ],
+      [
+        -0.04712485014271859,
+        -0.0289407682139237,
+        -0.6824162069378769,
+        -0.032285610380124986,
+        0.7585437603468632,
+        0.48604450396553095,
+        0.3432481439100909,
+        0.8629032317005392,
+        -0.2227869155878804,
+        -0.3125912855572238,
+        -0.029066275671208824,
+        0.30136271480987786
+      ],
+      [
+        0.2107211049166219,
+        0.3253418729384591,
+        0.05755304393888797,
+        -0.14663676386058958,
+        -0.4025270847785565,
+        0.024668308052054208,
+        -0.01147348117364299,
+        0.5056607438908699,
+        -0.05819447099706162,
+        -0.6689753458366952,
+        0.47056641002159894,
+        0.31916676944601813
+      ],
+      [
+        0.10012416731118584,
+        -0.25265943524982065,
+        0.7802034087243748,
+        0.23222024900749136,
+        0.5792616388579048,
+        -0.5064136522832153,
+        -0.46821394832728364,
+        0.05497262429031265,
+        -0.5638028650787764,
+        -0.12969971380709744,
+        0.22721149671228186,
+        -0.9666189537845645
+      ],
+      [
+        -0.0928729442524737,
+        -0.4798229194727355,
+        0.801782435315868,
+        -0.1302465642250336,
+        0.3603944090877753,
+        -0.5394710074494085,
+        -0.21240208906842667,
+        -0.7974603357814292,
+        -0.5110536572444925,
+        0.4213132521590405,
+        -0.5170408120673624,
+        -0.23322414181719567
+      ],
+      [
+        -0.010119549905236058,
+        -0.6154822229709407,
+        -0.21567071412581468,
+        -0.13961186100300257,
+        0.19511188007377764,
+        -0.04909863801566866,
+        -0.10061418212592671,
+        0.2704354442110178,
+        0.5204967589734013,
+        0.9443147961900804,
+        -0.3468269499673327,
+        0.0064085394270036395
+      ]
+    ],
+    "b1": [
+      0.25644833557545094,
+      -0.233151360443679,
+      -0.8725195852406271,
+      0.23926996923494767,
+      0.011785943679655264,
+      0.5531123818645636,
+      0.07009897099296092,
+      -0.2093849090819468,
+      -0.43992850153146884,
+      -0.9896410485964497,
+      0.48174795546983895,
+      -0.5229501572203887
+    ],
+    "w2": [
+      [
+        -0.26101747406278697
+      ],
+      [
+        -0.4755896155689572
+      ],
+      [
+        0.5799185591830902
+      ],
+      [
+        0.27760218452266605
+      ],
+      [
+        -0.24077135248852635
+      ],
+      [
+        -0.5716913278100715
+      ],
+      [
+        -0.3094122518921067
+      ],
+      [
+        0.15298364143522833
+      ],
+      [
+        0.23615229883181763
+      ],
+      [
+        -0.342443192685127
+      ],
+      [
+        0.39805539318884314
+      ],
+      [
+        0.7020685624416383
+      ]
+    ],
+    "b2": [
+      0.48018113802505463
+    ]
+  },
+  "weightChangeL2": 3.390587238592723,
+  "trainingFeatureRanges": [
+    [
+      0.0,
+      0.75
+    ],
+    [
+      3.636314966951192,
+      8.086715318211967
+    ],
+    [
+      0.20428299741825456,
+      2.2150841654062505
+    ],
+    [
+      4.523026307740887,
+      11.14284375924617
+    ],
+    [
+      0.9706390893342022,
+      4.875273564881773
+    ],
+    [
+      22.715261779619425,
+      107.08397033142322
+    ]
+  ],
+  "test": {
+    "maeW": 13.05636947584258,
+    "rmseW": 17.04334713457086,
+    "meanAbsolutePercentError": 2.5479527547799483,
+    "maxAbsoluteErrorW": 37.12444944408145
+  },
+  "initialUntrainedTest": {
+    "maeW": 51.766420092710796,
+    "rmseW": 60.56618078631455,
+    "meanAbsolutePercentError": 9.978916358609615,
+    "maxAbsoluteErrorW": 97.56338267850248
+  },
+  "ridgeBaseline": {
+    "maeW": 10.900744336344792,
+    "rmseW": 14.16034480221971,
+    "meanAbsolutePercentError": 2.1179247854887673,
+    "maxAbsoluteErrorW": 34.80197753867111
+  },
+  "ridgeModel": {
+    "coefficients": [
+      35.041330682053456,
+      -8.25734181113352,
+      7.110113253849046,
+      3.6934400267065297,
+      5.978894667870553,
+      1.8051278003466715
+    ],
+    "interceptW": 516.1805270418823
+  },
+  "testErrorByPayload": [
+    {
+      "payloadKg": 0.0,
+      "flights": 8,
+      "maeW": 12.39867648168061
+    },
+    {
+      "payloadKg": 0.25,
+      "flights": 12,
+      "maeW": 16.615822706583756
+    },
+    {
+      "payloadKg": 0.5,
+      "flights": 9,
+      "maeW": 8.895047829664982
+    }
+  ],
+  "uncertainty": {
+    "nominalCoverage": 0.9,
+    "absoluteRadiusW": 29.098020605868555,
+    "calibrationFlights": 28,
+    "testCoverage": 0.8620689655172413,
+    "limitations": "Marginal interval assumes exchangeable flights; no cross-aircraft or weather-shift guarantee."
+  },
+  "unsupervised": {
+    "method": "K-means 3 operating regimes, training flights only",
+    "centers": [
+      [
+        0.065678944866595,
+        -1.0256644640733596,
+        -0.9950543532683391,
+        -0.9938993312557678,
+        -0.9492232772130137,
+        -0.16280191225296994
+      ],
+      [
+        -0.6722395424953821,
+        1.0646192525135123,
+        1.235668734139701,
+        1.0430407416627567,
+        1.0633153145168148,
+        0.18305895836675912
+      ],
+      [
+        0.5556917367700828,
+        0.44098712107542287,
+        0.23176479668290667,
+        0.41631632452593353,
+        0.3326818933057358,
+        0.05639241447472484
+      ]
+    ],
+    "supportDistance95thPercentile": 2.3003355929768117,
+    "testFlightsOutsideSupport": 2
+  },
+  "testPredictions": [
+    {
+      "flightId": 87,
+      "observedW": 491.6032248829226,
+      "predictedW": 528.727674327004,
+      "baselineW": 526.4052024215937,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 7.509507055971971,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 23,
+      "observedW": 533.3256655411188,
+      "predictedW": 544.8356651255909,
+      "baselineW": 526.989448855828,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 9.8174446621891,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 102,
+      "observedW": 561.7274452577802,
+      "predictedW": 559.9426446884522,
+      "baselineW": 552.1335704460844,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 5.589575905555059,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 252,
+      "observedW": 587.8495942898855,
+      "predictedW": 586.8268712508469,
+      "baselineW": 569.8802663896307,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 9.552954696017668,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 92,
+      "observedW": 583.6683922019698,
+      "predictedW": 592.0369148703883,
+      "baselineW": 574.2015919314274,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 9.312725606697917,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 86,
+      "observedW": 460.16212659084795,
+      "predictedW": 487.0220409543099,
+      "baselineW": 488.2942452900162,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 10.051892820275206,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 118,
+      "observedW": 514.4303805337379,
+      "predictedW": 535.4902681380014,
+      "baselineW": 529.5029583014615,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 7.029161883086185,
+      "outsideTrainingSupport": true
+    },
+    {
+      "flightId": 93,
+      "observedW": 561.6913191595448,
+      "predictedW": 570.4064580573131,
+      "baselineW": 557.2332647035519,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 7.019208978522909,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 139,
+      "observedW": 502.12605891134706,
+      "predictedW": 494.16202392938675,
+      "baselineW": 484.60102358831165,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 9.525520396083316,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 109,
+      "observedW": 548.0868530299464,
+      "predictedW": 579.3412007324979,
+      "baselineW": 560.27487906287,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 6.087930345512857,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 7,
+      "observedW": 467.9396622632819,
+      "predictedW": 455.78012693748275,
+      "baselineW": 464.57664019664435,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 5.885923958151241,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 165,
+      "observedW": 461.6114671497869,
+      "predictedW": 466.7016575667461,
+      "baselineW": 476.68102531062874,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 8.82299998852385,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 202,
+      "observedW": 509.98173643534824,
+      "predictedW": 524.1565296533424,
+      "baselineW": 499.8894945215951,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 4.758350098451774,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 251,
+      "observedW": 520.6254215839197,
+      "predictedW": 512.5371370413561,
+      "baselineW": 517.925034092907,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 7.799811311626293,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 99,
+      "observedW": 559.1681532385498,
+      "predictedW": 559.005006752029,
+      "baselineW": 555.6143667527225,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 7.7481811617305905,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 173,
+      "observedW": 530.8358441894399,
+      "predictedW": 504.9878739069444,
+      "baselineW": 510.623594307782,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 6.70538038075208,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 78,
+      "observedW": 464.83076243659633,
+      "predictedW": 459.56346947191963,
+      "baselineW": 474.0084985410304,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 7.878398388179383,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 68,
+      "observedW": 562.3400134087739,
+      "predictedW": 525.8542381464038,
+      "baselineW": 528.9521081489996,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 9.326275951239657,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 240,
+      "observedW": 561.9042120517075,
+      "predictedW": 577.1769123903787,
+      "baselineW": 561.5586455999851,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 8.463700919806545,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 124,
+      "observedW": 469.4673512634469,
+      "predictedW": 463.22808502677145,
+      "baselineW": 469.5226639861445,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 8.326846267808275,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 107,
+      "observedW": 581.2639877540282,
+      "predictedW": 589.5687466605942,
+      "baselineW": 573.0839662138353,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 9.227952743104591,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 176,
+      "observedW": 477.04086152664706,
+      "predictedW": 447.8398659609598,
+      "baselineW": 474.8237316856864,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 7.788819593552571,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 203,
+      "observedW": 452.6295461184847,
+      "predictedW": 459.03772811670956,
+      "baselineW": 467.41080796972165,
+      "payloadKg": 0.0,
+      "onboardAirflowMps": 7.65709741876588,
+      "outsideTrainingSupport": true
+    },
+    {
+      "flightId": 261,
+      "observedW": 510.3876854332155,
+      "predictedW": 509.8420713802977,
+      "baselineW": 507.48508899616917,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 6.56040936023171,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 18,
+      "observedW": 517.1980320428617,
+      "predictedW": 511.623702224214,
+      "baselineW": 512.3812626559553,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 5.8162282205369955,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 204,
+      "observedW": 503.0998849375775,
+      "predictedW": 508.24050254032534,
+      "baselineW": 504.6474193613887,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 6.3217386262071855,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 94,
+      "observedW": 561.6228180905013,
+      "predictedW": 566.7921099486232,
+      "baselineW": 551.348557576654,
+      "payloadKg": 0.5,
+      "onboardAirflowMps": 5.191975887211507,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 159,
+      "observedW": 515.8055351957771,
+      "predictedW": 508.84849949567706,
+      "baselineW": 504.98577319507194,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 6.186849923839821,
+      "outsideTrainingSupport": false
+    },
+    {
+      "flightId": 199,
+      "observedW": 493.98491899203526,
+      "predictedW": 520.8660343583866,
+      "baselineW": 501.0653927276698,
+      "payloadKg": 0.25,
+      "onboardAirflowMps": 4.627374758538066,
+      "outsideTrainingSupport": false
+    }
+  ],
+  "passesBaselineMAEGate": false,
+  "promoted": false,
+  "limitations": [
+    "One aircraft and author-processed dataset; no independent airframe or date-held-out validation.",
+    "Onboard airflow is not ambient gust speed. No standardized gust-duration label.",
+    "Observed cruise segment duration is not maximum endurance.",
+    "Input features are measured segment summaries; no prospective performance guarantee.",
+    "No raw dataset redistribution; source terms require verification before wider commercial model use.",
+    "Active flight physics and controller are unchanged."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "method": "Tabular Q-learning residual collective controller",
+  "scope": "Crazyflie 2.1 reference configuration in Copter PhysicsEngine only",
+  "physicalValidation": false,
+  "trainingEpisodes": 600,
+  "trainSeedRange": [
+    1,
+    600
+  ],
+  "evaluationSeedRanges": [
+    [
+      100001,
+      100050
+    ],
+    [
+      101001,
+      101050
+    ]
+  ],
+  "stepsPerEpisode": 1000,
+  "decisionEverySteps": 8,
+  "alpha": 0.1,
+  "gamma": 0.97,
+  "epsilon": [
+    0.3,
+    0.03
+  ],
+  "config": {
+    "droneType": "quadcopter",
+    "mass": 0.029,
+    "propDiameter": 1.7716535433070868,
+    "batteryVoltage": 3.7,
+    "armLength": 0.046,
+    "batteryCapacity": 250,
+    "maxThrustPerMotorN": 0.14715
+  },
+  "actions": [
+    0,
+    -0.04,
+    -0.02,
+    0.02,
+    0.04
+  ],
+  "results": [
+    {
+      "wind": false,
+      "baseline": {
+        "episodes": 50,
+        "successes": 50,
+        "failures": 0,
+        "meanAltitudeErrorM": 0.030327349610074522,
+        "meanReward": -31.793730857033314
+      },
+      "policy": {
+        "episodes": 50,
+        "successes": 50,
+        "failures": 0,
+        "meanAltitudeErrorM": 0.03713360473382307,
+        "meanReward": -44.6640456946885
+      }
+    },
+    {
+      "wind": true,
+      "baseline": {
+        "episodes": 50,
+        "successes": 0,
+        "failures": 50,
+        "meanAltitudeErrorM": 0.16361376517022166,
+        "meanReward": -1010.5898304734285
+      },
+      "policy": {
+        "episodes": 50,
+        "successes": 0,
+        "failures": 50,
+        "meanAltitudeErrorM": 0.1621453909156563,
+        "meanReward": -1011.0112439894168
+      }
+    }
+  ],
+  "passesSimulationGate": false,
+  "promoted": false,
+  "promotionReason": "Did not improve both held-out scenarios; existing controller retained",
+  "limitations": [
+    "Synthetic sinusoidal wind, not measured gusts.",
+    "No measured endurance labels.",
+    "Error is conditional on executed steps; use success/failure and penalized reward together.",
+    "Single training run; no statistical evidence of universal improvement."
+  ]
+}
