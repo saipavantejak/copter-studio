@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "kind": "gust-recovery",
+  "measured": {
+    "configurationKey": "REPLACE_WITH_EXACT_CONFIG_AND_BATTERY_REVISION",
+    "protocolId": "REPLACE_WITH_PROTOCOL_ID",
+    "sessionId": "REPLACE_WITH_SESSION_ID",
+    "sourceUrl": "https://REPLACE_WITH_MEASUREMENT_SOURCE",
+    "durationSeconds": null,
+    "energyJ": null,
+    "termination": "completed-mission",
+    "ambientTemperatureC": null,
+    "payloadKg": null,
+    "wind": {
+      "referenceFrame": "ambient-world",
+      "traceId": "REPLACE_WITH_TRACE_HASH",
+      "gustWindowSeconds": null,
+      "peakMps": null,
+      "recoverySeconds": null
+    }
+  },
+  "simulated": {
+    "configurationKey": "REPLACE_WITH_EXACT_CONFIG_AND_BATTERY_REVISION",
+    "protocolId": "REPLACE_WITH_PROTOCOL_ID",
+    "durationSeconds": null,
+    "energyJ": null,
+    "termination": "completed-mission",
+    "ambientTemperatureC": null,
+    "payloadKg": null,
+    "wind": {
+      "referenceFrame": "ambient-world",
+      "traceId": "REPLACE_WITH_TRACE_HASH",
+      "gustWindowSeconds": null,
+      "peakMps": null,
+      "recoverySeconds": null
+    },
+    "engineCommit": "REPLACE_WITH_40_CHARACTER_COMMIT",
+    "seed": 42
+  }
+}

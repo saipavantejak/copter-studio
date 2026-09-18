@@ -48,6 +48,9 @@ export interface PhysicsConfig {
   /** Measured nominal-voltage maximum static thrust per rotor, newtons. */
   maxThrustPerMotorN?: number;
   propulsionCurve?: PropulsionPoint[];
+  /** Whole-aircraft electronics draw, separate from per-motor electrical power. */
+  electronicsPowerW?: number;
+  propulsionCalibration?: import('./calibration/CalibrationBinding').CalibrationRecord;
 }
 
 export interface TestModules {
@@ -310,7 +313,7 @@ export class PhysicsEngine {
 
     // Electrical draw derives from rotor thrust, not wind/drag/updraft forces.
     const rotorArea = Math.PI * rotorRadius_m * rotorRadius_m;
-    instantPower = this.currentBattery <= 0 ? 0 : IDLE_POWER_W;
+    instantPower = this.currentBattery <= 0 ? 0 : (this.config.electronicsPowerW ?? IDLE_POWER_W);
     for (let i = 0; i < numMotors; i++) {
       if (failed[i] || this.currentBattery <= 0) continue;
       if (this.config.propulsionCurve?.length) {

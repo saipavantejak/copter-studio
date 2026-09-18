@@ -1,9 +1,11 @@
 import type { PhysicsConfig } from './PhysicsEngine';
+import { BOUND_FIELDS, calibrationBindingErrors } from './calibration/CalibrationBinding';
 
 /** Rotor data cannot be carried onto different motors/props by a UI hardware edit. */
 export function editHardware(config: PhysicsConfig, patch: Partial<PhysicsConfig>): PhysicsConfig {
   const changed = (['propDiameter','batteryVoltage','droneType'] as const).some(k=>patch[k]!==undefined && patch[k]!==config[k]);
-  return {...config,...(changed ? {maxThrustPerMotorN:undefined,propulsionCurve:undefined} : {}),...patch};
+  const calibrationChanged = !!config.propulsionCalibration && (BOUND_FIELDS.some(k=>patch[k]!==undefined&&patch[k]!==config[k]) || patch.propulsionCurve!==undefined || patch.electronicsPowerW!==undefined);
+  return {...config,...(calibrationChanged ? {propulsionCalibration:undefined,electronicsPowerW:undefined,propulsionCurve:undefined,maxThrustPerMotorN:undefined} : {}),...(changed ? {maxThrustPerMotorN:undefined,propulsionCurve:undefined} : {}),...patch};
 }
 
 /** Reference inputs, not independent validation. No thrust/power curve is invented. */
@@ -25,9 +27,16 @@ export const AIRCRAFT_PROFILES = [
 export function propulsionEvidence(config: PhysicsConfig) {
   const matched = AIRCRAFT_PROFILES.find(p => ['droneType','propDiameter','batteryVoltage','maxThrustPerMotorN'].every(k =>
     p.config[k as keyof PhysicsConfig] === config[k as keyof PhysicsConfig]));
+  const imported = config.propulsionCalibration && calibrationBindingErrors(config).length===0;
   return {
-    status: config.propulsionCurve ? 'User-supplied curve; provenance unverified' : matched ? 'Manufacturer maximum only' : config.maxThrustPerMotorN ? 'User-supplied maximum; provenance unverified' : 'Generic estimate; uncalibrated',
-    sources: !config.propulsionCurve && matched ? [...matched.sources] : [],
+    status: imported ? 'Imported static bench calibration; source not independently verified' : config.propulsionCurve ? 'User-supplied curve; provenance unverified' : matched ? 'Manufacturer maximum only' : config.maxThrustPerMotorN ? 'User-supplied maximum; provenance unverified' : 'Generic estimate; uncalibrated',
+    sources: imported ? [config.propulsionCalibration!.sourceUrl] : !config.propulsionCurve && matched ? [...matched.sources] : [],
     physicallyValidated: false,
   };
+}
+
+export function calibrationAudit(config:PhysicsConfig):string {
+ const evidence=propulsionEvidence(config),record=config.propulsionCalibration;
+ const valid=record&&calibrationBindingErrors(config).length===0;
+ return `**Current calibration status**\n\n${evidence.status}.\n\n${valid?`Static propulsion checks: thrust normalized MAE ${(record.thrustNormalizedMAE*100).toFixed(2)}%; electrical power normalized MAE ${(record.powerNormalizedMAE*100).toFixed(2)}%. Fitting sessions: ${record.fittingSessions.length}; validation sessions: ${record.validationSessions.length}. Imported provenance is not independently verified.`:'No reviewed calibration is active for this configuration.'}\n\nBattery discharge/cutoff, gust response, inertia, drag and full-aircraft endurance remain unvalidated. Static bench agreement does not establish flight accuracy. Open Benchmark → Aircraft calibration workbench to review measured tests.`;
 }

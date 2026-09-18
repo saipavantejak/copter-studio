@@ -2,6 +2,7 @@
 
 import { useAppContext } from '../context/AppContext';
 import { RobustnessPanel } from '../RobustnessPanel';
+import { CalibrationPanel } from '../calibration/CalibrationPanel';
 import { LearningPanel } from '../learning/LearningPanel';
 import { CloudHistory } from '../CloudHistory';
 import { Cpu, Shield, Play, Bookmark, Download } from 'lucide-react';
@@ -22,6 +23,7 @@ export function BenchmarkTab() {
     <main className="max-w-[1400px] mx-auto p-5 space-y-5">
       <CloudHistory />
       <LearningPanel />
+      <CalibrationPanel />
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-xl font-bold">Episode Benchmark</h2>

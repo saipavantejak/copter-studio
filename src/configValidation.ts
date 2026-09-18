@@ -1,4 +1,5 @@
 import type { PhysicsConfig } from './PhysicsEngine';
+import { calibrationBindingErrors } from './calibration/CalibrationBinding';
 
 /** Software limits, NOT a declaration of physical calibration or flight safety. */
 export const CONFIG_LIMITS = {
@@ -8,6 +9,8 @@ export const CONFIG_LIMITS = {
 export function configErrors(config: PhysicsConfig): string[] {
   const errors: string[] = [];
   if (!config || typeof config !== 'object' || Array.isArray(config)) return ['Configuration must be an object'];
+  errors.push(...calibrationBindingErrors(config));
+  if (config.electronicsPowerW !== undefined && (!Number.isFinite(config.electronicsPowerW) || config.electronicsPowerW < 0 || config.electronicsPowerW > 10000)) errors.push('Electronics power must be within 0–10000 W');
   if (config.useHighFidelityAero !== undefined && typeof config.useHighFidelityAero !== 'boolean') errors.push('useHighFidelityAero must be boolean');
   if (!['bicopter', 'quadcopter', 'hexacopter'].includes(config.droneType)) errors.push('Unsupported drone type');
   for (const [key, range] of Object.entries(CONFIG_LIMITS)) {
