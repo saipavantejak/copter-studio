@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "aircraftId": "crazyflie-2.1-stock-brushed",
+  "hardwareRevision": "REPLACE_WITH_EXACT_MOTOR_PROP_BATTERY_REVISION",
+  "sourceUrl": "https://REPLACE_WITH_MEASUREMENT_SOURCE",
+  "evidenceKind": "measured",
+  "powerScope": "per-motor-electrical",
+  "config": {
+    "droneType": "quadcopter",
+    "mass": 0.029,
+    "propDiameter": 1.7716535433070868,
+    "batteryVoltage": 3.7,
+    "armLength": 0.046,
+    "batteryCapacity": 250
+  },
+  "electronicsPowerW": null,
+  "fitting": [
+    {
+      "sessionId": "REPLACE_FITTING_SESSION",
+      "voltageV": null,
+      "command": -1,
+      "thrustN": null,
+      "powerW": null
+    },
+    {
+      "sessionId": "REPLACE_FITTING_SESSION",
+      "voltageV": null,
+      "command": 0,
+      "thrustN": null,
+      "powerW": null
+    },
+    {
+      "sessionId": "REPLACE_FITTING_SESSION",
+      "voltageV": null,
+      "command": 1,
+      "thrustN": null,
+      "powerW": null
+    }
+  ],
+  "validation": [
+    {
+      "sessionId": "REPLACE_INDEPENDENT_VALIDATION_SESSION",
+      "voltageV": null,
+      "command": -1,
+      "thrustN": null,
+      "powerW": null
+    },
+    {
+      "sessionId": "REPLACE_INDEPENDENT_VALIDATION_SESSION",
+      "voltageV": null,
+      "command": 0,
+      "thrustN": null,
+      "powerW": null
+    },
+    {
+      "sessionId": "REPLACE_INDEPENDENT_VALIDATION_SESSION",
+      "voltageV": null,
+      "command": 1,
+      "thrustN": null,
+      "powerW": null
+    }
+  ]
+}

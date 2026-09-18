@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "battery-endurance",
+  "measured": {
+    "configurationKey": "REPLACE_WITH_EXACT_CONFIG_AND_BATTERY_REVISION",
+    "protocolId": "REPLACE_WITH_PROTOCOL_ID",
+    "sessionId": "REPLACE_WITH_SESSION_ID",
+    "sourceUrl": "https://REPLACE_WITH_MEASUREMENT_SOURCE",
+    "durationSeconds": null,
+    "energyJ": null,
+    "termination": "battery-cutoff",
+    "ambientTemperatureC": null,
+    "payloadKg": null
+  },
+  "simulated": {
+    "configurationKey": "REPLACE_WITH_EXACT_CONFIG_AND_BATTERY_REVISION",
+    "protocolId": "REPLACE_WITH_PROTOCOL_ID",
+    "durationSeconds": null,
+    "energyJ": null,
+    "termination": "battery-cutoff",
+    "ambientTemperatureC": null,
+    "payloadKg": null,
+    "engineCommit": "REPLACE_WITH_40_CHARACTER_COMMIT",
+    "seed": 42
+  }
+}
