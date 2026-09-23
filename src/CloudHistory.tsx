@@ -1,17 +1,18 @@
+import {AuthForm} from './AuthForm';
 import {useEffect,useState} from 'react';
-import {cloudDatabase,benchmarkRecord,configurationRecord} from './cloudDatabase';
+import {cloudDatabase,authStartup,benchmarkRecord,configurationRecord} from './cloudDatabase';
 import {useAppContext} from './context/AppContext';
 import {assertValidConfig} from './configValidation';
 
 export function CloudHistory(){
   const {batchStats,config,setConfig}=useAppContext();
   const [user,setUser]=useState<{id:string;email?:string}|null>(null);
-  const [email,setEmail]=useState(''),[name,setName]=useState(''),[message,setMessage]=useState('');
+  const [name,setName]=useState(''),[message,setMessage]=useState(authStartup.message);
   const [busy,setBusy]=useState(false),[runs,setRuns]=useState<any[]>([]),[configs,setConfigs]=useState<any[]>([]);
   useEffect(()=>{
     if(!cloudDatabase)return;
     let alive=true;
-    cloudDatabase.auth.getSession().then(({data,error})=>{if(alive){setUser(data.session?.user??null);if(error)setMessage(error.message);}});
+    cloudDatabase.auth.getSession().then(({data,error})=>{if(alive){setUser(data.session?.user??null);if(error)setMessage(error.message);}}).catch(()=>{if(alive)setMessage('Could not restore your session. Please log in again.');});
     const {data}=cloudDatabase.auth.onAuthStateChange((_event,session)=>{setUser(session?.user??null);setRuns([]);setConfigs([]);});
     return ()=>{alive=false;data.subscription.unsubscribe();};
   },[]);
@@ -19,10 +20,7 @@ export function CloudHistory(){
   if(!cloudDatabase)return <section className="border border-zinc-700 rounded p-3 text-sm"><h3>Cloud history</h3><p>Cloud database is not connected. Benchmarks still work; export JSON to keep your results.</p></section>;
   return <section className="border border-zinc-700 rounded p-3 text-sm space-y-2">
     <h3 className="font-bold">Private cloud history</h3>
-    {!user ? <form onSubmit={e=>{e.preventDefault();void task(async()=>{
-      const {error}=await cloudDatabase.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
-      if(error)throw error;setMessage('Check your email for a sign-in link. Open it in this browser.');
-    });}}><label>Email <input aria-label="Cloud sign-in email" type="email" required value={email} onChange={e=>setEmail(e.target.value)} className="bg-zinc-950 p-2" /></label><button disabled={busy} className="p-2 underline">Send sign-in link</button></form> : <>
+    {!user ? <AuthForm client={cloudDatabase} /> : <>
       <p>Signed in as {user.email}. Records are private to your account.</p>
       <button disabled={busy} className="underline mr-3" onClick={()=>void task(async()=>{const {error}=await cloudDatabase.auth.signOut();if(error)throw error;})}>Sign out</button>
       <input aria-label="Cloud record name" placeholder="Optional record name" maxLength={120} value={name} onChange={e=>setName(e.target.value)} className="bg-zinc-950 p-2" />

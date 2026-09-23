@@ -1,6 +1,7 @@
 // AppContext.tsx — Centralized state management for Copter Studios
 // Extracted from App.tsx to enable tab-level component decomposition.
 
+import {authLanding} from '../cloudDatabase';
 import { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { RLAgent } from '../RLAgent';
@@ -45,7 +46,7 @@ function writeConfigToHash(config: PhysicsConfig, tests: TestModules): void {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type AppTab = 'simulation' | 'benchmark' | 'policy-xray' | 'digital-twin' | 'gym-bridge' | 'leaderboard';
+export type AppTab = 'account' | 'simulation' | 'benchmark' | 'policy-xray' | 'digital-twin' | 'gym-bridge' | 'leaderboard';
 
 export interface AppContextType {
   // Navigation / flow
@@ -147,7 +148,7 @@ export function useAppContext(): AppContextType {
 export function AppProvider({ children }: { children: ReactNode }) {
   const savedCfg = useMemo(() => loadConfigFromHash(), []);
 
-  const [isStarted, setIsStarted] = useState(false);
+  const [isStarted, setIsStarted] = useState(authLanding);
   const [isExiting, setIsExiting] = useState(false);
   const [simStarted, setSimStarted] = useState(false);
 
@@ -172,7 +173,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [showForensics, setShowForensics] = useState(false);
   const [showReplay, setShowReplay]   = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
-  const [activeTab, setActiveTab]     = useState<AppTab>('simulation');
+  const [activeTab, setActiveTab]     = useState<AppTab>(authLanding?'account':'simulation');
   const [rightTab, setRightTab]       = useState<'aether' | 'obs'>('aether');
   const [metricsTrayOpen, setMetricsTrayOpen] = useState(true);
 

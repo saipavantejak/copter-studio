@@ -1,3 +1,4 @@
+import {CloudHistory} from './CloudHistory';
 // App.tsx — v12 refactored
 // Reduced from 724 lines to ~85 lines.
 // All state management → AppContext.tsx
@@ -19,6 +20,7 @@ import { UserGuide } from './UserGuide';
 import { Activity, Wind, Trophy, BarChart2, Eye, Settings, Terminal, HelpCircle } from 'lucide-react';
 
 const TABS: { id: AppTab; label: string; icon: any }[] = [
+  { id: 'account', label: 'Account', icon: Settings },
   { id: 'simulation',   label: 'Simulation',   icon: Wind      },
   { id: 'benchmark',    label: 'Benchmark',    icon: BarChart2 },
   { id: 'policy-xray',  label: 'Policy X-Ray', icon: Eye       },
@@ -91,6 +93,7 @@ function AppContent() {
 
         {/* ── Tab Content ────────────────────────────────────────────── */}
         <div hidden={activeTab !== 'simulation'}><SimulationTab /></div>
+        {activeTab === 'account' && <main className="p-6 max-w-3xl mx-auto w-full overflow-auto"><h2 className="text-xl font-bold mb-4">Account · Login & Sign up</h2><CloudHistory /></main>}
         {activeTab === 'benchmark'    && <BenchmarkTab />}
         {activeTab === 'policy-xray'  && <PolicyXRayTab />}
         {activeTab === 'digital-twin' && <DigitalTwinTab />}
@@ -103,7 +106,7 @@ function AppContent() {
         {showGuide     && <UserGuide      onClose={() => setShowGuide(false)} />}
 
         {/* Onboarding Tour */}
-        {isStarted && <OnboardingTour />}
+        {isStarted && activeTab !== 'account' && <OnboardingTour />}
       </div>
 
       {/* ── WELCOME OVERLAY ──────────────────────────────────────────── */}
