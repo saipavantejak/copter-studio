@@ -92,7 +92,7 @@ function AppContent() {
         </header>
 
         {/* ── Tab Content ────────────────────────────────────────────── */}
-        <div hidden={activeTab !== 'simulation'}><SimulationTab /></div>
+        {activeTab !== 'account' && <div hidden={activeTab !== 'simulation'}><SimulationTab /></div>}
         {activeTab === 'account' && <main className="p-6 max-w-3xl mx-auto w-full overflow-auto"><h2 className="text-xl font-bold mb-4">Account · Login & Sign up</h2><CloudHistory /></main>}
         {activeTab === 'benchmark'    && <BenchmarkTab />}
         {activeTab === 'policy-xray'  && <PolicyXRayTab />}

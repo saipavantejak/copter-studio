@@ -96,6 +96,7 @@ describe('App — Integration Tests', () => {
   it('renders WelcomeOverlay on mount', () => {
     render(<App />);
     expect(screen.getByText('INITIALISE MISSION')).toBeTruthy();
+    expect(screen.getByRole('link',{name:'Log in / Sign up'}).getAttribute('href')).toBe('?view=account');
     // Both WelcomeOverlay and header render "COPTER STUDIO" text
     const copterTexts = screen.getAllByText(/COPTER/);
     expect(copterTexts.length).toBeGreaterThanOrEqual(1);

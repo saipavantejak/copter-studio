@@ -141,6 +141,7 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
           transition={{ duration: 0.6, delay: 1.5, ease: dramatic }}
           className="flex flex-col items-center gap-6"
         >
+          <a href="?view=account" className="text-emerald-300 underline">Log in / Sign up</a>
           <button
             onClick={onStart}
             className="group relative px-14 py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 active:scale-95 overflow-hidden"
@@ -166,3 +167,4 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
     </motion.div>
   );
 };
+
