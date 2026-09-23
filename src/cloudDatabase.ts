@@ -10,6 +10,7 @@ const deployed=productionDatabase(typeof window==='undefined'?'':window.location
 const hasOverride=env.VITE_SUPABASE_URL||env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const url=hasOverride?env.VITE_SUPABASE_URL:deployed.url;
 const key=hasOverride?env.VITE_SUPABASE_PUBLISHABLE_KEY:deployed.key;
+export const authConnection = {url, key};
 export const authLanding = typeof window !== 'undefined' && isAuthReturn(window.location.href);
 const authHref = typeof window !== 'undefined' ? window.location.href : '';
 export const authStartup = {message:'',failed:false};

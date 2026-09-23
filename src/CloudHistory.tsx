@@ -1,6 +1,7 @@
+import {UsernameSettings} from './UsernameSettings';
 import {AuthForm} from './AuthForm';
 import {useEffect,useState} from 'react';
-import {cloudDatabase,authStartup,benchmarkRecord,configurationRecord} from './cloudDatabase';
+import {cloudDatabase,authConnection,authStartup,benchmarkRecord,configurationRecord} from './cloudDatabase';
 import {useAppContext} from './context/AppContext';
 import {assertValidConfig} from './configValidation';
 
@@ -20,8 +21,9 @@ export function CloudHistory(){
   if(!cloudDatabase)return <section className="border border-zinc-700 rounded p-3 text-sm"><h3>Cloud history</h3><p>Cloud database is not connected. Benchmarks still work; export JSON to keep your results.</p></section>;
   return <section className="border border-zinc-700 rounded p-3 text-sm space-y-2">
     <h3 className="font-bold">Private cloud history</h3>
-    {!user ? <AuthForm client={cloudDatabase} /> : <>
+    {!user ? <AuthForm client={cloudDatabase} connection={authConnection} /> : <>
       <p>Signed in as {user.email}. Records are private to your account.</p>
+      <UsernameSettings key={user.id} client={cloudDatabase} userId={user.id} />
       <button disabled={busy} className="underline mr-3" onClick={()=>void task(async()=>{const {error}=await cloudDatabase.auth.signOut();if(error)throw error;})}>Sign out</button>
       <input aria-label="Cloud record name" placeholder="Optional record name" maxLength={120} value={name} onChange={e=>setName(e.target.value)} className="bg-zinc-950 p-2" />
       <button disabled={busy||!batchStats} className="underline p-2" onClick={()=>void task(async()=>{
