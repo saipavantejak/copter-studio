@@ -70,9 +70,9 @@ export const ObsActionViz: React.FC<ObsActionVizProps> = ({ state, action, noisy
       <div>
         <div className="text-[10px] text-muted uppercase mb-1.5">Velocity</div>
         <div className="space-y-1">
-          <Bar label="ẋ" value={state.x_dot} min={-5} max={5} color="#a78bfa" unit="m/s" noisy={noisy?.x_dot} />
-          <Bar label="ẏ" value={state.y_dot} min={-5} max={5} color="#a78bfa" unit="m/s" noisy={noisy?.y_dot} />
-          <Bar label="ż" value={state.z_dot} min={-5} max={5} color="#a78bfa" unit="m/s" noisy={noisy?.z_dot} />
+          <Bar label="ẋ" value={state.x_dot} min={-5} max={5} color="#7c3aed" unit="m/s" noisy={noisy?.x_dot} />
+          <Bar label="ẏ" value={state.y_dot} min={-5} max={5} color="#7c3aed" unit="m/s" noisy={noisy?.y_dot} />
+          <Bar label="ż" value={state.z_dot} min={-5} max={5} color="#7c3aed" unit="m/s" noisy={noisy?.z_dot} />
         </div>
       </div>
 
@@ -90,9 +90,9 @@ export const ObsActionViz: React.FC<ObsActionVizProps> = ({ state, action, noisy
       <div>
         <div className="text-[10px] text-muted uppercase mb-1.5">Angular rates</div>
         <div className="space-y-1">
-          <Bar label="p" value={state.p} min={-5} max={5} color="#f472b6" unit="r/s" noisy={noisy?.p} />
-          <Bar label="q" value={state.q} min={-5} max={5} color="#f472b6" unit="r/s" noisy={noisy?.q} />
-          <Bar label="r" value={state.r} min={-5} max={5} color="#f472b6" unit="r/s" noisy={noisy?.r} />
+          <Bar label="p" value={state.p} min={-5} max={5} color="#be185d" unit="r/s" noisy={noisy?.p} />
+          <Bar label="q" value={state.q} min={-5} max={5} color="#be185d" unit="r/s" noisy={noisy?.q} />
+          <Bar label="r" value={state.r} min={-5} max={5} color="#be185d" unit="r/s" noisy={noisy?.r} />
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export const ObsActionViz: React.FC<ObsActionVizProps> = ({ state, action, noisy
         </div>
         <div className="space-y-1">
           {['col_L','lat_L','lon_L','col_R','lat_R','lon_R'].map((lbl,i) => (
-            <Bar key={lbl} label={lbl} value={action[i]??0} min={-1} max={1} color="#2dd4bf" unit="" />
+            <Bar key={lbl} label={lbl} value={action[i]??0} min={-1} max={1} color="#0f766e" unit="" />
           ))}
         </div>
       </div>

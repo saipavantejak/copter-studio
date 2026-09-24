@@ -23,15 +23,15 @@ const OBS_NAMES = [
   { name: 'x pos',     category: 'Position', color: '#2563EB' },
   { name: 'y pos',     category: 'Position', color: '#2563EB' },
   { name: 'z alt',     category: 'Position', color: '#556B2F' },
-  { name: 'ẋ vel',     category: 'Velocity', color: '#a78bfa' },
-  { name: 'ẏ vel',     category: 'Velocity', color: '#a78bfa' },
-  { name: 'ż vel',     category: 'Velocity', color: '#a78bfa' },
+  { name: 'ẋ vel',     category: 'Velocity', color: '#7c3aed' },
+  { name: 'ẏ vel',     category: 'Velocity', color: '#7c3aed' },
+  { name: 'ż vel',     category: 'Velocity', color: '#7c3aed' },
   { name: 'roll φ',    category: 'Attitude', color: '#C2410C' },
   { name: 'pitch θ',   category: 'Attitude', color: '#C2410C' },
   { name: 'yaw ψ',     category: 'Attitude', color: '#C2410C' },
-  { name: 'roll rate', category: 'Angular',  color: '#f472b6' },
-  { name: 'pitch rate',category: 'Angular',  color: '#f472b6' },
-  { name: 'yaw rate',  category: 'Angular',  color: '#f472b6' },
+  { name: 'roll rate', category: 'Angular',  color: '#be185d' },
+  { name: 'pitch rate',category: 'Angular',  color: '#be185d' },
+  { name: 'yaw rate',  category: 'Angular',  color: '#be185d' },
 ];
 
 // Per-dimension epsilon scales — each ε is ~1% of the typical range.

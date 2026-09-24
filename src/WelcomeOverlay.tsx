@@ -119,7 +119,7 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
         {/* Version tag */}
         <motion.p
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.3 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 2.0, duration: 0.6 }}
           className="text-[10px] text-muted font-mono uppercase tracking-[0.4em]"
         >

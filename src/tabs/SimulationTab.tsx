@@ -95,7 +95,7 @@ export function SimulationTab() {
             className="group flex flex-col items-center gap-3 px-8 py-5 bg-emerald-600/90 hover:bg-emerald-500 rounded-2xl shadow-2xl shadow-emerald-500/20 transition-all hover:scale-105">
             <Play className="w-10 h-10 text-white group-hover:scale-110 transition-transform" />
             <span className="text-white font-bold text-sm tracking-wide">Start Simulation</span>
-            <span className="text-emerald-700/70 text-[10px] font-mono">{config.droneType} · {config.mass}kg · {config.propDiameter}″</span>
+            <span className="text-white/90 text-[10px] font-mono">{config.droneType} · {config.mass}kg · {config.propDiameter}″</span>
           </button>
         </div>
       )}
