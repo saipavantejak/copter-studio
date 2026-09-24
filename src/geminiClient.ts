@@ -17,6 +17,8 @@ export interface ChatOptions {
   systemInstruction?:  string;
   history?:            ChatMessage[];
   temperature?:        number;
+  json?: boolean;
+  signal?: AbortSignal;
 }
 
 export interface GeminiClient {
@@ -40,6 +42,7 @@ function buildPayload(opts: ChatOptions, userMessage: string): object {
     generationConfig: {
       temperature: opts.temperature ?? 0.7,
       maxOutputTokens: 2048,
+      ...(opts.json ? {responseMimeType:'application/json'} : {}),
     },
   };
 }
@@ -48,9 +51,10 @@ function buildPayload(opts: ChatOptions, userMessage: string): object {
 
 const PROXY_URL = '/api/gemini';
 
-async function callProxy(model: string, payload: object): Promise<string> {
+async function callProxy(model: string, payload: object, signal?: AbortSignal): Promise<string> {
   const resp = await fetch(PROXY_URL, {
     method: 'POST',
+    signal: signal ? AbortSignal.any([signal,AbortSignal.timeout(35000)]) : AbortSignal.timeout(35000),
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model, payload }),
   });
@@ -63,8 +67,8 @@ async function callProxy(model: string, payload: object): Promise<string> {
   const data = await resp.json();
 
   // Parse Gemini REST response
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (typeof text !== 'string') {
+  const text = data?.candidates?.[0]?.content?.parts?.filter((p:any)=>typeof p.text==='string'&&!p.thought).map((p:any)=>p.text).join('');
+  if (typeof text !== 'string' || !text.trim()) {
     throw new Error('Unexpected Gemini response shape: ' + JSON.stringify(data).slice(0, 200));
   }
   return text;
@@ -90,7 +94,7 @@ export function createGeminiClient(): GeminiClient {
         async send(userMessage: string): Promise<string> {
           if (isAirGapped()) throw new Error('Air-gap mode: external API calls disabled');
           const payload = buildPayload(opts, userMessage);
-          return callProxy(model, payload);
+          return callProxy(model, payload, opts.signal);
         },
       };
     },
