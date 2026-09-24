@@ -124,6 +124,7 @@ export interface AppContextType {
   // Actions
   handleStartMission: () => void;
   handleModelLoaded: () => void;
+  restorePD: () => void;
   handleModelError: (e: string) => void;
   handleMetricsUpdate: (m: MissionMetrics, h: { time: number; sec: number; spt: number }[], full: TelemetryHistory[]) => void;
   handleReset: () => void;
@@ -212,6 +213,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => { latestMetrics.current  = metrics;   }, [metrics]);
   useEffect(() => { latestTelemetry.current = telemetry; }, [telemetry]);
   useEffect(() => { writeConfigToHash(config, tests); }, [config, tests]);
+
+  const restorePD = useCallback(() => {agentRef.current.restorePD();setControllerStatus('Heuristic PD');setModelLoadTrigger(p=>p+1);}, []);
 
   const handleModelLoaded = useCallback(() => {
     setModelLoadTrigger(p => p + 1);
@@ -316,7 +319,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setConfig, setTests, setSensorCfg, setDomainRandCfg, setMasterSeed,
     setTelemetry, setNoisyState, setLastAction, setCrashData,
     setShowForensics, setShowReplay, setComparisonMode, setSimResetTrigger,
-    handleStartMission, handleModelLoaded, handleModelError,
+    restorePD, handleStartMission, handleModelLoaded, handleModelError,
     handleMetricsUpdate, handleReset, handleRunSimulation,
     runBenchmark, stopWorker, clearHistory,
   };

@@ -58,3 +58,19 @@ Tests include semantic negation, gust-speed ambiguity, conflicting values, model
 fields, budgets, snapshot preservation, real EpisodeRunner comparisons, repeatability,
 baseline failure, cancellation, mismatched evidence and API limits. Supabase ownership,
 cross-user reads/writes, reassignment and anonymous denial were tested transactionally.
+
+## Background jobs and native training (v2)
+
+Supabase `aether-jobs` executes server-owned, checkpointed jobs. The browser may close. The private pg_cron dispatcher polls every 10 seconds (two jobs maximum per tick); execution claims have 90-second leases, compare-and-swap commits, three attempts per checkpoint and a 24-hour deadline. Cancellation invalidates the lease, so late results cannot overwrite it. Submission is authenticated, idempotent, limited to one active job/account, two submissions/account/day and 20 platform submissions/day. Only owner-readable result columns are exposed. No browser can write checkpoints, attestations or promotion timestamps. Worker requests authenticate with a private, per-job token; the function validates Supabase users separately for user actions. Gateway JWT validation is disabled only because these two authentication paths are implemented inside the function.
+
+Cloud benchmark limits: five episodes/run, 1,000 steps/episode (16 seconds), no domain randomization; larger requests are rejected without changing them. Local benchmarks retain their earlier limits. Training supports the current complete **quadcopter** configuration, 1 m / 16 s hover, clean observations, clean and built-in wind scenarios. It uses 120 tabular Q-learning episodes (alpha .1, gamma .97, epsilon .3→.03, five collective residual actions, held for eight physics steps). Each episode's exploration seed is independent so checkpoint resumption is exact. Evaluation freezes Q values and compares 40 paired PD/candidate episodes on disjoint seeds, 20 per scenario. The gate requires no regression in success count, failure count or mean tracking error, and a positive lower paired-reward confidence bound in each scenario (Student critical value 2.093, 19 df; finite-sample/model assumptions still apply). This is one simulation training run, not universal statistical or physical validation.
+
+Passing candidates require a separate user approval. The service recomputes the gate before returning its stored candidate; activation replaces the controller only in that user's current simulator session. The approval timestamp persists, and reactivation after reload is explicit. Native serialization preserves the policy in benchmark workers. A candidate is bound to its exact aircraft and 1 m / 16 s hover; restore PD before changing that scope. **Restore PD** stops the simulation and removes the candidate. No hardware, firmware or global production controller is changed. Failed candidates stay unpromoted. SB3/Colab ZIP conversion remains unsupported; this native Q-learning path does not claim to convert or run PPO artifacts.
+
+Build the deployed function reproducibly:
+
+```sh
+node -e "require('esbuild').buildSync({entryPoints:['supabase/functions/aether-jobs/source.ts'],bundle:true,format:'esm',platform:'neutral',outfile:'/tmp/aether-jobs.js'})"
+```
+
+Deploy that bundle as `index.ts` to Supabase. The function uses only built-in server-side Supabase credentials; no service key belongs in Vite variables. Apply both background-job and scheduler migrations. Rollback: unschedule `aether-background-pump`, keep jobs/history for inspection, and restore PD in clients. The previous browser executor remains available.
