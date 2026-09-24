@@ -88,6 +88,7 @@ export function hydrateGeminiResponse(r: any): SimulationIntent {
 
 export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFIG, currentTests: TestModules = DEF_TESTS): SimulationIntent {
   const ambiguities: Ambiguity[] = [];
+  if (isExplanationOnly(msg)) ambiguities.push({level:'error',field:'intent',issue:'This is a question or a request not to execute',assumed:'No execution'});
   const block = (field: string, issue: string) => ambiguities.push({level:'error',field,issue,assumed:'Execution blocked; clarify the request'});
   const number = '[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?';
   const profile = /\bcrazyflie\s*2\.1\b(?!\s*\+)/i.test(msg)
@@ -101,6 +102,14 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
   for (const [field, pattern] of [['mass',number+'\\s*(?:kg|kilograms?|grams?|g)\\b'],['voltage',number+'\\s*(?:v|volts?)\\b'],['speed',number+'\\s*(?:m/s|mps)'],['episodes',number+'[ -]*episodes?']] as const) {
     if ([...msg.matchAll(new RegExp(pattern,'gi'))].length > 1) block(field,'Multiple values require clarification');
   }
+
+  for (const [field, pattern] of [
+    ['propDiameter', number+'\\s*(?:inch(?:es)?|in\\b|")'],
+    ['altitude', '(?:hover(?:\\s+at)?|altitude)\\s*[=:]?\\s*'+number],
+    ['duration', '(?:for|duration)\\s*[=:]?\\s*'+number+'\\s*(?:seconds?|secs?|s|minutes?|mins?)\\b'],
+    ['armLength', 'arm[\\s-]?(?:length)?\\s*[=:]?\\s*'+number],
+    ['seed', '\\bseed\\s*[=:]?\\s*'+number],
+  ]) if ([...msg.matchAll(new RegExp(pattern,'gi'))].length>1) block(field,'Multiple values or multi-stage commands require separate experiments');
 
   // Type
   const isBenchmark = /benchmark|stress[\s-]?test|batch|episodes?|run\s+\d+\s*times?|headless/i.test(msg);
@@ -199,7 +208,7 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
   if (/(?:no|without|disable)\s+(?:all\s+)?faults?\b/i.test(msg)) windEnabled=payloadShiftEnabled=batterySagEnabled=motorOutEnabled=false;
   windEnabled=flag('wind|gusts?|turbulence|storm|breezy',windEnabled);
   payloadShiftEnabled=flag('payload[ -]?shift|cog|unbalanced|center[ -]of[ -]gravity',payloadShiftEnabled);
-  batterySagEnabled=flag('battery[ -]?sag|voltage[ -]?drop|drain',batterySagEnabled);
+  batterySagEnabled=flag('battery[ -]?sag|voltage[ -]?drop|drain|endurance',batterySagEnabled);
   motorOutEnabled=flag('motor[ -]?(?:out|fail(?:ure)?)|engine[ -]?fail(?:ure)?|one[ -]motor',motorOutEnabled);
   enableNoise=flag('sensor[ -]?noise|noisy|realistic[ -]?sensor|real[ -]?world[ -]?sensor',enableNoise);
   domainRandEnabled=flag('domain[ -]?randomization|domain[ -]?rand|robust|randomize[ -]?param|sim[ -]?to[ -]?real',domainRandEnabled);
@@ -207,7 +216,7 @@ export function localParse(msg: string, currentConfig: PhysicsConfig = DEF_CONFI
   const altitude = msg.match(new RegExp('(?:hover(?:\\s+at)?|altitude)\\s*[=:]?\\s*('+number+')\\s*(?:meters?|metres?|m)\\b','i'));
   const speed = msg.match(new RegExp('('+number+')\\s*(?:m/s|mps)','i'));
   const duration = msg.match(new RegExp('(?:for|duration)\\s*[=:]?\\s*('+number+')\\s*(seconds?|secs?|s|minutes?|mins?)\\b','i'));
-  if (/\bwind\b/i.test(msg) && speed) block('wind','Numeric wind speed is not supported by this command grammar');
+  if (/\b(?:wind|gusts?|turbulence|storm|breeze)\b/i.test(msg) && speed) block('wind','Numeric wind speed is not supported by this command grammar');
   if (/\bhover\b/i.test(msg) && speed && Number(speed[1])!==0) block('mission','Hover and nonzero forward velocity conflict');
   if (new RegExp('(?:'+number+'\\s*|\\b)(?:feet|ft|mph|km/h|kph|lbs?|pounds?)\\b','i').test(msg)) block('units','Unsupported units; use kg/g, meters, m/s and seconds/minutes');
   if (/\bhover\b|fly forward/i.test(msg) || altitude || speed || duration) {
@@ -271,9 +280,14 @@ export async function parseSimulationIntent(message: string, config: PhysicsConf
 
 /** Quick check: does this message look like a simulation command?
  *  Used in AetherInterface before spending time on full parsing. */
+export function isExplanationOnly(message: string): boolean {
+  return /\b(?:do not|don't|never)\s+(?:run|execute|start|launch|simulate|fly|train)\b/i.test(message)
+    || /^\s*(?:explain|describe|what|why|how|can you explain|tell me|is it|does|would|could you explain)\b/i.test(message);
+}
 export function isSimulationCommand(message: string): boolean {
+  if (isExplanationOnly(message)) return false;
   const runWords  = /\b(run|simulate|fly|test|launch|execute|start|trigger|benchmark|batch|train|tweak)\b/i;
-  const simTokens = /\b(sim|drone|flight|bicopter|quad(?:copter)?|hex(?:acopter)?|wind|benchmark|episodes?|times?|motor|payload|battery|stress[\s-]?test|long[\s-]?range|precision|high[\s-]?speed|policy|rl|crazyflie|dji|avata|mavic|matrice|anafi)\b/i;
+  const simTokens = /\b(sim|drone|flight|bicopter|quad(?:copter)?|hex(?:acopter)?|wind|benchmark|episodes?|times?|motor|payload|battery|stress[\s-]?test|endurance|long[\s-]?range|precision|high[\s-]?speed|policy|rl|crazyflie|dji|avata|mavic|matrice|anafi)\b/i;
   return /\b(hover|fly|simulate|benchmark)\b/i.test(message) || (runWords.test(message) && simTokens.test(message));
 }
 

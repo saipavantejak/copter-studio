@@ -1,3 +1,4 @@
+import {AgentWorkspace} from './agent/AgentWorkspace';
 // AetherInterface.tsx — v12
 // Aether is now an active simulation operator, not just a chat bot.
 //
@@ -100,7 +101,7 @@ function buildColabNotebookObject(config: PhysicsConfig) {
         "metadata": {},
         "source": [
           "# 🚁 SWASH-BICOP Auto-RL Trainer\n\n",
-          "This notebook trains a custom Reinforcement Learning policy for your drone configuration using Google Colab's fast CPUs/GPUs.\n\n",
+          "Experimental legacy bicopter trainer. Only mass, propeller diameter and voltage are transferred. Other configuration fields and test conditions are NOT preserved. The resulting SB3 ZIP is not compatible with the browser model loader.\n\n",
           "### Step 1: Upload the Project\n",
           "Using the file browser on the left (🗂️ icon), upload the `swash-bicop-initial-version.zip` file containing your local project.\n",
           "*(Note: You can skip this if you clone directly from a given GitHub URL).* \n\n",
@@ -258,6 +259,7 @@ export const AetherInterface = ({
     '- *"Benchmark 100 episodes with domain randomisation"*\n\n' +
     'I\'ll parse, flag any ambiguities, and ask for your approval before touching the sim.'
   }]);
+  const [agentOpen,setAgentOpen]=useState(false);
   const [input,          setInput]          = useState('');
   const [isLoading,      setIsLoading]      = useState(false);
   const [isParsing,      setIsParsing]      = useState(false);
@@ -398,7 +400,7 @@ export const AetherInterface = ({
         `1. Go to [colab.research.google.com](https://colab.research.google.com/)\n` +
         `2. Click **File → Upload Notebook** and select the \`swash-bicop-colab-trainer.ipynb\` file that just downloaded.\n` +
         `3. Follow the instructions in the notebook to harness cloud GPUs for training.\n` +
-        `4. Once trained, drag \`cargo_policy.zip\` into the **Load RL Model** dropzone.\n\n` +
+        `4. The exported \`cargo_policy.zip\` is an SB3 checkpoint for the Python runtime. The browser loader requires TensorFlow.js JSON/BIN; this ZIP cannot be imported directly. Conversion and observation/action compatibility must be verified separately.\n\n` +
         `*Prefer to paste the notebook directly into Colab? Click* **Copy Notebook** *in the toolbar below to copy the JSON to your clipboard.*`
       }]);
       return;
@@ -433,6 +435,7 @@ export const AetherInterface = ({
 
   return (
     <>
+      {agentOpen && <AgentWorkspace config={config} tests={activeTests} onClose={()=>setAgentOpen(false)} />}
       {pendingIntent && (
         <SimulationApprovalDialog
           intent={pendingIntent} originalPrompt={pendingPrompt}
@@ -449,6 +452,7 @@ export const AetherInterface = ({
           <div className="flex-1 min-w-0">
             <div className="text-xs font-bold text-ink">Aether</div>
           </div>
+          <button onClick={()=>setAgentOpen(true)} className="text-xs px-2 py-1 rounded-lg bg-emerald-600 text-white">Agent workspace</button>
           <Activity className={`w-3 h-3 ${isLoading||isParsing?'text-emerald-700 animate-pulse':'text-muted'}`} />
         </div>
 
