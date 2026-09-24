@@ -20,15 +20,15 @@ interface Importance {
 }
 
 const OBS_NAMES = [
-  { name: 'x pos',     category: 'Position', color: '#60a5fa' },
-  { name: 'y pos',     category: 'Position', color: '#60a5fa' },
-  { name: 'z alt',     category: 'Position', color: '#34a840' },
+  { name: 'x pos',     category: 'Position', color: '#2563EB' },
+  { name: 'y pos',     category: 'Position', color: '#2563EB' },
+  { name: 'z alt',     category: 'Position', color: '#556B2F' },
   { name: 'ẋ vel',     category: 'Velocity', color: '#a78bfa' },
   { name: 'ẏ vel',     category: 'Velocity', color: '#a78bfa' },
   { name: 'ż vel',     category: 'Velocity', color: '#a78bfa' },
-  { name: 'roll φ',    category: 'Attitude', color: '#fb923c' },
-  { name: 'pitch θ',   category: 'Attitude', color: '#fb923c' },
-  { name: 'yaw ψ',     category: 'Attitude', color: '#fb923c' },
+  { name: 'roll φ',    category: 'Attitude', color: '#C2410C' },
+  { name: 'pitch θ',   category: 'Attitude', color: '#C2410C' },
+  { name: 'yaw ψ',     category: 'Attitude', color: '#C2410C' },
   { name: 'roll rate', category: 'Angular',  color: '#f472b6' },
   { name: 'pitch rate',category: 'Angular',  color: '#f472b6' },
   { name: 'yaw rate',  category: 'Angular',  color: '#f472b6' },
@@ -93,24 +93,24 @@ export const PolicyXRay: React.FC<PolicyXRayProps> = ({ agentRef, state, isUsing
   const grouped = ['Position', 'Velocity', 'Attitude', 'Angular'];
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col gap-3">
+    <div className="bg-surface border border-line rounded-xl p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Eye className="w-4 h-4 text-purple-400" />
-          <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">Policy X-Ray</span>
+          <Eye className="w-4 h-4 text-purple-700" />
+          <span className="text-xs font-bold text-ink uppercase tracking-wider">Policy X-Ray</span>
         </div>
         <div className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
-          isUsingModel ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+          isUsingModel ? 'bg-emerald-500/20 text-emerald-700' : 'bg-amber-500/20 text-amber-700'
         }`}>
           {isUsingModel ? 'RL Model' : 'Heuristic PD'}
         </div>
       </div>
 
       {!isUsingModel && (
-        <div className="text-xs text-zinc-500 bg-zinc-950 border border-zinc-800 rounded-lg p-3 space-y-1">
-          <div className="font-bold text-zinc-400">No RL model loaded — showing heuristic PD sensitivity</div>
-          <div className="text-zinc-600">To see meaningful data: (1) Go to the <span className="text-emerald-400">Simulation</span> tab and click <span className="text-emerald-400">Start Simulation</span>, then return here to watch bars move live. (2) For RL policy analysis, load a model via the <span className="text-emerald-400">Model Loader</span> panel.</div>
-          <div className="text-zinc-600">Bars at 0% means the sim hasn't started yet — the controller has no state to react to.</div>
+        <div className="text-xs text-muted bg-surface border border-line rounded-lg p-3 space-y-1">
+          <div className="font-bold text-muted">No RL model loaded — showing heuristic PD sensitivity</div>
+          <div className="text-muted">To see meaningful data: (1) Go to the <span className="text-emerald-700">Simulation</span> tab and click <span className="text-emerald-700">Start Simulation</span>, then return here to watch bars move live. (2) For RL policy analysis, load a model via the <span className="text-emerald-700">Model Loader</span> panel.</div>
+          <div className="text-muted">Bars at 0% means the sim hasn't started yet — the controller has no state to react to.</div>
         </div>
       )}
 
@@ -122,12 +122,12 @@ export const PolicyXRay: React.FC<PolicyXRayProps> = ({ agentRef, state, isUsing
 
           return (
             <div key={cat}>
-              <div className="text-[10px] text-zinc-600 uppercase font-bold mb-1.5">{cat}</div>
+              <div className="text-[10px] text-muted uppercase font-bold mb-1.5">{cat}</div>
               <div className="space-y-1">
                 {indices.map(({ name, color, i, imp }) => (
                   <div key={i} className="flex items-center gap-2 text-[11px] font-mono">
-                    <div className="w-16 text-zinc-500 text-right shrink-0">{name}</div>
-                    <div className="flex-1 h-3 bg-zinc-800 rounded-sm relative overflow-hidden">
+                    <div className="w-16 text-muted text-right shrink-0">{name}</div>
+                    <div className="flex-1 h-3 bg-canvas rounded-sm relative overflow-hidden">
                       <div
                         className="absolute inset-y-0 left-0 rounded-sm transition-all duration-300"
                         style={{ width: `${imp * 100}%`, background: color }}
@@ -144,18 +144,18 @@ export const PolicyXRay: React.FC<PolicyXRayProps> = ({ agentRef, state, isUsing
         })}
       </div>
 
-      <div className="border-t border-zinc-800 pt-2 flex items-center justify-between text-[10px]">
-        <div className="text-zinc-500">
-          Top driver: <span className="text-purple-300 font-bold">{topFeature}</span>
+      <div className="border-t border-line pt-2 flex items-center justify-between text-[10px]">
+        <div className="text-muted">
+          Top driver: <span className="text-purple-700 font-bold">{topFeature}</span>
         </div>
-        <div className="flex items-center gap-1 text-zinc-600">
+        <div className="flex items-center gap-1 text-muted">
           <Cpu className="w-2.5 h-2.5" /> 2Hz Jacobian
         </div>
       </div>
 
       {isUsingModel && (
-        <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-400">
-          <div className="font-bold text-zinc-300 mb-1">How to read this</div>
+        <div className="bg-surface border border-line rounded-lg p-3 text-xs text-muted">
+          <div className="font-bold text-ink mb-1">How to read this</div>
           Bar width = how much this observation drives control output.
           Wide bar = policy is sensitive to this measurement.
           Very wide on noise-heavy sensors (gyro) = policy may overfit to sensor artifacts.
@@ -164,3 +164,4 @@ export const PolicyXRay: React.FC<PolicyXRayProps> = ({ agentRef, state, isUsing
     </div>
   );
 };
+

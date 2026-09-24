@@ -49,7 +49,7 @@ export class PanelErrorBoundary extends React.Component<Props, State> {
 
     if (compact) {
       return (
-        <div className="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400">
+        <div className="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-700">
           <AlertTriangle className="w-3 h-3 shrink-0" />
           <span className="flex-1 truncate">{name}: {error.message}</span>
           <button onClick={this.reset}
@@ -61,28 +61,29 @@ export class PanelErrorBoundary extends React.Component<Props, State> {
     }
 
     return (
-      <div className="h-full flex flex-col items-center justify-center gap-4 p-6 bg-zinc-950 border border-red-500/20 rounded-2xl">
+      <div className="h-full flex flex-col items-center justify-center gap-4 p-6 bg-surface border border-red-500/20 rounded-2xl">
         <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-          <AlertTriangle className="w-5 h-5 text-red-400" />
+          <AlertTriangle className="w-5 h-5 text-red-700" />
         </div>
         <div className="text-center">
-          <p className="text-sm font-bold text-zinc-200 mb-1">{name} crashed</p>
-          <p className="text-xs text-zinc-500 max-w-xs leading-relaxed">{error.message}</p>
+          <p className="text-sm font-bold text-ink mb-1">{name} crashed</p>
+          <p className="text-xs text-muted max-w-xs leading-relaxed">{error.message}</p>
         </div>
         {/* Collapsed stack trace */}
         <details className="w-full max-w-md">
-          <summary className="text-[10px] text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors">
+          <summary className="text-[10px] text-muted cursor-pointer hover:text-muted transition-colors">
             Stack trace
           </summary>
-          <pre className="mt-2 text-[9px] text-zinc-600 bg-zinc-900 border border-zinc-800 rounded-lg p-2 overflow-auto max-h-32 leading-relaxed">
+          <pre className="mt-2 text-[9px] text-muted bg-surface border border-line rounded-lg p-2 overflow-auto max-h-32 leading-relaxed">
             {errorInfo?.componentStack ?? error.stack}
           </pre>
         </details>
         <button onClick={this.reset}
-          className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 rounded-xl text-xs font-medium transition-colors">
+          className="flex items-center gap-2 px-4 py-2 bg-canvas hover:bg-selected border border-line-strong text-ink rounded-xl text-xs font-medium transition-colors">
           <RefreshCw className="w-3.5 h-3.5" /> Retry
         </button>
       </div>
     );
   }
 }
+

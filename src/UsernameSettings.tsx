@@ -23,8 +23,8 @@ export function UsernameSettings({client,userId}:{client:SupabaseClient;userId:s
     }catch(error){setMessage(error instanceof Error?error.message:'Could not save username.');}
     finally{setBusy(false);}
   }
-  return <form className="space-y-2 border border-zinc-700 rounded p-3" onSubmit={e=>{e.preventDefault();void save();}}>
-    <label>Username <input required minLength={3} maxLength={30} autoComplete="username" value={username} disabled={busy} onChange={e=>setUsername(e.target.value)} className="bg-zinc-950 border border-zinc-700 rounded p-2" /></label>
+  return <form className="space-y-2 border border-line-strong rounded p-3" onSubmit={e=>{e.preventDefault();void save();}}>
+    <label>Username <input required minLength={3} maxLength={30} autoComplete="username" value={username} disabled={busy} onChange={e=>setUsername(e.target.value)} className="bg-surface border border-line-strong rounded p-2" /></label>
     <button disabled={busy} className="underline p-2">Save username</button>
     <p>Choose a username after verifying your account. Username login requires an existing account password; social-only accounts can continue using their provider.</p>
     <p role="status">{message}</p>

@@ -301,25 +301,25 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden flex flex-col">
-      <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-950 flex items-center gap-3">
-        <Settings className="w-5 h-5 text-teal-400" />
+    <div className="bg-surface border border-line rounded-xl overflow-hidden flex flex-col">
+      <div className="px-5 py-4 border-b border-line bg-surface flex items-center gap-3">
+        <Settings className="w-5 h-5 text-teal-700" />
         <div>
-          <h2 className="text-sm font-bold text-zinc-100">Digital Twin Calibrator</h2>
-          <p className="text-xs text-zinc-500">Upload real flight CSV → auto-fit physics parameters</p>
+          <h2 className="text-sm font-bold text-ink">Digital Twin Calibrator</h2>
+          <p className="text-xs text-muted">Upload real flight CSV → auto-fit physics parameters</p>
         </div>
       </div>
 
       <div className="p-5 space-y-5">
         <div
           onClick={()=>fileInputRef.current?.click()}
-          className="border-2 border-dashed border-zinc-700 hover:border-teal-500 rounded-xl p-6 flex flex-col items-center gap-3 cursor-pointer transition-colors"
+          className="border-2 border-dashed border-line-strong hover:border-teal-500 rounded-xl p-6 flex flex-col items-center gap-3 cursor-pointer transition-colors"
         >
-          <Upload className="w-8 h-8 text-zinc-500" />
+          <Upload className="w-8 h-8 text-muted" />
           <div className="text-center">
-            <p className="text-sm text-zinc-300">Drop real flight CSV here</p>
-            <p className="text-xs text-zinc-600 mt-1">Requires columns: time_s, z_m, roll_rad, pitch_rad</p>
-            <p className="text-xs text-zinc-600">Use the "Export CSV" button to get the format from a sim flight</p>
+            <p className="text-sm text-ink">Drop real flight CSV here</p>
+            <p className="text-xs text-muted mt-1">Requires columns: time_s, z_m, roll_rad, pitch_rad</p>
+            <p className="text-xs text-muted">Use the "Export CSV" button to get the format from a sim flight</p>
           </div>
           <input ref={fileInputRef} type="file" accept=".csv" className="hidden"
             onChange={e=>{ if(e.target.files?.[0]) handleFile(e.target.files[0]); }} />
@@ -327,11 +327,11 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
 
         {(status==='loading'||status==='fitting') && (
           <div>
-            <div className="flex justify-between text-xs text-zinc-500 mb-1">
+            <div className="flex justify-between text-xs text-muted mb-1">
               <span>{status==='loading'?'Parsing CSV...':'Running Nelder-Mead optimizer...'}</span>
               <span>{progress.toFixed(0)}%</span>
             </div>
-            <div className="w-full bg-zinc-800 rounded-full h-2">
+            <div className="w-full bg-canvas rounded-full h-2">
               <div className="bg-teal-500 h-2 rounded-full transition-all" style={{width:`${progress}%`}} />
             </div>
           </div>
@@ -339,19 +339,19 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
 
         {status==='error' && (
           <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-            <p className="text-xs text-red-200">{errorMsg}</p>
+            <AlertCircle className="w-4 h-4 text-red-700 shrink-0 mt-0.5" />
+            <p className="text-xs text-red-700">{errorMsg}</p>
           </div>
         )}
 
         {status==='done' && result && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 p-3 bg-teal-500/10 border border-teal-500/20 rounded-lg">
-              <CheckCircle className="w-4 h-4 text-teal-400" />
+              <CheckCircle className="w-4 h-4 text-teal-700" />
               <div className="flex-1">
-                <div className="text-sm font-bold text-teal-300">Calibration complete</div>
-                <div className="text-xs text-zinc-500">
-                  Digital Twin Accuracy: <span className="text-teal-300 font-bold">{result.accuracy.toFixed(1)}%</span>
+                <div className="text-sm font-bold text-teal-700">Calibration complete</div>
+                <div className="text-xs text-muted">
+                  Digital Twin Accuracy: <span className="text-teal-700 font-bold">{result.accuracy.toFixed(1)}%</span>
                   &nbsp;·&nbsp;Alt RMSE: {result.rmseAlt.toFixed(3)}m
                   &nbsp;·&nbsp;Roll RMSE: {(result.rmseRoll*180/Math.PI).toFixed(2)}°
                   &nbsp;·&nbsp;{result.iterations} iterations
@@ -368,10 +368,10 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
                 ['Drag Cd',      result.dragCoeff.toFixed(3),     ''],
                 ['Accuracy',     result.accuracy.toFixed(1),      '%'],
               ].map(([l,v,u])=>(
-                <div key={l as string} className="bg-zinc-950 border border-zinc-800 rounded-lg p-3">
-                  <div className="text-[10px] text-zinc-500 mb-1">{l as string}</div>
-                  <div className="text-lg font-mono font-bold text-teal-300">
-                    {v as string}<span className="text-xs text-zinc-500 ml-0.5">{u as string}</span>
+                <div key={l as string} className="bg-surface border border-line rounded-lg p-3">
+                  <div className="text-[10px] text-muted mb-1">{l as string}</div>
+                  <div className="text-lg font-mono font-bold text-teal-700">
+                    {v as string}<span className="text-xs text-muted ml-0.5">{u as string}</span>
                   </div>
                 </div>
               ))}
@@ -379,19 +379,19 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
 
             {chartData.length > 0 && (
               <div>
-                <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
                   <TrendingDown className="w-3 h-3" /> Altitude comparison: real vs calibrated sim
                 </div>
                 <div style={{height:180}}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="2 2" stroke="#27272a" />
-                      <XAxis dataKey="t" fontSize={10} stroke="#52525b" />
-                      <YAxis fontSize={10} stroke="#71717a" width={35}/>
-                      <Tooltip contentStyle={{background:'#18181b',border:'1px solid #27272a',fontSize:11,fontFamily:'monospace'}} />
+                      <CartesianGrid strokeDasharray="2 2" stroke="#D8DDCF" />
+                      <XAxis dataKey="t" fontSize={10} stroke="#606657" />
+                      <YAxis fontSize={10} stroke="#606657" width={35}/>
+                      <Tooltip contentStyle={{background:'#FFFFFF',border:'1px solid #D8DDCF',fontSize:11,fontFamily:'monospace'}} />
                       <Legend wrapperStyle={{fontSize:11}} />
-                      <Line dataKey="real_z" stroke="#34a840" strokeWidth={2} dot={false} name="Real alt (m)" />
-                      <Line dataKey="sim_z"  stroke="#60a5fa" strokeWidth={2} dot={false} name="Sim alt (m)" strokeDasharray="4 2" />
+                      <Line dataKey="real_z" stroke="#556B2F" strokeWidth={2} dot={false} name="Real alt (m)" />
+                      <Line dataKey="sim_z"  stroke="#2563EB" strokeWidth={2} dot={false} name="Sim alt (m)" strokeDasharray="4 2" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -408,3 +408,4 @@ export const DigitalTwinCalibrator: React.FC<DigitalTwinCalibratorProps> = ({
     </div>
   );
 };
+

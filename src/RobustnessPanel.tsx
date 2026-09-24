@@ -26,12 +26,12 @@ function classifyFailureMode(r: EpisodeResult): string {
 }
 
 const FAILURE_COLORS: Record<string,string> = {
-  'Success': '#34a840',
-  'Roll Divergence': '#f87171',
-  'Pitch Divergence': '#fb923c',
+  'Success': '#556B2F',
+  'Roll Divergence': '#B91C1C',
+  'Pitch Divergence': '#C2410C',
   'Total Attitude Failure': '#dc2626',
   'Early Crash (<1s)': '#f43f5e',
-  'Late Crash': '#fbbf24',
+  'Late Crash': '#A16207',
 };
 
 export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomainRandEnabled }) => {
@@ -45,7 +45,7 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
     return Object.entries(counts).map(([mode,count])=>({
       mode, count,
       pct: (count/stats.numEpisodes*100).toFixed(1),
-      color: FAILURE_COLORS[mode]||'#71717a'
+      color: FAILURE_COLORS[mode]||'#606657'
     }));
   }, [stats]);
 
@@ -73,13 +73,13 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
 
   if (!stats) {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 flex flex-col items-center gap-3">
-        <Shield className="w-10 h-10 text-zinc-700" />
+      <div className="bg-surface border border-line rounded-xl p-8 flex flex-col items-center gap-3">
+        <Shield className="w-10 h-10 text-muted" />
         <div className="text-center">
-          <p className="text-sm font-bold text-zinc-400">No benchmark data yet</p>
-          <p className="text-xs text-zinc-600 mt-1">
+          <p className="text-sm font-bold text-muted">No benchmark data yet</p>
+          <p className="text-xs text-muted mt-1">
             Run the Episode Benchmark tab to generate robustness stats.
-            {!isDomainRandEnabled && <span className="text-amber-400 block mt-1">Enable Domain Randomization for realistic robustness testing.</span>}
+            {!isDomainRandEnabled && <span className="text-amber-700 block mt-1">Enable Domain Randomization for realistic robustness testing.</span>}
           </p>
         </div>
       </div>
@@ -87,23 +87,23 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
   }
 
   const robustnessScore = Math.round((stats.successRate ?? 0)*100);
-  const scoreColor = robustnessScore >= 80 ? '#34a840' : robustnessScore >= 50 ? '#fbbf24' : '#f87171';
+  const scoreColor = robustnessScore >= 80 ? '#556B2F' : robustnessScore >= 50 ? '#A16207' : '#B91C1C';
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-950 flex items-center justify-between">
+    <div className="bg-surface border border-line rounded-xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-line bg-surface flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-emerald-400" />
-          <h2 className="text-sm font-bold text-zinc-100">Reality Stress Test Results</h2>
+          <Shield className="w-4 h-4 text-emerald-700" />
+          <h2 className="text-sm font-bold text-ink">Reality Stress Test Results</h2>
           {isDomainRandEnabled && (
-            <span className="text-[10px] px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded-full font-mono">
+            <span className="text-[10px] px-2 py-0.5 bg-purple-500/20 text-purple-700 rounded-full font-mono">
               Domain Rand ON
             </span>
           )}
         </div>
         <div className="text-2xl font-mono font-bold" style={{color:scoreColor}}>
           {robustnessScore}%
-          <span className="text-xs text-zinc-500 ml-1 font-normal">mission success</span>
+          <span className="text-xs text-muted ml-1 font-normal">mission success</span>
         </div>
       </div>
 
@@ -120,8 +120,8 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
             ['Best SEC',     stats.bestSEC!=null?`${stats.bestSEC.toFixed(3)}`:'N/A','emerald'],
             ['Worst SEC',    stats.worstSEC!=null?`${stats.worstSEC.toFixed(3)}`:'N/A','red'],
           ].map(([l,v,c])=>(
-            <div key={l as string} className="bg-zinc-950 border border-zinc-800 rounded-lg p-3">
-              <div className="text-[10px] text-zinc-500 mb-0.5">{l as string}</div>
+            <div key={l as string} className="bg-surface border border-line rounded-lg p-3">
+              <div className="text-[10px] text-muted mb-0.5">{l as string}</div>
               <div className={`text-sm font-mono font-bold text-${c as string}-300`}>{v as string}</div>
             </div>
           ))}
@@ -129,14 +129,14 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
 
         {/* Failure mode breakdown */}
         <div>
-          <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <div className="text-xs font-bold text-muted uppercase tracking-wider mb-3 flex items-center gap-2">
             <AlertTriangle className="w-3 h-3" /> Failure mode breakdown
           </div>
           <div className="space-y-1.5">
             {failureCounts.sort((a,b)=>b.count-a.count).map(({mode,count,pct,color})=>(
               <div key={mode} className="flex items-center gap-3 text-xs font-mono">
-                <div className="w-32 text-zinc-400 shrink-0">{mode}</div>
-                <div className="flex-1 h-3 bg-zinc-800 rounded-sm overflow-hidden">
+                <div className="w-32 text-muted shrink-0">{mode}</div>
+                <div className="flex-1 h-3 bg-canvas rounded-sm overflow-hidden">
                   <div className="h-full rounded-sm"
                     style={{width:`${pct}%`, background:color}} />
                 </div>
@@ -151,15 +151,15 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Alt error histogram */}
           <div>
-            <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Alt error distribution</div>
+            <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Alt error distribution</div>
             <div style={{height:140}}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={altErrorHist} margin={{left:0,right:0}}>
-                  <CartesianGrid strokeDasharray="2 2" stroke="#27272a" />
-                  <XAxis dataKey="range" fontSize={8} stroke="#52525b" tick={{fontSize:8}} />
-                  <YAxis fontSize={9} stroke="#52525b" width={25} />
-                  <Tooltip contentStyle={{background:'#18181b',border:'1px solid #27272a',fontSize:10,fontFamily:'monospace'}} />
-                  <Bar dataKey="count" fill="#34a840" radius={[2,2,0,0]} />
+                  <CartesianGrid strokeDasharray="2 2" stroke="#D8DDCF" />
+                  <XAxis dataKey="range" fontSize={8} stroke="#606657" tick={{fontSize:8}} />
+                  <YAxis fontSize={9} stroke="#606657" width={25} />
+                  <Tooltip contentStyle={{background:'#FFFFFF',border:'1px solid #D8DDCF',fontSize:10,fontFamily:'monospace'}} />
+                  <Bar dataKey="count" fill="#556B2F" radius={[2,2,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -167,15 +167,15 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
 
           {/* Survival time histogram */}
           <div>
-            <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Survival time distribution</div>
+            <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Survival time distribution</div>
             <div style={{height:140}}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={survivalHist} margin={{left:0,right:0}}>
-                  <CartesianGrid strokeDasharray="2 2" stroke="#27272a" />
-                  <XAxis dataKey="range" fontSize={8} stroke="#52525b" tick={{fontSize:8}} />
-                  <YAxis fontSize={9} stroke="#52525b" width={25} />
-                  <Tooltip contentStyle={{background:'#18181b',border:'1px solid #27272a',fontSize:10,fontFamily:'monospace'}} />
-                  <Bar dataKey="count" fill="#60a5fa" radius={[2,2,0,0]} />
+                  <CartesianGrid strokeDasharray="2 2" stroke="#D8DDCF" />
+                  <XAxis dataKey="range" fontSize={8} stroke="#606657" tick={{fontSize:8}} />
+                  <YAxis fontSize={9} stroke="#606657" width={25} />
+                  <Tooltip contentStyle={{background:'#FFFFFF',border:'1px solid #D8DDCF',fontSize:10,fontFamily:'monospace'}} />
+                  <Bar dataKey="count" fill="#2563EB" radius={[2,2,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -183,14 +183,14 @@ export const RobustnessPanel: React.FC<RobustnessPanelProps> = ({ stats, isDomai
         </div>
 
         {/* Interpretation */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-xs text-zinc-400 space-y-1">
-          <div className="font-bold text-zinc-300 mb-2">Interpretation</div>
-          {stats.crashRate > 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}90% — inspect the recorded failure events and executed inputs. <span className="text-zinc-400">The crash rate alone cannot distinguish controller, propulsion, battery, numerical or injected-fault causes. Establish a baseline before changing parameters.</span></div>}
-          {stats.crashRate > 0.5 && stats.crashRate <= 0.9 && <div className="text-red-400">⚠ Crash rate {'>'}50% — simulation failures require diagnosis. <span className="text-zinc-400">Check executed inputs, propulsion/inertia calibration, controller compatibility and recorded failure events before tuning or RL training.</span></div>}
-          {stats.stdSEC!=null && stats.meanSEC!=null && stats.stdSEC > stats.meanSEC * 0.5 && stats.meanSEC > 0 && <div className="text-amber-400">⚠ High conditional SEC variation (±{(stats.stdSEC/stats.meanSEC*100).toFixed(0)}%) among applicable successful episodes. Inspect conditions and sample count before attributing a cause.</div>}
-          {stats.crashRate >= 0.1 && stats.crashRate <= 0.5 && <div className="text-amber-400">Moderate crash rate — compare failure events and executed conditions before selecting a remedy.</div>}
-          {stats.crashRate < 0.1 && <div className="text-emerald-400">✓ Low crash rate — consider more aggressive domain randomization to stress-test further.</div>}
-          {!isDomainRandEnabled && <div className="text-zinc-500 italic">Domain randomization explores assumed variation; it does not establish real-world robustness. Without it, all episodes use identical physics parameters.</div>}
+        <div className="bg-surface border border-line rounded-lg p-4 text-xs text-muted space-y-1">
+          <div className="font-bold text-ink mb-2">Interpretation</div>
+          {stats.crashRate > 0.9 && <div className="text-red-700">⚠ Crash rate {'>'}90% — inspect the recorded failure events and executed inputs. <span className="text-muted">The crash rate alone cannot distinguish controller, propulsion, battery, numerical or injected-fault causes. Establish a baseline before changing parameters.</span></div>}
+          {stats.crashRate > 0.5 && stats.crashRate <= 0.9 && <div className="text-red-700">⚠ Crash rate {'>'}50% — simulation failures require diagnosis. <span className="text-muted">Check executed inputs, propulsion/inertia calibration, controller compatibility and recorded failure events before tuning or RL training.</span></div>}
+          {stats.stdSEC!=null && stats.meanSEC!=null && stats.stdSEC > stats.meanSEC * 0.5 && stats.meanSEC > 0 && <div className="text-amber-700">⚠ High conditional SEC variation (±{(stats.stdSEC/stats.meanSEC*100).toFixed(0)}%) among applicable successful episodes. Inspect conditions and sample count before attributing a cause.</div>}
+          {stats.crashRate >= 0.1 && stats.crashRate <= 0.5 && <div className="text-amber-700">Moderate crash rate — compare failure events and executed conditions before selecting a remedy.</div>}
+          {stats.crashRate < 0.1 && <div className="text-emerald-700">✓ Low crash rate — consider more aggressive domain randomization to stress-test further.</div>}
+          {!isDomainRandEnabled && <div className="text-muted italic">Domain randomization explores assumed variation; it does not establish real-world robustness. Without it, all episodes use identical physics parameters.</div>}
         </div>
       </div>
     </div>

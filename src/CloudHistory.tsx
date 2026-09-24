@@ -18,14 +18,14 @@ export function CloudHistory(){
     return ()=>{alive=false;data.subscription.unsubscribe();};
   },[]);
   const task=async(fn:()=>Promise<void>)=>{setBusy(true);setMessage('');try{await fn();}catch(e){setMessage(e instanceof Error?e.message:'Cloud operation failed');}finally{setBusy(false);}};
-  if(!cloudDatabase)return <section className="border border-zinc-700 rounded p-3 text-sm"><h3>Cloud history</h3><p>Cloud database is not connected. Benchmarks still work; export JSON to keep your results.</p></section>;
-  return <section className="border border-zinc-700 rounded p-3 text-sm space-y-2">
+  if(!cloudDatabase)return <section className="border border-line-strong rounded p-3 text-sm"><h3>Cloud history</h3><p>Cloud database is not connected. Benchmarks still work; export JSON to keep your results.</p></section>;
+  return <section className="border border-line-strong rounded p-3 text-sm space-y-2">
     <h3 className="font-bold">Private cloud history</h3>
     {!user ? <AuthForm client={cloudDatabase} connection={authConnection} /> : <>
       <p>Signed in as {user.email}. Records are private to your account.</p>
       <UsernameSettings key={user.id} client={cloudDatabase} userId={user.id} />
       <button disabled={busy} className="underline mr-3" onClick={()=>void task(async()=>{const {error}=await cloudDatabase.auth.signOut();if(error)throw error;})}>Sign out</button>
-      <input aria-label="Cloud record name" placeholder="Optional record name" maxLength={120} value={name} onChange={e=>setName(e.target.value)} className="bg-zinc-950 p-2" />
+      <input aria-label="Cloud record name" placeholder="Optional record name" maxLength={120} value={name} onChange={e=>setName(e.target.value)} className="bg-surface p-2" />
       <button disabled={busy||!batchStats} className="underline p-2" onClick={()=>void task(async()=>{
         const payload=benchmarkRecord(batchStats!);
         const {error}=await cloudDatabase.from('benchmark_runs').upsert({id:batchStats!.runId??crypto.randomUUID(),user_id:user.id,name:name||'Benchmark',payload},{onConflict:'id'});

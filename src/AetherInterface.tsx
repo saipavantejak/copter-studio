@@ -440,16 +440,16 @@ export const AetherInterface = ({
         />
       )}
 
-      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl flex flex-col h-full overflow-hidden">
+      <div className="bg-surface border border-line rounded-2xl flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <div className="px-3.5 py-2.5 border-b border-zinc-800 flex items-center gap-2 shrink-0">
+        <div className="px-3.5 py-2.5 border-b border-line flex items-center gap-2 shrink-0">
           <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-            <Bot className="w-3.5 h-3.5 text-emerald-400" />
+            <Bot className="w-3.5 h-3.5 text-emerald-700" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-zinc-100">Aether</div>
+            <div className="text-xs font-bold text-ink">Aether</div>
           </div>
-          <Activity className={`w-3 h-3 ${isLoading||isParsing?'text-emerald-400 animate-pulse':'text-zinc-700'}`} />
+          <Activity className={`w-3 h-3 ${isLoading||isParsing?'text-emerald-700 animate-pulse':'text-muted'}`} />
         </div>
 
         {/* Messages */}
@@ -458,28 +458,28 @@ export const AetherInterface = ({
             <div key={i} className={`flex ${m.role==='user'?'justify-end':'justify-start'}`}>
               <div className={`max-w-[93%] rounded-xl px-3 py-2 text-xs leading-relaxed ${
                 m.role==='user'
-                  ? 'bg-emerald-600/20 border border-emerald-600/30 text-emerald-100'
+                  ? 'bg-emerald-600/20 border border-emerald-600/30 text-emerald-800'
                   : m.isError
-                    ? 'bg-red-500/10 border border-red-500/20 text-red-200'
+                    ? 'bg-red-500/10 border border-red-500/20 text-red-700'
                     : m.isSim
-                      ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-100'
-                      : 'bg-zinc-900 border border-zinc-800 text-zinc-200'}`}>
+                      ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-800'
+                      : 'bg-surface border border-line text-ink'}`}>
                 {m.role==='assistant' && (
                   <div className="flex items-center gap-1 mb-1.5">
                     {m.isSim
-                      ? <Cpu className="w-3 h-3 text-indigo-400" />
-                      : <Bot className="w-3 h-3 text-emerald-500" />}
-                    <span className={`text-[9px] font-bold uppercase ${m.isSim?'text-indigo-500':'text-emerald-600'}`}>
+                      ? <Cpu className="w-3 h-3 text-indigo-700" />
+                      : <Bot className="w-3 h-3 text-emerald-700" />}
+                    <span className={`text-[9px] font-bold uppercase ${m.isSim?'text-indigo-700':'text-emerald-600'}`}>
                       {m.isSim?'Sim Operator':'Aether'}
                     </span>
                   </div>
                 )}
                 <ReactMarkdown components={{
-                  code: ({children,className}) => <code className={`${className??''} bg-zinc-800 px-1 py-0.5 rounded text-[10px] font-mono text-emerald-300`}>{children}</code>,
-                  pre: ({children}) => <pre className="bg-zinc-900 border border-zinc-700 rounded-lg p-2 overflow-x-auto text-[10px] font-mono mt-1.5 mb-1.5">{children}</pre>,
+                  code: ({children,className}) => <code className={`${className??''} bg-canvas px-1 py-0.5 rounded text-[10px] font-mono text-emerald-700`}>{children}</code>,
+                  pre: ({children}) => <pre className="bg-surface border border-line-strong rounded-lg p-2 overflow-x-auto text-[10px] font-mono mt-1.5 mb-1.5">{children}</pre>,
                   p: ({children}) => <p className="mb-1 last:mb-0">{children}</p>,
                   ul: ({children}) => <ul className="list-disc list-inside space-y-0.5 mb-1">{children}</ul>,
-                  strong: ({children}) => <strong className="font-bold text-zinc-100">{children}</strong>,
+                  strong: ({children}) => <strong className="font-bold text-ink">{children}</strong>,
                 }}>
                   {m.content}
                 </ReactMarkdown>
@@ -488,9 +488,9 @@ export const AetherInterface = ({
           ))}
           {(isLoading||isParsing) && (
             <div className="flex justify-start">
-              <div className={`rounded-xl px-3 py-2 border text-xs flex items-center gap-2 ${isParsing?'bg-indigo-500/10 border-indigo-500/20 text-indigo-300':'bg-zinc-900 border-zinc-800 text-zinc-500'}`}>
+              <div className={`rounded-xl px-3 py-2 border text-xs flex items-center gap-2 ${isParsing?'bg-indigo-500/10 border-indigo-500/20 text-indigo-700':'bg-surface border-line text-muted'}`}>
                 <div className="flex gap-0.5">
-                  {[0,1,2].map(i=><div key={i} className={`w-1 h-1 rounded-full animate-bounce ${isParsing?'bg-indigo-400':'bg-zinc-500'}`} style={{animationDelay:`${i*0.15}s`}} />)}
+                  {[0,1,2].map(i=><div key={i} className={`w-1 h-1 rounded-full animate-bounce ${isParsing?'bg-indigo-400':'bg-selected'}`} style={{animationDelay:`${i*0.15}s`}} />)}
                 </div>
                 {isParsing?'Parsing request…':'Thinking…'}
               </div>
@@ -502,12 +502,12 @@ export const AetherInterface = ({
         {/* Suggestion chips */}
         {messages.length<=2 && !isLoading && (
           <div className="px-3 pb-2 flex flex-col gap-1 shrink-0">
-            <div className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-0.5">
+            <div className="text-[9px] text-muted uppercase flex items-center gap-1 mb-0.5">
               <Play className="w-2.5 h-2.5" /> Example simulation commands
             </div>
             {SUGGESTIONS.slice(0,2).map(s=>(
               <button key={s} onClick={()=>setInput(s)}
-                className="text-left text-[10px] px-2 py-1.5 bg-zinc-900 border border-zinc-800 hover:border-indigo-500/40 hover:bg-indigo-500/5 rounded-lg text-zinc-400 hover:text-indigo-300 transition-colors truncate">
+                className="text-left text-[10px] px-2 py-1.5 bg-surface border border-line hover:border-indigo-500/40 hover:bg-indigo-500/5 rounded-lg text-muted hover:text-indigo-700 transition-colors truncate">
                 {s}
               </button>
             ))}
@@ -515,17 +515,17 @@ export const AetherInterface = ({
         )}
 
         {/* Input area */}
-        <div className="p-3 border-t border-zinc-800 shrink-0">
+        <div className="p-3 border-t border-line shrink-0">
           <div className="flex gap-2">
             <input
               value={input} onChange={e=>setInput(e.target.value)}
               onKeyDown={e=>e.key==='Enter'&&!e.shiftKey&&handleSend()}
               placeholder={isParsing?'Parsing…':'Ask or say "run a 7kg bicopter in wind"…'}
               disabled={isLoading||isParsing}
-              className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500 transition-colors disabled:opacity-50"
+              className="flex-1 bg-surface border border-line-strong rounded-lg px-3 py-2 text-xs text-ink placeholder:text-muted focus:outline-none focus:border-emerald-500 transition-colors disabled:opacity-50"
             />
             <button onClick={handleSend} disabled={!input.trim()||isLoading||isParsing}
-              className="w-8 h-8 bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-800 disabled:text-zinc-600 text-white rounded-lg flex items-center justify-center transition-colors shrink-0">
+              className="w-8 h-8 bg-emerald-600 hover:bg-emerald-500 disabled:bg-canvas disabled:text-muted text-white rounded-lg flex items-center justify-center transition-colors shrink-0">
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -538,7 +538,7 @@ export const AetherInterface = ({
               { label:'Reward Fn',  icon:Code, fn:()=>setInput('Generate a reward function for stable hover optimised for SEC') },
             ].map(({label,icon:Icon,fn})=>(
               <button key={label} onClick={fn}
-                className="flex items-center gap-1 px-2 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-600 text-zinc-500 hover:text-zinc-300 rounded-lg text-[10px] transition-colors">
+                className="flex items-center gap-1 px-2 py-1 bg-surface hover:bg-canvas border border-line hover:border-line-strong text-muted hover:text-ink rounded-lg text-[10px] transition-colors">
                 <Icon className="w-3 h-3" />{label}
               </button>
             ))}
@@ -552,10 +552,10 @@ export const AetherInterface = ({
               title="Copy the Colab notebook JSON to your clipboard"
               className={`flex items-center gap-1 px-2 py-1 border rounded-lg text-[10px] transition-colors ${
                 notebookCopied === 'ok'
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                   : notebookCopied === 'err'
-                    ? 'bg-red-500/10 border-red-500/30 text-red-300'
-                    : 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-600 text-zinc-500 hover:text-zinc-300'
+                    ? 'bg-red-500/10 border-red-500/30 text-red-700'
+                    : 'bg-surface hover:bg-canvas border-line hover:border-line-strong text-muted hover:text-ink'
               }`}>
               {notebookCopied === 'ok'
                 ? (<><Check className="w-3 h-3" />Copied!</>)
@@ -564,7 +564,7 @@ export const AetherInterface = ({
                   : (<><Copy className="w-3 h-3" />Copy Notebook</>)}
             </button>
           </div>
-          <div className="mt-1.5 flex items-center gap-1 text-[9px] text-zinc-700">
+          <div className="mt-1.5 flex items-center gap-1 text-[9px] text-muted">
             <HelpCircle className="w-2.5 h-2.5 shrink-0" />
             Say "run" + describe your drone to trigger the sim operator. Aether parses and asks for approval.
           </div>

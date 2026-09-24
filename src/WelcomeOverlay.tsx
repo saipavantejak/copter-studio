@@ -1,35 +1,5 @@
 import { motion } from 'motion/react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, Float } from '@react-three/drei';
-import { useRef } from 'react';
 import { Play } from 'lucide-react';
-import { DroneMesh, getRotorDefs } from './DroneSim';
-import * as THREE from 'three';
-
-const BackgroundDrone = () => {
-  const rotorRefs = [useRef<THREE.Group>(null), useRef<THREE.Group>(null), useRef<THREE.Group>(null), useRef<THREE.Group>(null)];
-  const rotorDefs = getRotorDefs('quadcopter', 1.0);
-
-  useFrame(() => {
-    rotorRefs.forEach((ref, i) => {
-      if (ref.current) {
-        ref.current.rotation.y += (0.15 + i * 0.02);
-      }
-    });
-  });
-
-  return (
-    <Float speed={1.2} rotationIntensity={0.6} floatIntensity={0.4}>
-      <group rotation={[0.2, Math.PI / 4, 0.1]}>
-        <DroneMesh 
-          rotorDefs={rotorDefs} 
-          rotorRefs={rotorRefs as any} 
-          isGhost={false} 
-        />
-      </group>
-    </Float>
-  );
-};
 
 interface WelcomeOverlayProps {
   onStart: () => void;
@@ -55,17 +25,9 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
           ? { duration: 1.1, ease: [0.4, 0, 0.2, 1] }
           : { duration: 0.8, ease: 'easeOut' }
       }
-      className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6 overflow-hidden"
+      className="fixed inset-0 z-[100] bg-canvas flex items-center justify-center p-6 overflow-y-auto"
     >
-      {/* ── Background 3D Scene ───────────────────────────────── */}
-      <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color="#237227" />
-          <BackgroundDrone />
-          <Environment preset="city" />
-        </Canvas>
-      </div>
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none welcome-wash" />
 
       {/* Radial glow */}
       <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent pointer-events-none" />
@@ -94,19 +56,19 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
               initial={{ letterSpacing: '0.2em', opacity: 0 }}
               animate={{ letterSpacing: '-0.02em', opacity: 1 }}
               transition={{ duration: 1.6, delay: 0.35, ease: smoothOut }}
-              className="text-7xl font-black text-white text-center"
+              className="text-4xl sm:text-6xl font-extrabold tracking-tight text-ink text-center"
             >
-              COPTER <span className="text-emerald-500">STUDIOS</span>
+              COPTER <span className="text-emerald-700">STUDIOS</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.8, ease: 'easeOut' }}
-              className="text-zinc-500 font-medium text-xl tracking-tight leading-relaxed text-center max-w-lg"
+              className="text-muted font-medium text-xl tracking-tight leading-relaxed text-center max-w-lg"
             >
               The Premier Digital Twin Environment for <br />
-              <span className="text-zinc-200">Autonomous Flight &amp; RL Research.</span>
+              <span className="text-ink">Autonomous Flight &amp; RL Research.</span>
             </motion.p>
           </div>
         </motion.div>
@@ -125,11 +87,11 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
           ].map((f) => (
             <motion.div
               key={f.label}
-              whileHover={{ y: -6, backgroundColor: 'rgba(39,39,42,0.8)', borderColor: 'rgba(16,185,129,0.2)' }}
-              className="p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md text-center transition-all duration-300"
+              whileHover={{ y: -6, backgroundColor: 'rgba(247,246,240,0.95)', borderColor: 'rgba(85,107,47,0.28)' }}
+              className="p-5 rounded-2xl bg-surface/40 border border-line/50 backdrop-blur-md text-center transition-all duration-300"
             >
-              <div className="text-emerald-500 font-bold text-[11px] mb-1.5 uppercase tracking-widest">{f.label}</div>
-              <div className="text-zinc-500 text-[11px] leading-snug font-mono">{f.desc}</div>
+              <div className="text-emerald-700 font-bold text-[11px] mb-1.5 uppercase tracking-widest">{f.label}</div>
+              <div className="text-muted text-[11px] leading-snug font-mono">{f.desc}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -141,7 +103,7 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
           transition={{ duration: 0.6, delay: 1.5, ease: dramatic }}
           className="flex flex-col items-center gap-6"
         >
-          <a href="?view=account" className="text-emerald-300 underline">Log in / Sign up</a>
+          <a href="?view=account" className="text-emerald-700 underline">Log in / Sign up</a>
           <button
             onClick={onStart}
             className="group relative px-14 py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 active:scale-95 overflow-hidden"
@@ -159,7 +121,7 @@ export const WelcomeOverlay = ({ onStart, isExiting }: WelcomeOverlayProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.3 }}
           transition={{ delay: 2.0, duration: 0.6 }}
-          className="text-[10px] text-zinc-600 font-mono uppercase tracking-[0.4em]"
+          className="text-[10px] text-muted font-mono uppercase tracking-[0.4em]"
         >
           Precision Aerospace Simulation Node v12.1 PRO
         </motion.p>

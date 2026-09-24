@@ -121,7 +121,7 @@ export const SplitPane = ({
         }}
       >
         <div
-          className={`rounded-full bg-zinc-700 group-hover:bg-emerald-500 group-active:bg-emerald-400 transition-colors duration-150 ${
+          className={`rounded-full bg-selected group-hover:bg-emerald-500 group-active:bg-emerald-400 transition-colors duration-150 ${
             isVertical ? 'w-[2px] h-10' : 'h-[2px] w-10'
           }`}
         />
@@ -139,3 +139,4 @@ export const SplitPane = ({
     </div>
   );
 };
+

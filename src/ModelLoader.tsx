@@ -194,38 +194,38 @@ export const ModelLoader = ({
   const deltaOk   = deltaResult && !deltaResult.skipped && deltaResult.maxDelta <= DELTA_WARN_THRESHOLD;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-2xl flex flex-col h-full">
+    <div className="bg-surface border border-line rounded-xl p-6 shadow-2xl flex flex-col h-full">
       <div className="mb-4">
-        <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-          <UploadCloud className="w-5 h-5 text-emerald-400" />
+        <h2 className="text-lg font-bold text-ink flex items-center gap-2">
+          <UploadCloud className="w-5 h-5 text-emerald-700" />
           Load RL Model
         </h2>
-        <p className="text-xs text-zinc-400 mt-1">
+        <p className="text-xs text-muted mt-1">
           Upload TensorFlow.js model files to override the heuristic PD controller.
         </p>
-        <div className="mt-2 text-[10px] text-zinc-600 bg-zinc-950 border border-zinc-800 rounded-lg p-2 font-mono space-y-0.5">
-          <div>Input: <span className="text-zinc-400">12-DOF state [x, y, z, vx, vy, vz, roll, pitch, yaw, p, q, r]</span></div>
-          <div>Output: <span className="text-zinc-400">{droneType === 'bicopter' ? '2 dims' : droneType === 'quadcopter' ? '4 dims' : '6 dims'} (motor commands for {droneType})</span></div>
-          <div>Format: <span className="text-zinc-400">model.json + model.weights.bin (TF.js LayersModel)</span></div>
+        <div className="mt-2 text-[10px] text-muted bg-surface border border-line rounded-lg p-2 font-mono space-y-0.5">
+          <div>Input: <span className="text-muted">12-DOF state [x, y, z, vx, vy, vz, roll, pitch, yaw, p, q, r]</span></div>
+          <div>Output: <span className="text-muted">{droneType === 'bicopter' ? '2 dims' : droneType === 'quadcopter' ? '4 dims' : '6 dims'} (motor commands for {droneType})</span></div>
+          <div>Format: <span className="text-muted">model.json + model.weights.bin (TF.js LayersModel)</span></div>
         </div>
       </div>
 
       <div
         className={`flex-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-6 transition-colors ${
-          isDragging ? 'border-emerald-500 bg-emerald-500/5' : 'border-zinc-700 hover:border-zinc-600 bg-zinc-950/50'
+          isDragging ? 'border-emerald-500 bg-emerald-500/5' : 'border-line-strong hover:border-line-strong bg-surface/50'
         }`}
         onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}
       >
-        <UploadCloud className={`w-10 h-10 mb-3 ${isDragging ? 'text-emerald-400' : 'text-zinc-500'}`} />
-        <p className="text-sm text-zinc-300 text-center mb-1">
-          Drag & drop <span className="font-mono text-emerald-400">model.json</span> and{' '}
-          <span className="font-mono text-emerald-400">model.weights.bin</span>
+        <UploadCloud className={`w-10 h-10 mb-3 ${isDragging ? 'text-emerald-700' : 'text-muted'}`} />
+        <p className="text-sm text-ink text-center mb-1">
+          Drag & drop <span className="font-mono text-emerald-700">model.json</span> and{' '}
+          <span className="font-mono text-emerald-700">model.weights.bin</span>
         </p>
-        <p className="text-xs text-zinc-500 mb-4">or click to browse</p>
+        <p className="text-xs text-muted mb-4">or click to browse</p>
         <input type="file" multiple accept=".json,.bin" className="hidden"
           ref={fileInputRef} onChange={handleFileSelect} />
         <button onClick={() => fileInputRef.current?.click()}
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-sm font-medium transition-colors">
+          className="px-4 py-2 bg-canvas hover:bg-selected text-ink rounded-lg text-sm font-medium transition-colors">
           Select Files
         </button>
       </div>
@@ -236,14 +236,14 @@ export const ModelLoader = ({
           { file: weightsFile, Icon: FileCode, placeholder: 'model.weights.bin' },
         ].map(({ file, Icon, placeholder }) => (
           <div key={placeholder}
-            className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
+            className="flex items-center justify-between p-3 bg-surface rounded-lg border border-line">
             <div className="flex items-center gap-2">
-              <Icon className={`w-4 h-4 ${file ? 'text-emerald-400' : 'text-zinc-600'}`} />
-              <span className={`text-sm font-mono ${file ? 'text-zinc-200' : 'text-zinc-600'}`}>
+              <Icon className={`w-4 h-4 ${file ? 'text-emerald-700' : 'text-muted'}`} />
+              <span className={`text-sm font-mono ${file ? 'text-ink' : 'text-muted'}`}>
                 {file ? file.name : placeholder}
               </span>
             </div>
-            {file && <CheckCircle className="w-4 h-4 text-emerald-500" />}
+            {file && <CheckCircle className="w-4 h-4 text-emerald-700" />}
           </div>
         ))}
       </div>
@@ -251,8 +251,8 @@ export const ModelLoader = ({
       {/* Error */}
       {status === 'error' && (
         <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-red-200">{errorMsg}</p>
+          <AlertCircle className="w-4 h-4 text-red-700 shrink-0 mt-0.5" />
+          <p className="text-xs text-red-700">{errorMsg}</p>
         </div>
       )}
 
@@ -260,18 +260,18 @@ export const ModelLoader = ({
       {status === 'success' && (
         <div className="mt-4 space-y-2">
           <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-start gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <p className="text-xs text-emerald-200">Model loaded and validated.</p>
+            <CheckCircle className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+            <p className="text-xs text-emerald-700">Model loaded and validated.</p>
           </div>
 
           {/* Backend delta badge */}
           {deltaResult && (
             <div className={`p-3 rounded-lg border flex items-start gap-2 text-xs ${
               deltaResult.skipped
-                ? 'bg-amber-500/10 border-amber-500/20 text-amber-300'
+                ? 'bg-amber-500/10 border-amber-500/20 text-amber-700'
                 : deltaOk
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
-                  : 'bg-orange-500/10 border-orange-500/20 text-orange-300'
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-700'
+                  : 'bg-orange-500/10 border-orange-500/20 text-orange-700'
             }`}>
               {deltaResult.skipped
                 ? <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -317,7 +317,7 @@ export const ModelLoader = ({
         <button
           onClick={handleLoadModel}
           disabled={!jsonFile || !weightsFile || status === 'loading' || status === 'measuring'}
-          className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-800 disabled:text-zinc-500 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+          className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-canvas disabled:text-muted text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
         >
           {status === 'loading' ? (
             <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Validating...</>
@@ -331,7 +331,7 @@ export const ModelLoader = ({
         <button
           onClick={handleLoadDemo}
           disabled={status === 'loading' || status === 'measuring'}
-          className="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-800 disabled:text-zinc-500 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+          className="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-canvas disabled:text-muted text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           title="Load Official Demo Model (88% Crash Rate)"
         >
           {status === 'loading' ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <Cpu className="w-4 h-4" />}
@@ -341,3 +341,4 @@ export const ModelLoader = ({
     </div>
   );
 };
+
