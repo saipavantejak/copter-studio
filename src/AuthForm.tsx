@@ -71,17 +71,17 @@ export function AuthForm({client,connection}: {client: SupabaseClient;connection
   return <div className="space-y-3">
     <div className="flex flex-wrap gap-3" aria-label="Social sign-in">
       {([['google','Google'],['github','GitHub'],['linkedin_oidc','LinkedIn']] as const).map(([provider,label]) =>
-        <button key={provider} type="button" disabled={busy} className="border border-zinc-600 rounded p-3" onClick={()=>void socialSignIn(provider)}>Continue with {label}</button>)}
+        <button key={provider} type="button" disabled={busy} className="border border-line-strong rounded p-3" onClick={()=>void socialSignIn(provider)}>Continue with {label}</button>)}
     </div>
     <p>Or use your email address and password.</p>
     <div className="flex flex-wrap gap-3" aria-label="Authentication method">
       {(['login','signup','link'] as const).map(value=><button key={value} type="button" disabled={busy} aria-pressed={mode===value} className="underline p-2" onClick={()=>{setMode(value);setPassword('');setMessage('');setFailed(false);}}>{value==='login'?'Log in':value==='signup'?'Sign up':'Email sign-in link'}</button>)}
     </div>
     <form className="flex flex-col gap-3 max-w-md" onSubmit={event=>{event.preventDefault();void submit();}}>
-      <label>{mode==='login'?'Email or username':'Email'} <input className="block bg-zinc-950 border border-zinc-700 rounded p-2 w-full" type={mode==='login'?'text':'email'} autoComplete={mode==='login'?'username':'email'} required value={email} disabled={busy} onChange={event=>setEmail(event.target.value)} /></label>
-      {mode!=='link' && <label>Password <input className="block bg-zinc-950 border border-zinc-700 rounded p-2 w-full" type="password" required minLength={mode==='signup'?8:undefined} autoComplete={mode==='signup'?'new-password':'current-password'} value={password} disabled={busy} onChange={event=>setPassword(event.target.value)} /></label>}
+      <label>{mode==='login'?'Email or username':'Email'} <input className="block bg-surface border border-line-strong rounded p-2 w-full" type={mode==='login'?'text':'email'} autoComplete={mode==='login'?'username':'email'} required value={email} disabled={busy} onChange={event=>setEmail(event.target.value)} /></label>
+      {mode!=='link' && <label>Password <input className="block bg-surface border border-line-strong rounded p-2 w-full" type="password" required minLength={mode==='signup'?8:undefined} autoComplete={mode==='signup'?'new-password':'current-password'} value={password} disabled={busy} onChange={event=>setPassword(event.target.value)} /></label>}
       {mode==='signup' && <p>Use at least 8 characters. Confirm your email before your first login.</p>}
-      <button disabled={busy} className="rounded bg-emerald-800 p-2">{busy?'Please wait…':mode==='login'?'Log in to your account':mode==='signup'?'Create account':'Send sign-in link'}</button>
+      <button disabled={busy} className="rounded bg-emerald-600 text-white hover:bg-emerald-500 p-2">{busy?'Please wait…':mode==='login'?'Log in to your account':mode==='signup'?'Create account':'Send sign-in link'}</button>
     </form>
     {mode==='login' && <><p>Forgot your password? Use Email sign-in link to access your account.</p><button disabled={busy||!email.trim()} className="underline" onClick={()=>void submit(true)}>Resend confirmation email</button></>}
     <p role={failed?'alert':'status'}>{message}</p>

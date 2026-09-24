@@ -26,35 +26,35 @@ interface Section {
 // ── Reusable atoms ──────────────────────────────────────────────────────────
 
 const H = ({ children }: { children: React.ReactNode }) =>
-  <h3 className="text-sm font-bold text-emerald-400 mb-2 mt-5 first:mt-0">{children}</h3>;
+  <h3 className="text-sm font-bold text-emerald-700 mb-2 mt-5 first:mt-0">{children}</h3>;
 
 const P = ({ children }: { children: React.ReactNode }) =>
-  <p className="text-zinc-300 text-[13px] leading-relaxed mb-3">{children}</p>;
+  <p className="text-ink text-[13px] leading-relaxed mb-3">{children}</p>;
 
 const Step = ({ n, title, children }: { n: number; title: string; children: React.ReactNode }) => (
   <div className="flex gap-3 mb-3">
-    <div className="shrink-0 w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 font-bold text-xs">{n}</div>
+    <div className="shrink-0 w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-700 font-bold text-xs">{n}</div>
     <div className="flex-1">
-      <div className="text-zinc-100 font-semibold text-[13px] mb-0.5">{title}</div>
-      <div className="text-zinc-400 text-[12px] leading-relaxed">{children}</div>
+      <div className="text-ink font-semibold text-[13px] mb-0.5">{title}</div>
+      <div className="text-muted text-[12px] leading-relaxed">{children}</div>
     </div>
   </div>
 );
 
 const Note = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-3 my-3 flex gap-2">
-    <Lightbulb className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-    <div className="text-emerald-100/90 text-[12px] leading-relaxed">{children}</div>
+    <Lightbulb className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+    <div className="text-emerald-800/90 text-[12px] leading-relaxed">{children}</div>
   </div>
 );
 
 const Code = ({ children }: { children: React.ReactNode }) =>
-  <code className="bg-zinc-900 border border-zinc-700 px-1.5 py-0.5 rounded text-[11px] font-mono text-emerald-300">{children}</code>;
+  <code className="bg-surface border border-line-strong px-1.5 py-0.5 rounded text-[11px] font-mono text-emerald-700">{children}</code>;
 
 const Row = ({ left, right }: { left: React.ReactNode; right: React.ReactNode }) => (
-  <div className="flex gap-3 py-1.5 border-b border-zinc-800/60 last:border-0 text-[12px]">
-    <div className="w-32 shrink-0 text-zinc-500 font-mono">{left}</div>
-    <div className="flex-1 text-zinc-300 leading-relaxed">{right}</div>
+  <div className="flex gap-3 py-1.5 border-b border-line/60 last:border-0 text-[12px]">
+    <div className="w-32 shrink-0 text-muted font-mono">{left}</div>
+    <div className="flex-1 text-ink leading-relaxed">{right}</div>
   </div>
 );
 
@@ -68,7 +68,7 @@ const sections: Section[] = [
     body: () => (
       <div>
         <P>
-          Copter Studios is a browser-based <span className="text-zinc-100 font-semibold">drone flight simulator</span>.
+          Copter Studios is a browser-based <span className="text-ink font-semibold">drone flight simulator</span>.
           It runs a real physics engine (Blade-Element-Theory thrust, RK4 quaternion integration,
           ISA atmosphere) so the bi-, quad-, and hexacopters you build behave like real aircraft.
         </P>
@@ -79,10 +79,10 @@ const sections: Section[] = [
           panel to run scenarios without touching the sliders.
         </P>
         <H>Who is it for?</H>
-        <ul className="text-zinc-300 text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
-          <li><span className="text-zinc-100 font-semibold">Hobbyists</span> — learn how multirotors fly and what changing mass / prop / battery does.</li>
-          <li><span className="text-zinc-100 font-semibold">Students &amp; researchers</span> — train RL controllers in Google Colab and benchmark them here.</li>
-          <li><span className="text-zinc-100 font-semibold">Engineers</span> — prototype configurations and tuning before cutting carbon.</li>
+        <ul className="text-ink text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
+          <li><span className="text-ink font-semibold">Hobbyists</span> — learn how multirotors fly and what changing mass / prop / battery does.</li>
+          <li><span className="text-ink font-semibold">Students &amp; researchers</span> — train RL controllers in Google Colab and benchmark them here.</li>
+          <li><span className="text-ink font-semibold">Engineers</span> — prototype configurations and tuning before cutting carbon.</li>
         </ul>
       </div>
     ),
@@ -94,7 +94,7 @@ const sections: Section[] = [
     body: () => (
       <div>
         <Step n={1} title="Pick a preset (left panel)">
-          In the <span className="text-zinc-100">Drone Configurator</span> on the left, click a
+          In the <span className="text-ink">Drone Configurator</span> on the left, click a
           quick-preset button — start with <Code>Research Bi</Code> (5 kg bicopter) or
           <Code>Cargo Quad</Code> (8 kg quadcopter). The sliders update to a known-good config.
         </Step>
@@ -154,10 +154,10 @@ const sections: Section[] = [
       <div>
         <P>The configurator sits on the left of the Simulation tab. It controls the physics.</P>
         <H>Drone Type</H>
-        <ul className="text-zinc-300 text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
-          <li><span className="text-zinc-100">Bicopter</span> — 2 motors with tilting nacelles. Hard to balance, fun to watch.</li>
-          <li><span className="text-zinc-100">Quadcopter</span> — 4 motors, X-configuration. The standard. What DJI sells.</li>
-          <li><span className="text-zinc-100">Hexacopter</span> — 6 motors. Survives a single motor failure.</li>
+        <ul className="text-ink text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
+          <li><span className="text-ink">Bicopter</span> — 2 motors with tilting nacelles. Hard to balance, fun to watch.</li>
+          <li><span className="text-ink">Quadcopter</span> — 4 motors, X-configuration. The standard. What DJI sells.</li>
+          <li><span className="text-ink">Hexacopter</span> — 6 motors. Survives a single motor failure.</li>
         </ul>
         <H>Quick Presets</H>
         <Row left="Nano (Crazyflie)" right="27 g, 1.5″ props, 3.7 V — try the smallest drone in the world." />
@@ -209,7 +209,7 @@ const sections: Section[] = [
           <Code>Approval Required</Code> dialog before touching anything.
         </P>
         <H>Things you can ask</H>
-        <ul className="text-zinc-300 text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
+        <ul className="text-ink text-[12px] space-y-1.5 list-disc list-inside leading-relaxed">
           <li><em>"Hover at 2 meters with a 7 kg bicopter."</em></li>
           <li><em>"Run a 50-episode benchmark on a quad with wind enabled."</em></li>
           <li><em>"Fly forward at 5 m/s for 10 seconds."</em></li>
@@ -341,18 +341,18 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
     <div
       ref={dialogRef}
       onClick={onBackdropClick}
-      className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[200] bg-scrim/45 backdrop-blur-sm flex items-center justify-center p-4"
     >
-      <div className="w-full max-w-5xl h-[85vh] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="w-full max-w-5xl h-[85vh] bg-surface border border-line rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-800 shrink-0">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-line shrink-0">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <div className="font-bold text-zinc-100 text-sm">Beginner's Guide</div>
-            <div className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">Copter Studios</div>
+            <BookOpen className="w-4 h-4 text-emerald-700" />
+            <div className="font-bold text-ink text-sm">Beginner's Guide</div>
+            <div className="text-[10px] text-muted font-mono uppercase tracking-wider">Copter Studios</div>
           </div>
           <button onClick={onClose}
-            className="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-1.5 hover:bg-canvas rounded-lg text-muted hover:text-ink transition-colors"
             title="Close (Esc)">
             <X className="w-4 h-4" />
           </button>
@@ -361,22 +361,22 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
         {/* Body — sidebar + content */}
         <div className="flex-1 flex min-h-0 overflow-hidden">
           {/* Sidebar */}
-          <aside className="w-60 shrink-0 border-r border-zinc-800 bg-zinc-950/60 flex flex-col">
-            <div className="p-2 border-b border-zinc-800">
+          <aside className="w-60 shrink-0 border-r border-line bg-surface/60 flex flex-col">
+            <div className="p-2 border-b border-line">
               <div className="relative">
-                <Search className="w-3 h-3 text-zinc-600 absolute left-2 top-1/2 -translate-y-1/2" />
+                <Search className="w-3 h-3 text-muted absolute left-2 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Search guide…"
-                  className="w-full pl-7 pr-2 py-1.5 bg-zinc-900 border border-zinc-800 rounded-md text-[11px] text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40"
+                  className="w-full pl-7 pr-2 py-1.5 bg-surface border border-line rounded-md text-[11px] text-ink placeholder:text-muted focus:outline-none focus:border-emerald-500/40"
                 />
               </div>
             </div>
             <nav className="flex-1 overflow-y-auto p-1.5 space-y-0.5">
               {visible.length === 0 && (
-                <div className="px-2 py-3 text-[11px] text-zinc-600 italic">No sections match "{query}"</div>
+                <div className="px-2 py-3 text-[11px] text-muted italic">No sections match "{query}"</div>
               )}
               {visible.map(s => {
                 const Icon = s.icon;
@@ -387,22 +387,22 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
                     onClick={() => setActive(s.id)}
                     className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-left text-[12px] transition-colors ${
                       isActive
-                        ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-200'
-                        : 'border border-transparent text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200'
+                        ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-700'
+                        : 'border border-transparent text-muted hover:bg-surface hover:text-ink'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-emerald-400' : 'text-zinc-500'}`} />
+                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-emerald-700' : 'text-muted'}`} />
                     <span className="flex-1 truncate">{s.label}</span>
-                    {isActive && <ChevronRight className="w-3 h-3 text-emerald-400" />}
+                    {isActive && <ChevronRight className="w-3 h-3 text-emerald-700" />}
                   </button>
                 );
               })}
             </nav>
-            <div className="p-2 border-t border-zinc-800 shrink-0">
+            <div className="p-2 border-t border-line shrink-0">
               <button
                 onClick={replayTour}
                 title="Re-trigger the first-visit guided walkthrough"
-                className="w-full px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 rounded-md text-[10px] text-zinc-400 hover:text-emerald-300 transition-colors"
+                className="w-full px-2 py-1.5 bg-surface hover:bg-canvas border border-line hover:border-emerald-500/40 rounded-md text-[10px] text-muted hover:text-emerald-700 transition-colors"
               >
                 Replay onboarding tour
               </button>
@@ -413,8 +413,8 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
           <div className="flex-1 overflow-y-auto">
             <article className="px-7 py-6 max-w-3xl">
               <div className="flex items-center gap-2 mb-4">
-                <current.icon className="w-5 h-5 text-emerald-400" />
-                <h2 className="text-lg font-bold text-zinc-100">{current.label}</h2>
+                <current.icon className="w-5 h-5 text-emerald-700" />
+                <h2 className="text-lg font-bold text-ink">{current.label}</h2>
               </div>
               {current.body()}
             </article>
@@ -422,7 +422,7 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-2.5 border-t border-zinc-800 shrink-0 flex items-center justify-between text-[10px] text-zinc-500">
+        <div className="px-5 py-2.5 border-t border-line shrink-0 flex items-center justify-between text-[10px] text-muted">
           <span>Press <Code>Esc</Code> to close · Click outside the panel to dismiss</span>
           <span className="font-mono">Copter Studios · Beginner's Guide</span>
         </div>
@@ -430,3 +430,4 @@ export const UserGuide = ({ onClose }: UserGuideProps) => {
     </div>
   );
 };
+

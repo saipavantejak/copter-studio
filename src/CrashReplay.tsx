@@ -36,11 +36,11 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
   for (let i=1;i<history.length;i++) {
     const h=history[i], p=history[i-1];
     if (Math.abs(h.phi-p.phi)/0.016 > 3.0 && !annotations.find(a=>a.label==='Roll spike'))
-      annotations.push({frame:i,label:'Roll spike',color:'#f87171'});
+      annotations.push({frame:i,label:'Roll spike',color:'#B91C1C'});
     if (h.z<0.15 && !annotations.find(a=>a.label==='Ground contact'))
-      annotations.push({frame:i,label:'Ground contact',color:'#fbbf24'});
+      annotations.push({frame:i,label:'Ground contact',color:'#A16207'});
     if (h.battery<0.2 && !annotations.find(a=>a.label==='Battery critical'))
-      annotations.push({frame:i,label:'Battery critical',color:'#fb923c'});
+      annotations.push({frame:i,label:'Battery critical',color:'#C2410C'});
   }
 
   // ── Three.js setup ──────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
     if (!canvas || typeof THREE === 'undefined') return;
 
     const scene    = new THREE.Scene();
-    scene.background = new THREE.Color(0x0f0f11);
+    scene.background = new THREE.Color(0xF7F6F0);
     const cam = new THREE.PerspectiveCamera(50, 1, 0.01, 100);
     cam.position.set(1.5, 1.5, 2);
     cam.lookAt(0, 0.5, 0);
@@ -59,7 +59,7 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dl = new THREE.DirectionalLight(0xffffff, 1); dl.position.set(3,6,3); dl.castShadow=true; scene.add(dl);
-    scene.add(new THREE.GridHelper(10,20,0x333333,0x222222));
+    scene.add(new THREE.GridHelper(10,20,0x8F9B82,0xD1D8C9));
 
     // Drone mesh
     const drone = new THREE.Group();
@@ -81,11 +81,11 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
     const trailGeo = new THREE.BufferGeometry();
     const trailPos = new Float32Array(300*3);
     trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
-    const trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({color:0x10b981,opacity:0.5,transparent:true}));
+    const trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({color:0x556B2F,opacity:0.5,transparent:true}));
     scene.add(trail);
 
     // Target ring
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.35,0.012,8,40), new THREE.MeshStandardMaterial({color:0x10b981,emissive:0x10b981,emissiveIntensity:0.6}));
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.35,0.012,8,40), new THREE.MeshStandardMaterial({color:0x556B2F,emissive:0x556B2F,emissiveIntensity:0.6}));
     ring.position.y=1.0; ring.rotation.x=Math.PI/2; scene.add(ring);
 
     const resize = () => {
@@ -168,19 +168,19 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
   const r2d = (r: number) => (r*180/Math.PI).toFixed(1);
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-3xl flex flex-col shadow-2xl overflow-hidden" style={{maxHeight:'92vh'}}>
+    <div className="fixed inset-0 bg-scrim/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-surface border border-line-strong rounded-2xl w-full max-w-3xl flex flex-col shadow-2xl overflow-hidden" style={{maxHeight:'92vh'}}>
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 bg-zinc-950 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-5 py-3 bg-surface border-b border-line">
           <div>
-            <h2 className="font-bold text-zinc-100">Crash Replay</h2>
-            <p className="text-xs text-zinc-500">{totalFrames} frames · {(totalFrames*0.016).toFixed(1)}s flight</p>
+            <h2 className="font-bold text-ink">Crash Replay</h2>
+            <p className="text-xs text-muted">{totalFrames} frames · {(totalFrames*0.016).toFixed(1)}s flight</p>
           </div>
-          <button onClick={onClose} className="text-zinc-500 hover:text-zinc-300 text-xl font-bold px-2 leading-none">✕</button>
+          <button onClick={onClose} className="text-muted hover:text-ink text-xl font-bold px-2 leading-none">✕</button>
         </div>
 
         {/* 3D View */}
-        <div className="relative bg-zinc-950" style={{height:320}}>
+        <div className="relative bg-surface" style={{height:320}}>
           <canvas ref={canvasRef} style={{width:'100%',height:'100%',display:'block'}} />
           {/* Annotations overlay */}
           <div className="absolute top-3 right-3 flex flex-col gap-1">
@@ -197,32 +197,32 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
           </div>
           {/* Live telemetry */}
           {currentFrame && (
-            <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-2 rounded-lg border border-white/10 font-mono text-xs grid grid-cols-2 gap-x-4 gap-y-0.5">
-              <span className="text-zinc-500">ALT:</span><span className="text-right">{currentFrame.z.toFixed(3)}m</span>
-              <span className="text-zinc-500">ROLL:</span><span className="text-right">{r2d(currentFrame.phi)}°</span>
-              <span className="text-zinc-500">PITCH:</span><span className="text-right">{r2d(currentFrame.theta)}°</span>
-              <span className="text-zinc-500">Z-VEL:</span><span className="text-right">{currentFrame.z_dot.toFixed(2)}m/s</span>
+            <div className="absolute bottom-3 left-3 bg-surface/95 backdrop-blur-md px-3 py-2 rounded-lg border border-line font-mono text-xs grid grid-cols-2 gap-x-4 gap-y-0.5">
+              <span className="text-muted">ALT:</span><span className="text-right">{currentFrame.z.toFixed(3)}m</span>
+              <span className="text-muted">ROLL:</span><span className="text-right">{r2d(currentFrame.phi)}°</span>
+              <span className="text-muted">PITCH:</span><span className="text-right">{r2d(currentFrame.theta)}°</span>
+              <span className="text-muted">Z-VEL:</span><span className="text-right">{currentFrame.z_dot.toFixed(2)}m/s</span>
             </div>
           )}
         </div>
 
         {/* Controls */}
-        <div className="px-5 py-4 bg-zinc-950 border-t border-zinc-800 space-y-3">
+        <div className="px-5 py-4 bg-surface border-t border-line space-y-3">
           {/* Scrubber */}
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-zinc-500 w-12 shrink-0 text-right">
+            <span className="text-xs font-mono text-muted w-12 shrink-0 text-right">
               {(frameIdx*0.016).toFixed(2)}s
             </span>
             <input type="range" min={0} max={totalFrames-1} value={frameIdx}
               onChange={e=>{ playRef.current=false; setPlaying(false); seek(parseInt(e.target.value)); }}
               className="flex-1 accent-emerald-500" />
-            <span className="text-xs font-mono text-zinc-500 w-12 shrink-0">
+            <span className="text-xs font-mono text-muted w-12 shrink-0">
               {(totalFrames*0.016).toFixed(2)}s
             </span>
           </div>
 
           {/* Annotation markers */}
-          <div className="relative h-2 bg-zinc-800 rounded-full mx-14">
+          <div className="relative h-2 bg-canvas rounded-full mx-14">
             {annotations.map(a=>(
               <div key={a.label}
                 className="absolute top-0 bottom-0 w-1 rounded-full cursor-pointer hover:scale-150 transition-transform"
@@ -236,28 +236,28 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
           {/* Playback buttons */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <button onClick={()=>seek(0)} className="p-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">
+              <button onClick={()=>seek(0)} className="p-2 bg-canvas hover:bg-selected text-ink rounded-lg transition-colors">
                 <SkipBack className="w-4 h-4" />
               </button>
-              <button onClick={()=>seek(Math.max(0,frameIdx-10))} className="p-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">
+              <button onClick={()=>seek(Math.max(0,frameIdx-10))} className="p-2 bg-canvas hover:bg-selected text-ink rounded-lg transition-colors">
                 <Rewind className="w-4 h-4" />
               </button>
               <button onClick={togglePlay} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors">
                 {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
-              <button onClick={()=>seek(Math.min(totalFrames-1,frameIdx+10))} className="p-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">
+              <button onClick={()=>seek(Math.min(totalFrames-1,frameIdx+10))} className="p-2 bg-canvas hover:bg-selected text-ink rounded-lg transition-colors">
                 <SkipForward className="w-4 h-4" />
               </button>
-              <button onClick={()=>seek(totalFrames-1)} className="p-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">
+              <button onClick={()=>seek(totalFrames-1)} className="p-2 bg-canvas hover:bg-selected text-ink rounded-lg transition-colors">
                 <SkipForward className="w-4 h-4" />
               </button>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-zinc-500">Speed:</span>
+              <span className="text-xs text-muted">Speed:</span>
               {SPEED_OPTIONS.map(s=>(
                 <button key={s} onClick={()=>changeSpeed(s)}
-                  className={`px-2 py-1 text-xs rounded transition-colors ${speed===s?'bg-emerald-600 text-white':'bg-zinc-800 text-zinc-400 hover:text-zinc-200'}`}>
+                  className={`px-2 py-1 text-xs rounded transition-colors ${speed===s?'bg-emerald-600 text-white':'bg-canvas text-muted hover:text-ink'}`}>
                   {s}×
                 </button>
               ))}
@@ -268,3 +268,4 @@ export const CrashReplay: React.FC<CrashReplayProps> = ({ history, onClose }) =>
     </div>
   );
 };
+

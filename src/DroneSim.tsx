@@ -389,13 +389,13 @@ export const DroneSim = ({
   }, [paused]);
 
   return (
-    <div className="w-full h-full relative bg-zinc-900">
+    <div className="w-full h-full relative bg-surface">
       <Canvas shadows camera={{ position: [2, 2, 3], fov: 50 }}>
-        <color attach="background" args={['#18181b']} />
+        <color attach="background" args={['#F7F6F0']} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5,10,5]} intensity={1.2} castShadow
           shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
-        <pointLight position={[-3,3,-3]} intensity={0.4} color="#237227" />
+        <pointLight position={[-3,3,-3]} intensity={0.4} color="#556B2F" />
         <DroneModel
           physicsRef={physicsRef} ghostPhysicsRef={ghostPhysicsRef}
           agentRef={agentRef} pdAgentRef={pdAgentRef}
@@ -409,14 +409,14 @@ export const DroneSim = ({
           comparisonMode={comparisonMode}
           config={config}
         />
-        <Grid infiniteGrid fadeDistance={20} sectionColor="#444" cellColor="#222" position={[0,-0.01,0]} />
+        <Grid infiniteGrid fadeDistance={20} sectionColor="#8F9B82" cellColor="#D1D8C9" position={[0,-0.01,0]} />
         <mesh position={[0,1.0,0]} rotation={[Math.PI/2,0,0]}>
           <torusGeometry args={[0.35,0.012,8,40]} />
-          <meshStandardMaterial color="#237227" emissive="#237227" emissiveIntensity={0.7} />
+          <meshStandardMaterial color="#556B2F" emissive="#556B2F" emissiveIntensity={0.7} />
         </mesh>
         <mesh position={[0,0.5,0]}>
           <cylinderGeometry args={[0.006,0.006,1,6]} />
-          <meshStandardMaterial color="#237227" emissive="#237227" emissiveIntensity={0.3} />
+          <meshStandardMaterial color="#556B2F" emissive="#556B2F" emissiveIntensity={0.3} />
         </mesh>
         <OrbitControls makeDefault />
         <Environment preset="city" />
@@ -424,9 +424,9 @@ export const DroneSim = ({
 
       {/* Telemetry HUD removed — App.tsx glassmorphism overlay replaces it */}
       <div className="absolute top-4 left-4 z-20">
-        {comparisonMode && <div className="bg-black/70 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-white/10 text-amber-400 text-[10px] font-mono mb-1.5">◎ Ghost = Heuristic PD</div>}
-        {sensorCfg.enableNoise && <div className="bg-black/70 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-white/10 text-purple-400 text-[10px] font-mono mb-1.5">⚡ Sensor noise ON</div>}
-        {isCrashed && <div className="bg-red-500/20 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-red-500/30 text-red-400 text-[10px] font-bold font-mono animate-pulse mb-1.5">CRASH DETECTED</div>}
+        {comparisonMode && <div className="bg-surface/95 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-line text-amber-700 text-[10px] font-mono mb-1.5">◎ Ghost = Heuristic PD</div>}
+        {sensorCfg.enableNoise && <div className="bg-surface/95 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-line text-purple-700 text-[10px] font-mono mb-1.5">⚡ Sensor noise ON</div>}
+        {isCrashed && <div className="bg-red-500/20 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-red-500/30 text-red-700 text-[10px] font-bold font-mono animate-pulse mb-1.5">CRASH DETECTED</div>}
         <button onClick={handleReset}
           className="px-2.5 py-1.5 bg-emerald-600/90 hover:bg-emerald-500 backdrop-blur-md rounded-lg text-white text-[10px] font-mono transition-colors">
           RESET SIM

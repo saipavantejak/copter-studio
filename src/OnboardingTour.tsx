@@ -7,37 +7,37 @@ import 'driver.js/dist/driver.css';
 
 const STORAGE_KEY = 'copter-studios-onboarding-v1';
 
-// Custom dark theme CSS is injected once
+// Custom light theme CSS is injected once
 const CUSTOM_CSS = `
 .driver-popover {
-  background: #18181b !important;
-  border: 1px solid #3f3f46 !important;
-  color: #e4e4e7 !important;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #A5AD99 !important;
+  color: #1C1D1A !important;
+  box-shadow: 0 25px 50px -12px rgba(28,29,26,0.14) !important;
   border-radius: 1rem !important;
 }
 .driver-popover .driver-popover-title {
-  color: #10b981 !important;
+  color: #556B2F !important;
   font-size: 14px !important;
   font-weight: 700 !important;
 }
 .driver-popover .driver-popover-description {
-  color: #a1a1aa !important;
+  color: #606657 !important;
   font-size: 12px !important;
   line-height: 1.6 !important;
 }
 .driver-popover .driver-popover-progress-text {
-  color: #71717a !important;
+  color: #606657 !important;
 }
 .driver-popover-prev-btn {
-  background: #27272a !important;
-  color: #a1a1aa !important;
-  border: 1px solid #3f3f46 !important;
+  background: #D8DDCF !important;
+  color: #606657 !important;
+  border: 1px solid #A5AD99 !important;
   border-radius: 0.5rem !important;
   font-size: 12px !important;
 }
 .driver-popover-next-btn, .driver-popover-close-btn {
-  background: #059669 !important;
+  background: #4A5D23 !important;
   color: white !important;
   border: none !important;
   border-radius: 0.5rem !important;
@@ -45,7 +45,7 @@ const CUSTOM_CSS = `
   text-shadow: none !important;
 }
 .driver-popover-next-btn:hover, .driver-popover-close-btn:hover {
-  background: #10b981 !important;
+  background: #556B2F !important;
 }
 .driver-overlay {
   background: rgba(0,0,0,0.7) !important;
@@ -147,3 +147,4 @@ export function OnboardingTour() {
 
   return null; // This component only runs side effects
 }
+
