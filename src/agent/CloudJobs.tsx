@@ -8,7 +8,14 @@ import type {CloudCheckpoint} from './CloudJobCore';
 type Job={id:string;status:string;checkpoint:CloudCheckpoint;error:string|null;promoted_at:string|null};
 const columns='id,status,checkpoint,error,promoted_at';
 const style='px-3 py-2 border border-line-strong rounded-lg text-sm disabled:opacity-50';
-async function request(body:unknown){if(!cloudDatabase)throw new Error('Cloud connection unavailable. Open copterstudios.com and sign in.');const {data,error}=await cloudDatabase.functions.invoke('aether-jobs',{body});if(error)throw new Error(data?.error??error.message);if(data.error)throw new Error(data.error);return data;}
+async function request(body:unknown){
+ if(!cloudDatabase)throw new Error('Cloud connection unavailable. Open copterstudios.com and sign in.');
+ const {data:auth,error:authError}=await cloudDatabase.auth.getUser();
+ if(authError||!auth.user)throw new Error('Sign in through Account before starting a cloud job.');
+ const {data,error}=await cloudDatabase.functions.invoke('aether-jobs',{body});
+ if(error){let message=error.message;try{const details=await error.context?.json();if(typeof details?.error==='string')message=details.error;}catch{}throw new Error(message);}
+ if(data?.error)throw new Error(data.error);return data;
+}
 export function CloudJobs({plan}:{plan:Plan|null}){
  const app=useAppContext();const [jobs,setJobs]=useState<Job[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState('Sign in to submit persistent cloud jobs.');const locked=useRef(false);const mounted=useRef(true);const identity=useRef<string|null>(null);
  const refresh=async()=>{if(!cloudDatabase)return;const {data:{user}}=await cloudDatabase.auth.getUser();if(!user){if(mounted.current)setJobs([]);return;}const owner=user.id;identity.current=owner;const {data,error}=await cloudDatabase.from('aether_jobs').select(columns).order('created_at',{ascending:false}).limit(10);if(error)throw error;if(mounted.current&&identity.current===owner)setJobs((data??[]) as Job[]);};
