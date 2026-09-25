@@ -9,7 +9,7 @@ import { propulsionEvidence } from './AircraftProfiles';
 import { assertValidConfig } from './configValidation';
 import type { SensorConfig } from './SensorNoise';
 import { PhysicsEngine, PhysicsConfig, TestModules } from './PhysicsEngine';
-import { RLAgent } from './RLAgent';
+import type { RLAgent } from './RLAgent';
 import type { SerializedModel } from './RLAgent';
 import { MissionLogic, MissionMetrics } from './MissionLogic';
 import { SeededRandom } from './SeededRandom';
@@ -101,7 +101,7 @@ export class EpisodeRunner {
   }
 
   async run(
-    agent: RLAgent,
+    agent: Pick<RLAgent, 'resetIntegral' | 'predictAction' | 'isUsingUserModel'>,
     cfg: EpisodeBenchmarkConfig,
     signal?: AbortSignal
   ): Promise<BatchStats> {

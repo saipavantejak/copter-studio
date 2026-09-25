@@ -1,3 +1,5 @@
+import {NativePolicy} from './learning/NativePolicy';
+import type {TrainingState} from './learning/TrainingJob';
 // RLAgent.ts — v11
 // Added: serializeForWorker() / loadFromWorkerData() for transferring the
 // loaded RL policy to the episode benchmark Web Worker via structured-clone.
@@ -20,6 +22,7 @@ import { maxThrustPerMotor } from './physics/thrustLimits';
 // ── Serialized model payload (structured-clone-safe) ─────────────────────────
 
 export interface SerializedModel {
+  nativeCandidate?: TrainingState;
   topology:    object;          // model.toJSON()
   weightSpecs: tf.io.WeightsManifestEntry[];
   weightData:  ArrayBuffer;     // concatenated Float32 weights
@@ -27,6 +30,9 @@ export interface SerializedModel {
 }
 
 export class RLAgent {
+  private nativePolicy: NativePolicy | null = null;
+  public loadNativePolicy(candidate:TrainingState){const policy=new NativePolicy(candidate);this.userModel?.dispose();this.userModel=null;this.nativePolicy=policy;this.isUsingUserModel=true;this.resetIntegral();}
+  public restorePD(){this.nativePolicy=null;this.userModel?.dispose();this.userModel=null;this.isUsingUserModel=false;this.resetIntegral();}
   private vehicleController = new VehicleController();
   private actorNet: tf.Sequential;
   private criticNet: tf.Sequential;
@@ -58,6 +64,7 @@ export class RLAgent {
   }
 
   public async loadUserModel(jsonFile: File, weightsFile: File, droneType: DroneType = 'bicopter'): Promise<void> {
+    this.nativePolicy=null;
     try {
       const model = await tf.loadLayersModel(tf.io.browserFiles([jsonFile, weightsFile]));
       const inputDim  = model.inputs[0].shape.at(-1);
@@ -78,6 +85,7 @@ export class RLAgent {
 
   /** Predict action from noisy OR clean observation array */
   public predictAction(state: number[], droneType: DroneType = 'bicopter', missionPreset = 'none', mass: number | PhysicsConfig = 5.0, mission?: MissionSpec): number[] {
+    if(this.nativePolicy){if(typeof mass!=='object')throw new Error('Native policy requires complete configuration');return this.nativePolicy.predict(state,mass,resolveMission({mission,missionPreset}));}
     if (this.isUsingUserModel && this.userModel) {
       return tf.tidy(() => {
         const t = tf.tensor2d([state]);
@@ -104,6 +112,7 @@ export class RLAgent {
    * Returns null when no user model is loaded (worker falls back to heuristic PD).
    */
   public async serializeForWorker(droneType: DroneType): Promise<SerializedModel | null> {
+    if(this.nativePolicy)return {nativeCandidate:structuredClone(this.nativePolicy.candidate),topology:{},weightSpecs:[],weightData:new ArrayBuffer(0),droneType};
     if (!this.isUsingUserModel || !this.userModel) return null;
     try {
       let topology: object = {};
@@ -143,6 +152,8 @@ export class RLAgent {
    * Called inside the Web Worker after receiving the postMessage payload.
    */
   public async loadFromWorkerData(data: SerializedModel): Promise<void> {
+    if(data.nativeCandidate){this.loadNativePolicy(data.nativeCandidate);return;}
+    this.nativePolicy=null;
     const model = await tf.loadLayersModel(
       tf.io.fromMemory(data.topology, data.weightSpecs, data.weightData)
     );
@@ -174,6 +185,7 @@ export class RLAgent {
     this.altIntegral = 0;
     this.lastHeuristicTime = 0;
     this.vehicleController.reset();
+    this.nativePolicy?.reset();
   }
 
   /** Dispose TF.js model to free GPU/CPU memory. Call on unmount or model swap. */

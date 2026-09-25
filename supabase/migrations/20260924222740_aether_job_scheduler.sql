@@ -1,0 +1,1 @@
+revoke usage on schema net from public,anon,authenticated; revoke execute on all functions in schema net from public,anon,authenticated; create policy service_dispatch on aether_private.dispatch for all to service_role using (true) with check (true); select cron.schedule('aether-background-pump','10 seconds','select aether_private.pump()');

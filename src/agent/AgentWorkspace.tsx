@@ -1,3 +1,4 @@
+import {CloudJobs} from './CloudJobs';
 import {useEffect,useRef,useState} from 'react';
 import type {PhysicsConfig,TestModules} from '../PhysicsEngine';
 import {planExperiment} from './AgentPlanner';
@@ -55,7 +56,8 @@ export function AgentWorkspace({config,tests,onClose}:{config:PhysicsConfig;test
     <div className="flex gap-2"><button className={button} disabled={busy} onClick={()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(task,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download=`aether-${task.id}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}}>Export evidence JSON</button><button className={button} disabled={busy} onClick={()=>void cloud(async()=>{await saveTask(task);setMessage('Task saved privately to your account.');})}>Save private history</button></div>
    </section>}
    <section className="space-y-2"><button className={button} disabled={busy} onClick={()=>void cloud(async()=>{setHistory(await loadTasks());setMessage('Loaded your latest ten tasks. Historical records cannot trigger execution.');})}>Load private history</button>{history.map(t=><details key={t.id} className="bg-surface border border-line rounded-lg p-3"><summary>{t.plan.goal} · {t.status}</summary><p className="whitespace-pre-wrap text-sm mt-2">{t.report||'No completed report was saved.'}</p></details>)}</section>
-   <details className="text-sm"><summary>Available tools and boundaries</summary><ul>{TOOL_CATALOG.map(t=><li key={t.name}><strong>{t.name}</strong>: {t.effect}</li>)}</ul><p className="mt-2">Training execution, controller promotion, deployment, numeric gust sweeps, and real hardware control are not available. This agent cannot establish real-flight reliability. Cloud history stores browser-generated evidence, not certified measurements.</p></details>
+   <CloudJobs plan={plan}/>
+   <details className="text-sm"><summary>Available tools and boundaries</summary><ul>{TOOL_CATALOG.map(t=><li key={t.name}><strong>{t.name}</strong>: {t.effect}</li>)}</ul><p className="mt-2">Background training and simulator-only promotion are available above with separate approval. Deployment, numeric gust sweeps, and real hardware control are not available. This agent cannot establish real-flight reliability. Cloud history stores browser-generated evidence, not certified measurements.</p></details>
   </div>
  </dialog>;
 }
