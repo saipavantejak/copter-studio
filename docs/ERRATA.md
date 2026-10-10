@@ -1,5 +1,22 @@
 # Evaluation errata
 
+## Determinism-check preflight dependency path
+
+The first invocation of the new replay helper stopped before executing a
+controller: a `node_modules` symlink was not covered by git's directory ignore
+rule, so the clean-worktree check rejected it. The helper now creates an ignored
+`node_modules` directory and links its entries. It still rejects any dirty
+worktree before execution. No study seed was read, no result was produced and
+no previously reported number was affected by this helper-only correction.
+
+The corrected helper completed both frozen final-stage replays at the original
+selection/source commit. All output bytes, including provenance, agree between
+the two worktrees and with the four committed artifacts. Evidence is in
+`reports/integrity/final-determinism.json`. No new candidate was selected,
+no model was trained, and no unconsumed seed bank was accessed. A separate
+negative-control check deliberately altered a resume percentage only in a
+temporary worktree and confirmed that the independent verifier rejects it.
+
 ## Hiring-manager integrity audit: discovered blocker, now repaired
 
 Observed against branch `audit/ml-evaluation-integrity` at `69e469b`.

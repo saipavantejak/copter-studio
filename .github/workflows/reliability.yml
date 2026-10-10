@@ -15,11 +15,15 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24.19.0'
           cache: npm
       - run: npm ci
       - name: Independently check recorded study metrics and generated claims
         run: node scripts/learning/verify-study-independent.mjs
+      - name: Prove numeric claim drift is rejected
+        run: python scripts/learning/check-claim-drift.py
+      - name: Replay frozen final stage twice in clean worktrees
+        run: python scripts/learning/check-final-determinism.py
       - run: npm run lint
       - run: npm run type-check:server
       - run: npm test

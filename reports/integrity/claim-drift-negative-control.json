@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "scope": "Deliberately corrupted copied resume claim rejected; no real claim or result changed.",
+  "command": "node scripts/learning/verify-study-independent.mjs",
+  "sourceCommit": "a2f2d6779996ca8b72c005260768f353a5478ae1",
+  "expectedExitCode": 1,
+  "actualExitCode": 1,
+  "detectedFailures": [
+    {
+      "claim": "actual resume altitude reduction (%)",
+      "source": "reports/ml-evaluation-audit.md",
+      "recomputed": [
+        15.2,
+        16.1
+      ],
+      "reported": [
+        16.2,
+        16.1
+      ],
+      "status": "FAIL"
+    },
+    {
+      "claim": "inventory matches actual resume paragraph",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": "Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by 16.2% in calm and 16.1% in mild synthetic wind; physical-flight validation was not performed.",
+      "reported": "Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by 15.2% in calm and 16.1% in mild synthetic wind; physical-flight validation was not performed.",
+      "status": "FAIL"
+    },
+    {
+      "claim": "generated study claims match committed artifacts",
+      "source": "README.md; scripts/learning/README.md; reports/study/improvement-study.md; reports/ml-evaluation-audit.md",
+      "recomputed": true,
+      "reported": false,
+      "status": "FAIL"
+    }
+  ]
+}

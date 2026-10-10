@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "sourceCommit": "65180add7c821d5d37550409fcb46fb1876a4dd1",
+  "node": "v24.19.0",
+  "command": "node --import tsx scripts/learning/study/run-study.ts --stage=final",
+  "replayCount": 2,
+  "trackedSourceCleanBeforeEachRun": true,
+  "dependencyMode": "shared installed dependency tree, identical lockfile",
+  "packageLockSha256": "851cce6faf121974e45fb7f2224a8a9c83a684570c6438763275225131c6b2f4",
+  "comparisons": [
+    {
+      "file": "reports/study/final-attempt.json",
+      "replay1Sha256": "a4e564419748074d7aa5bfc59f0a9bfab1761b53f3601a4639e23458edf470be",
+      "replay2Sha256": "a4e564419748074d7aa5bfc59f0a9bfab1761b53f3601a4639e23458edf470be",
+      "matchesCommittedArtifact": true,
+      "status": "PASS"
+    },
+    {
+      "file": "reports/study/final.json",
+      "replay1Sha256": "17108abb658c15c5ea962c9c8ac5be9c091d890d31bcf8433c36326acfe6f327",
+      "replay2Sha256": "17108abb658c15c5ea962c9c8ac5be9c091d890d31bcf8433c36326acfe6f327",
+      "matchesCommittedArtifact": true,
+      "status": "PASS"
+    },
+    {
+      "file": "public/learning/residual-policy.json",
+      "replay1Sha256": "17108abb658c15c5ea962c9c8ac5be9c091d890d31bcf8433c36326acfe6f327",
+      "replay2Sha256": "17108abb658c15c5ea962c9c8ac5be9c091d890d31bcf8433c36326acfe6f327",
+      "matchesCommittedArtifact": true,
+      "status": "PASS"
+    },
+    {
+      "file": "src/learning/rl-summary.json",
+      "replay1Sha256": "facfc7a40b2715e5e4517c2780229d03630f5f103515536442fdb56078f06a36",
+      "replay2Sha256": "facfc7a40b2715e5e4517c2780229d03630f5f103515536442fdb56078f06a36",
+      "matchesCommittedArtifact": true,
+      "status": "PASS"
+    },
+    {
+      "file": "stdout",
+      "replay1Sha256": "6d1616df0732d451e5e5f941666664957990e6dc3bc61084f4b903f4e58c4a89",
+      "replay2Sha256": "6d1616df0732d451e5e5f941666664957990e6dc3bc61084f4b903f4e58c4a89",
+      "matchesCommittedArtifact": null,
+      "status": "PASS"
+    }
+  ],
+  "scope": "Exact frozen final-stage evaluation replay only. Not a new test, not retraining, not proof of determinism for every other experiment."
+}
