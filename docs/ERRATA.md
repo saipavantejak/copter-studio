@@ -1,5 +1,31 @@
 # Evaluation errata
 
+## Remaining classifier templates in the numeric inventory
+
+Final source review found that `audit-claims.py:doc_expected` still assigns
+MATCH to several non-generated README rows from literal classifier text,
+including historical training-budget and benchmark-default descriptions.
+The resume repair is independently checked, but it does not satisfy the
+broader requirement that every inventory row be artifact-derived. The cause
+is the original classifier's assertion-based design. No new wrong
+experimental metric was demonstrated; the affected claim is the assurance
+attached to those inventory rows. Repair is outstanding. The work stopped
+instead of declaring all-document numeric verification complete. See
+`reports/product/STOP-QUALITY.md` for the scoped evidence and pending tasks.
+
+## Invalid product measurement: preview network isolation
+
+The first registered Lighthouse desktop run at product-source commit
+`72e1c1f` could not reach the separately launched local preview server.
+Its retained report has FAILED_DOCUMENT_REQUEST / ERR_CONNECTION_REFUSED
+and null performance/accessibility scores. Commands run in isolated network
+contexts here; a preview launched in another command is not sufficient.
+The measurement setup needs a shared server/browser command context and
+a committed protocol amendment before resuming. No valid baseline or
+before/after metrics were produced, no run was discarded, and no product
+repair was selected from this invalid observation. Existing RL, physics and
+security numbers are unaffected. The registered stop rule was followed.
+
 ## Inconsistent local Gemini proxy protections
 
 The security audit found that the Vite and Gym proxy implementations did not

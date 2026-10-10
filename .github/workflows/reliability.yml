@@ -36,5 +36,7 @@ jobs:
         run: python scripts/security/check-client-bundle.py --check
       - name: Check recorded security claims
         run: python scripts/security/render-report.py --check
+      - name: Check scoped stop report against retained evidence
+        run: python scripts/product/render-stop-report.py --check
       - run: npm run ci:reliability
       - run: npm run ci:adversarial
