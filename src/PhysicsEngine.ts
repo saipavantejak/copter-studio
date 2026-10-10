@@ -24,6 +24,7 @@ import { OMEGA_MAX as OMEGA_MAX_CONST } from './physics/constants';
 import { DrydenTurbulence, TurbulenceIntensity, isaAtmosphere, thermalUpdraft, DEFAULT_THERMAL } from './physics/atmosphere';
 import { propTableLookup } from './physics/propTables';
 import { computeDragForces, multiRotorGroundEffect, DEFAULT_DRAG_TENSOR, scaleDragTensorForMass } from './physics/groundEffect';
+import { horizontalRelativeDrag, studyGust, type StudyWindModel } from './physics/studyWind';
 
 export interface PhysicsConfig {
   droneType: DroneType;
@@ -105,6 +106,8 @@ export class PhysicsEngine {
   private sensorNoise = new SensorNoise();
   public motorTauOverride: number = MOTOR_TAU;
   public dragCoeffOverride: number = 0.47;
+  /** Explicit opt-in preregistered study model. Undefined preserves historical behavior. */
+  public studyWindModel?: StudyWindModel;
   public rng: SeededRandom = new SeededRandom(42);
   /** True when ANY per-motor thrust was clipped last step (actuator saturation). */
   public lastSaturated: boolean = false;
@@ -251,7 +254,17 @@ export class PhysicsEngine {
     }
 
     let wfx=0, wfy=0;
-    if (this.tests.windEnabled || this.tests.missionPreset==='long-range') {
+    if (this.studyWindModel) {
+      if (hifi || this.tests.missionPreset !== 'none') throw new Error('Study wind supports the registered reference scenario only');
+      let airX = 0, airY = 0;
+      if (this.tests.windEnabled) {
+        this.windPhaseX += .5 * dt; this.windPhaseY += .7 * dt;
+        const gust = studyGust(this.windPhaseX, this.windPhaseY, this.z);
+        airX = gust.x; airY = gust.y;
+      }
+      const force = horizontalRelativeDrag(this.studyWindModel, airX, airY, this.x_dot, this.y_dot);
+      wfx = force.fx; wfy = force.fy;
+    } else if (this.tests.windEnabled || this.tests.missionPreset==='long-range') {
       if (hifi) {
         // ── Dryden MIL-HDBK-1797B turbulence ─────────────────────────────
         const tas = Math.max(0.5, Math.sqrt(this.x_dot**2 + this.y_dot**2 + this.z_dot**2));
