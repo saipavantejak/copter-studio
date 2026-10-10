@@ -21,49 +21,7 @@ import type { PhysicsConfig, TestModules } from '../src/PhysicsEngine';
 
 const PORT = 8765;
 
-// ── Gemini proxy ──────────────────────────────────────────────────────────────
-
-async function handleGeminiProxy(req: IncomingMessage, res: ServerResponse): Promise<void> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    res.writeHead(503, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'GEMINI_API_KEY not set on server' }));
-    return;
-  }
-
-  // Collect request body
-  const chunks: Buffer[] = [];
-  for await (const chunk of req) chunks.push(chunk as Buffer);
-  const body = Buffer.concat(chunks).toString();
-
-  let parsed: any;
-  try { parsed = JSON.parse(body); } catch {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Invalid JSON body' }));
-    return;
-  }
-
-  const model   = parsed.model ?? 'gemini-2.5-flash';
-  const apiUrl  = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-  // Forward to Gemini REST API
-  try {
-    const upstream = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(parsed.payload ?? parsed),
-    });
-    const upstreamBody = await upstream.text();
-    res.writeHead(upstream.status, {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    });
-    res.end(upstreamBody);
-  } catch (err: any) {
-    res.writeHead(502, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: `Upstream fetch failed: ${err?.message}` }));
-  }
-}
+import {handleGemini} from './geminiGateway';
 
 // ── GymSim — thin wrapper around PhysicsEngine ───────────────────────────────
 
@@ -128,15 +86,8 @@ class GymSim {
 // ── HTTP + WebSocket server ───────────────────────────────────────────────────
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-  // CORS preflight
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' });
-    res.end();
-    return;
-  }
-  // Gemini proxy
-  if (req.method === 'POST' && req.url === '/api/gemini') {
-    await handleGeminiProxy(req, res);
+  if (req.url === '/api/gemini') {
+    await handleGemini(req, res);
     return;
   }
   // Health check

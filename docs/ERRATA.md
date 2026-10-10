@@ -1,5 +1,21 @@
 # Evaluation errata
 
+## Inconsistent local Gemini proxy protections
+
+The security audit found that the Vite and Gym proxy implementations did not
+share the hosted endpoint's model/message validation. Both accepted arbitrary
+provider payloads and collected unbounded bodies; the Gym proxy lacked rate
+limiting, and both forwarded provider errors. Keys were server-side under the
+documented configuration; no actual leaked key was observed. A shared gateway
+now validates and bounds bodies, restricts the model, excludes provider tools,
+uses a bounded instance-local limiter and upstream timeout, rejects cross-origin
+browser requests, and returns generic failure messages. The key is sent only in
+the upstream header, never in the URL. Public client environment variables are
+allowlisted to prevent accidentally VITE-prefixed provider keys entering the
+bundle. A real-build synthetic-key regression check runs in CI. Distributed
+paid-service quotas and infrastructure log retention remain deployment concerns.
+No flight, reward, confidence interval or existing experimental result is affected.
+
 ## Determinism-check preflight dependency path
 
 The first invocation of the new replay helper stopped before executing a
