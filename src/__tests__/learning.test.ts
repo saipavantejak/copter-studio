@@ -51,7 +51,8 @@ describe('Measured learning evidence boundaries',()=>{
   for(const result of policy.results)for(const mode of ['baseline','policy']){
    const eps=policy.evaluations.filter(e=>e[mode].wind===result.wind&&(mode==='policy'||e.explorationSeed===policy.runs[0].explorationSeed)).map(e=>e[mode]);
    expect(eps.filter(e=>e.successful).length).toBe(result[mode].successes);
-   expect(eps.length).toBe(50*(mode==='policy'?policy.trainingSeedCount:1));
+   const bank=policy.evaluationSeedRanges[Number(result.wind)];
+   expect(eps.length).toBe((bank[1]-bank[0]+1)*(mode==='policy'?policy.trainingSeedCount:1));
   }
   expect(learningEvidenceContext()).toContain('weights were not fine-tuned');
  });
