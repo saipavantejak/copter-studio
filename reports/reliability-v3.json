@@ -6,7 +6,7 @@
   "unitTestsPassed": 199,
   "provenance": {
     "command": "node --import tsx scripts/audit-reliability.ts --date=2026-10-10",
-    "sourceCommit": "65180add7c821d5d37550409fcb46fb1876a4dd1",
+    "sourceCommit": "f896e2853c357fdc487440dc6d64328746b07928",
     "note": "Regenerated current-checkout software regression. Previous dated reports remain in git history; historical test counts are not asserted for this checkout."
   },
   "catalogEpisodes": 1050,

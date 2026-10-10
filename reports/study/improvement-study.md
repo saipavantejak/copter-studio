@@ -95,7 +95,9 @@ Run in an isolated checkout of the committed study source. Existing result files
 git worktree add /tmp/copter-study-replay adf410d
 cd /tmp/copter-study-replay
 # Restore reporting helpers only; experiment source remains at the registered implementation.
-git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py
+git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py src/__tests__/learning.test.ts
+git add scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py src/__tests__/learning.test.ts
+git commit -m "Restore reporting and seed-disjointness checks without changing registered experiment"
 npm ci
 # All experiment inputs and source must be committed before execution.
 node --import tsx scripts/learning/study/run-study.ts --stage=qualify
@@ -105,8 +107,8 @@ git add reports/study/qualification.json reports/study/validation.json reports/s
 git commit -m "Freeze validation-only candidate selection before final study test"
 node --import tsx scripts/learning/study/run-study.ts --stage=final
 node --import tsx scripts/learning/verify-artifacts.ts
+node --import tsx scripts/audit-reliability.ts --date=2026-10-10
 python scripts/learning/render-study-report.py
-npm test
 npm run lint
 npm run build
 ```

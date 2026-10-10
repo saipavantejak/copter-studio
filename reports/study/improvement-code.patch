@@ -133,10 +133,10 @@ index 045b3b8..948ecd5 100644
 +v=load('reports/rl-validation.json');old=load('reports/rl-legacy-reproduction.json')
 diff --git a/scripts/learning/render-study-report.py b/scripts/learning/render-study-report.py
 new file mode 100644
-index 0000000..4cd0cbf
+index 0000000..10f3a32
 --- /dev/null
 +++ b/scripts/learning/render-study-report.py
-@@ -0,0 +1,155 @@
+@@ -0,0 +1,157 @@
 +"""Render the pre-registered study from generated records; never runs controller episodes."""
 +import argparse,json,pathlib,subprocess
 +ROOT=pathlib.Path(__file__).resolve().parents[2]
@@ -178,8 +178,8 @@ index 0000000..4cd0cbf
 +git commit -m "Freeze validation-only candidate selection before final study test"
 +node --import tsx scripts/learning/study/run-study.ts --stage=final
 +node --import tsx scripts/learning/verify-artifacts.ts
++node --import tsx scripts/audit-reliability.ts --date=2026-10-10
 +python scripts/learning/render-study-report.py
-+npm test
 +npm run lint
 +npm run build'''
 +section=f'''## Pre-registered ML improvement study
@@ -265,7 +265,9 @@ index 0000000..4cd0cbf
 +git worktree add /tmp/copter-study-replay adf410d
 +cd /tmp/copter-study-replay
 +# Restore reporting helpers only; experiment source remains at the registered implementation.
-+git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py
++git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py src/__tests__/learning.test.ts
++git add scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py src/__tests__/learning.test.ts
++git commit -m "Restore reporting and seed-disjointness checks without changing registered experiment"
 +{commands}
 +```
 +
