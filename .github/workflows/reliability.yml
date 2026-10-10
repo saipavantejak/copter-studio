@@ -33,6 +33,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Ensure server and mistakenly VITE-prefixed API keys stay out of client output
-        run: python scripts/security/check-client-bundle.py
+        run: python scripts/security/check-client-bundle.py --check
+      - name: Check recorded security claims
+        run: python scripts/security/render-report.py --check
       - run: npm run ci:reliability
       - run: npm run ci:adversarial
