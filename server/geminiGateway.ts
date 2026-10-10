@@ -41,7 +41,9 @@ export async function handleGemini(req:GatewayRequest,res:GatewayResponse):Promi
  const reply=(status:number,body:object)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(body));};
  if(req.method!=='POST'){reply(405,{error:'Method not allowed'});return;}
  if(req.headers.origin){try{if(new URL(req.headers.origin).host!==req.headers.host){reply(403,{error:'Origin not allowed'});return;}}catch{reply(403,{error:'Origin not allowed'});return;}}
- const ip=String(req.headers['x-forwarded-for']??req.socket?.remoteAddress??'unknown').split(',')[0];
+ // Forwarded addresses are trusted only behind Vercel's managed proxy.
+ // A client talking directly to Vite/Gym cannot choose a fresh limiter identity.
+ const ip=String((process.env.VERCEL==='1'?req.headers['x-forwarded-for']:undefined)??req.socket?.remoteAddress??'unknown').split(',')[0];
  if(!allowed(ip)){reply(429,{error:'Request limit reached. Try again later.'});return;}
  let payload:ReturnType<typeof sanitizePayload>;
  try{payload=sanitizePayload(await readBody(req));}catch(error){reply(error instanceof Error&&error.message.includes('body limit')?413:400,{error:'Invalid or oversized request'});return;}

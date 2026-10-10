@@ -142,7 +142,8 @@ wss.on('connection', (ws: WebSocket) => {
   ws.on('close', () => { sims.delete(ws); console.log('[GymBridge] Client disconnected.'); });
 });
 
-server.listen(PORT, () => {
+// This unauthenticated training bridge is a local developer service.
+server.listen(PORT, '127.0.0.1', () => {
   const geminiStatus = process.env.GEMINI_API_KEY ? '✓ Gemini proxy active' : '✗ No GEMINI_API_KEY';
   console.log(`
 ╔══════════════════════════════════════════════╗
