@@ -119,7 +119,7 @@ The reporting helpers are restored from the completed-study branch as shown; the
 
 ## Verification and numeric-claim inventory
 
-The current checkout passes 199 tests, TypeScript checking and the production build. `verify-artifacts.ts` reconstructs all six validation summaries/CIs, selection and final comparisons from recorded data, and verifies source hashes against their execution commits without simulating another episode. The complete refreshed inventory is [numeric-claims-final.csv.gz](numeric-claims-final.csv.gz); `audit-claims.py` also writes the uncompressed CSV locally. The source diff is [improvement-code.patch](study/improvement-code.patch).
+The current checkout passes 205 tests, TypeScript checking and the production build. `verify-artifacts.ts` reconstructs all six validation summaries/CIs, selection and final comparisons from recorded data, and verifies source hashes against their execution commits without simulating another episode. The complete refreshed inventory is [numeric-claims-final.csv.gz](numeric-claims-final.csv.gz); `audit-claims.py` also writes the uncompressed CSV locally. The source diff is [improvement-code.patch](study/improvement-code.patch).
 
 ## Supported resume statement
 

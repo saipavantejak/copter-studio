@@ -79,3 +79,13 @@ measurements; the latter contains processed flight energy aggregates.
 Neither is a time-aligned Bitcraze flight trajectory. Therefore the requested
 trajectory-error comparison cannot be computed from these files. No physical
 trajectory accuracy is claimed; `physicalValidation=false` is retained.
+
+**Subsequent external diagnostic.** Public time-aligned Brushless trajectories
+were located outside the repository. Their comparison was separately
+preregistered before prediction and is documented in
+`reports/physics/comparison.md`. This does not make the original in-repository
+bench/energy files into flight logs. The diagnostic shows poor longer-horizon
+agreement and retains physicalValidation=false. It changes no original physics,
+Q-learning result or policy. The software test count increased after adding
+invariant tests; reliability reports and generated study docs were regenerated
+with their committed scripts rather than edited manually.

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "sourceCommit": "e9e1874f42b8cf73f0889347d0eb77f5753eb0f2",
+  "command": "node --import tsx scripts/physics/compare-flight.ts DATASET_CHECKOUT",
+  "datasetCommit": "2d921b57d166fe2debe08a5d39bd07297c5abc39",
+  "replayCount": 2,
+  "comparisons": [
+    {
+      "file": "reports/physics/flight-comparison.json",
+      "sha256": "7ca2ecf3c61ab45d03830141fb0d4b36d0581fbc5edfc46b814f17222b83c87c",
+      "status": "PASS"
+    },
+    {
+      "file": "reports/physics/independent-verifier.json",
+      "sha256": "ba3e3678136a687228493f04b872f9388f23724c69fe52a56b2a637276eeceb7",
+      "status": "PASS"
+    }
+  ]
+}

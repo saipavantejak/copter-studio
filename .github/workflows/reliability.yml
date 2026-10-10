@@ -24,6 +24,10 @@ jobs:
         run: python scripts/learning/check-claim-drift.py
       - name: Replay frozen final stage twice in clean worktrees
         run: python scripts/learning/check-final-determinism.py
+      - name: Independently check recorded public-flight diagnostic
+        run: |
+          python scripts/physics/verify-flight.py
+          python scripts/physics/render-report.py --check
       - run: npm run lint
       - run: npm run type-check:server
       - run: npm test
