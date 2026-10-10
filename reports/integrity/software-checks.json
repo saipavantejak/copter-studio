@@ -1,0 +1,22 @@
+{
+  "commands": {
+    "test": "npm test -- --reporter=json --outputFile=/tmp/copter-integrity-tests.json",
+    "lint": "npm run lint",
+    "build": "npm run build"
+  },
+  "tests": {
+    "numTotalTests": 199,
+    "numPassedTests": 199,
+    "numFailedTests": 0,
+    "success": true
+  },
+  "lintExitCode": 0,
+  "buildExitCode": 0,
+  "buildWarnings": [
+    "Chunks exceed Vite default warning threshold."
+  ],
+  "testWarnings": [
+    "jsdom reports unimplemented canvas getContext; tests nevertheless pass."
+  ],
+  "scope": "Software checks only; not experimental determinism, live-site verification or whole-repository claim certification."
+}
