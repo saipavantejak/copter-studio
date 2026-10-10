@@ -35,11 +35,11 @@ commands={
  'reports/reliability-v3.json':'node --import tsx scripts/audit-reliability.ts --date=2026-10-10',
  'reports/rl-legacy-reproduction.json':'node --import tsx scripts/learning/train-residual-legacy.ts',
  'reports/rl-validation.json':'npm run train:residual -- --stage=validation',
- 'public/learning/residual-policy.json':'npm run train:residual -- --stage=final',
- 'src/learning/rl-summary.json':'npm run train:residual -- --stage=final',
+ 'public/learning/residual-policy.json':'node --import tsx scripts/learning/study/run-study.ts --stage=final' if policy.get('schemaVersion')==3 else 'npm run train:residual -- --stage=final',
+ 'src/learning/rl-summary.json':'node --import tsx scripts/learning/study/run-study.ts --stage=final' if policy.get('schemaVersion')==3 else 'npm run train:residual -- --stage=final',
 }
-for path in sorted((ROOT/'reports').glob('*.json')):
- name=str(path.relative_to(ROOT));current=load(name);cmd=commands.get(name,'NO GENERATOR REGISTERED')
+for path in sorted(list((ROOT/'reports').glob('*.json')) + (list((ROOT/'reports/study').glob('*.json')) if policy.get('schemaVersion')==3 else [])):
+ name=str(path.relative_to(ROOT));current=load(name);cmd=commands.get(name,current.get('provenance',{}).get('command','NO GENERATOR REGISTERED'))
  try:old=json.loads(HEAD(name))
  except subprocess.CalledProcessError:old=None
  if old:

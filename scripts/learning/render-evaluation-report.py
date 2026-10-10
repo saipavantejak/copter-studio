@@ -3,7 +3,12 @@ import argparse,json,math,pathlib,statistics
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
 load=lambda p:json.loads((ROOT/p).read_text())
-p=load('public/learning/residual-policy.json');v=load('reports/rl-validation.json');old=load('reports/rl-legacy-reproduction.json')
+p=load('public/learning/residual-policy.json')
+if p.get('schemaVersion')==3:
+ import subprocess
+ subprocess.run(['python',str(ROOT/'scripts/learning/render-study-report.py')]+(['--check'] if args.check else []),check=True)
+ raise SystemExit(0)
+v=load('reports/rl-validation.json');old=load('reports/rl-legacy-reproduction.json')
 rel=load('reports/reliability-v3.json');energy=load('src/learning/energy-model.json');bench=load('src/learning/measured-models.json')
 f=lambda x: f'{x:.6f}'
 ci=lambda a:'['+', '.join(f(x) for x in a)+']'

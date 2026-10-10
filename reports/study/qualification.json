@@ -1,0 +1,3000 @@
+{
+  "physicalValidation": false,
+  "provenance": {
+    "command": "node --import tsx scripts/learning/study/run-study.ts --stage=qualify",
+    "sourceCommit": "adf410dfec3db7c01b703ef658b1e71e179fc5de",
+    "planCommit": "bf89608",
+    "calibrationCommit": "57fe174",
+    "planSha256": "0b5eda42eb9da01ccb05c8bafdf5f47c5859034252aeae3f7a1c701498aadcc6",
+    "sourceHashes": {
+      "package-lock.json": "851cce6faf121974e45fb7f2224a8a9c83a684570c6438763275225131c6b2f4",
+      "reports/study/preregistration.md": "0b5eda42eb9da01ccb05c8bafdf5f47c5859034252aeae3f7a1c701498aadcc6",
+      "reports/study/wind-calibration.md": "4b6be27c56f497809fb2ebffdee69a4f2270bbca969ebc7dfbd56818ff207ddd",
+      "scripts/learning/study/experiment.ts": "0749eecdf13bdd5fb368936b5eb689fdf1b5866170fe7a382b616b8f57248c35",
+      "scripts/learning/study/protocol.ts": "2836327a2f572f134d65fa783fdfe5e271aaf9fd07ce54aade904f44846e7023",
+      "scripts/learning/study/run-study.ts": "8d42d68dace44858d2841715fefc749f50d1da66b108d5917610fff595f95196",
+      "scripts/learning/study/statistics.ts": "31cc2d959ea6e22b8c916480ec352a4daa62c8ff778a0f30d6b759d18492c4a1",
+      "src/AircraftProfiles.ts": "371cef9ce0af2cbd816e24ca5c148a64f094fb066e0cd9b3755ee9991d5e6539",
+      "src/BenchmarkAudit.ts": "e4411bc8c992f01988cc24fa9a6e88fa0949cda4675da2ebb79ba0703aa01b94",
+      "src/BenchmarkEvidence.ts": "1934ee22168cc5202ad90a997cbfee3080a53f1f084a3d7094e705d4d85517c3",
+      "src/DomainRandomizer.ts": "8671453e29f19a02b58cddb66424d458c91c7fc88267fead69e091417135dee6",
+      "src/EpisodeRunner.ts": "eb65899b277d020af18847f961ae063b992893a83dc8f441690b27e244d855b4",
+      "src/MissionLogic.ts": "6a6712b33f302df25afab002a56c0392fa3c3643c301b0411352bbd9bfcc9120",
+      "src/MissionSpec.ts": "f13d15e962dac98fc8a15e6db6450f40d63789a341f99006dae6ccc2a8e5c6a4",
+      "src/OptimizationHook.ts": "96f7548daa12ac460741bc2c5e19c7ad59d0938510908359cb21d16a06c87b1a",
+      "src/PhysicsEngine.ts": "6d90c6f3128025012fe37339a4219d9f4a82be4feb4b79d29d9ce08f287f08c0",
+      "src/RLAgent.ts": "2866bce8fba4369fec07a393bb8ca5a7d77a64e16c2eae3ce0993834419ae83f",
+      "src/SeededRandom.ts": "741586e553b81e70455aaf14246ab72d8b2ae6d4956787afb32476f789958f4a",
+      "src/SensorNoise.ts": "e7d73917885d0853ff3282b2702a8c0478e232272c6b02b327fb960020a6af26",
+      "src/SimulationParser.ts": "e3c2aa266129eaf296c9d267c8c1657124a174e4ba586a5695b68332b0561a88",
+      "src/TelemetryExport.ts": "d740d9defb2b55e7e82a7a6ebc1280b7b221fa53aea3e0bd27fd533262ba7378",
+      "src/UniversalMixer.ts": "2a02b796e712b9a2d5584a1f013df88d0ef78ca19024906c511bc85c8b75f178",
+      "src/VehicleController.ts": "3adfb950b9fd512d3bcd953357384a09ee56dcd5c7a02f3f22cc9abbad9915f7",
+      "src/agent/AgentCore.ts": "9199dfe770ad769e72393d65f000c1e8709c6e24a932aca0706f6436b6e71047",
+      "src/agent/AgentExecutor.ts": "ef28ab48716a3fd78220a2204b2a90750472e1110a709abf46bd480a713b24ff",
+      "src/agent/AgentHistory.ts": "51d93530371966d087cf8eb0f12bb69faa5c55d53ddf0b95ade42be59462ce98",
+      "src/agent/AgentPlanner.ts": "7a4713a3d505ba303e3bfad4f83180aedc8b9d0829bc626fe8fe6ae83948cc79",
+      "src/agent/CloudJobCore.ts": "f10f8be2b5ab3a069acc62401a403cf7ef1fdf975525dc2dbe46d646f6ceb2b9",
+      "src/authFlow.ts": "aa745d47d937a3a001dacd4a753129b6ce4f9b3fda13963d190e22f48e0c31e6",
+      "src/calibration/CalibrationBinding.ts": "e92d14235e07d0ee7f2684fe9e6f31dab7ca53b1a5dca9203db8998c25ce2f49",
+      "src/calibration/PropulsionCalibration.ts": "1b165cb22c76796378c3fa9c82bd204bd25419bf058f91ef847d4c18fb107ea3",
+      "src/calibration/TrialValidation.ts": "87a105b83953c60527545c400e170b9c6ec0987651f725343b93d91cff74431a",
+      "src/cloudDatabase.ts": "73677946a454dab39f793c2044a22f6a92cf7cb1f1aec52893bc6ae6f981f7f7",
+      "src/configValidation.ts": "9974018b7596ae9c864006f820be78fab00948052be4117926c506244c0471b4",
+      "src/geminiClient.ts": "cc9051567fc416e1a2ec909a7a99b3912b19f8fba4ecaadd1f9e26fc7cb40efb",
+      "src/hooks/useMediaQuery.ts": "86f70c6e104faa7f3a636bae68af74c9b101e307e56cfd9ee63a58e04cc09725",
+      "src/learning/EnergyPrediction.ts": "f6732378a847774fae1780e979ecbbef38539ce9a9fd60475b23c4cf5dc8f603",
+      "src/learning/MeasuredPrediction.ts": "a8b53b46bd4cc2e8f8c59bd34f67aa0230c7a3f383a058d04c7432d01b9ce9e1",
+      "src/learning/NativePolicy.ts": "11eb382323aa3b1bf05d06c1c8ff697e7e8b03144883bcab248ada6a5ce6aac1",
+      "src/learning/ResidualPolicy.ts": "2eb0660658c77a53b04a65f3f55a1dd4aaf477417269f68aad8d798bca189778",
+      "src/learning/TrainingJob.ts": "48f009aaea8dbba573f0a01c5107ee3691f27f286ee77a571d867670523499fd",
+      "src/physics/atmosphere.ts": "bcf034c329641d326e99b0a58f374269aea91459862d4e6b600d8d32dd7139c3",
+      "src/physics/constants.ts": "cf935e9f093490b5245e251fc5e1dd95e7350efffa82831c6412bb2b894f1cf7",
+      "src/physics/core.ts": "2735e3b8fbb425fcde351086ea2a96360a6d0c2b89513c91e3ce6139304d30d6",
+      "src/physics/groundEffect.ts": "b7c5c25fbfa47e9bbd49a6da732797912cc7275bd44a8d9e2e4a566e6c4f9883",
+      "src/physics/physics.v12.test.ts": "0ae55fd188f37bba458d8c252da9791479b70e6092b8a3bbf39603a232b15dfa",
+      "src/physics/propTables.ts": "1707b58ff0be1312ccaa044cfe4c38acc315b7872094807f19ba30bafc6a44d8",
+      "src/physics/propulsion.ts": "b34106863ef5f9b1be469d67f32d4667f83b40e48b0943f89858867deae1ee6c",
+      "src/physics/sensorModels.ts": "f98a94dbe1fcd923789b195d3dc652a427d0d8d783568c523f7676f433633912",
+      "src/physics/studyWind.ts": "7e127fa4febac83ae7bf3b9b817caf33367741e1c3ef8d3fcae1b77d6a6e7911",
+      "src/physics/thrustLimits.ts": "4947d513837f5d380fddbf0c80c60711a3615203466363edfc0ce3fc64ea3703",
+      "src/productionDatabase.ts": "5ecf5ab81607b8b7c0aef2e6edc24ac8746f2cb6a650d5278e1dc48b087a9111",
+      "src/test-setup.ts": "2fbf00cbf62962613289b3f34adf42932d95a485408886765ba58ad546b69f26",
+      "src/useEpisodeWorker.ts": "759822f5f9ac307deaeefa63a991a75901a09973251086c3d1839e59d702ad86",
+      "src/workers/episodeWorker.ts": "e203d19797c383f4ab169b7dd046cf0368faf7e57f916f92068cfa915bb70a14"
+    },
+    "node": "v24.19.0"
+  },
+  "windModel": {
+    "densityKgM3": 1.225,
+    "dragCoefficient": 1.28,
+    "frontalAreaM2": 0.0026680000000000002
+  },
+  "seeds": [
+    510001,
+    510100
+  ],
+  "result": {
+    "episodes": 100,
+    "successes": 100,
+    "failures": 0,
+    "nonSuccesses": 0,
+    "meanReward": -30.931086606221744,
+    "meanAltitudeErrorM": 0.029489779166628628,
+    "meanSteps": 1000,
+    "successRate95CI": [
+      0.9630065017930143,
+      1
+    ],
+    "failureRate95CI": [
+      3.469446951953614e-18,
+      0.03699349820698568
+    ],
+    "outcomeCounts": {
+      "Successful mission": 100
+    }
+  },
+  "accepted": true,
+  "episodes": [
+    {
+      "seed": 510001,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.015029121677881466,
+      "reward": -15.980178499292563,
+      "energyJ": 43.96691353394576,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 15.029121677881466,
+        "velocityCost": 0.9510568214110958,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.24853245039637975,
+        "maxAngularRate": 0.3115119236404119,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510002,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.058500083682155035,
+      "reward": -60.71887079501404,
+      "energyJ": 43.97153946979112,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 58.50008368215504,
+        "velocityCost": 2.2187871128590313,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.2467762839718914,
+        "maxAngularRate": 0.32508105464153964,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510003,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02295774943256371,
+      "reward": -24.469213041538502,
+      "energyJ": 43.982591682161214,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 22.95774943256371,
+        "velocityCost": 1.5114636089747429,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.39388482429713323,
+        "maxAngularRate": 0.5648524671987445,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510004,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007889563304384433,
+      "reward": -8.744650508247517,
+      "energyJ": 43.98527366697638,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.889563304384433,
+        "velocityCost": 0.855087203863087,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4768397978216459,
+        "maxAngularRate": 0.5689931809934938,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510005,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05528882392385826,
+      "reward": -57.39724855779585,
+      "energyJ": 43.99223142744012,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 55.28882392385826,
+        "velocityCost": 2.1084246339375516,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5168006028174088,
+        "maxAngularRate": 0.6566032939465892,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510006,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.017092121864872904,
+      "reward": -18.369724951719544,
+      "energyJ": 43.9744427994954,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 17.092121864872905,
+        "velocityCost": 1.2776030868466182,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.30431422024707655,
+        "maxAngularRate": 0.421542323229333,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510007,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02403203311608248,
+      "reward": -25.58836454718067,
+      "energyJ": 43.97859668271829,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 24.03203311608248,
+        "velocityCost": 1.5563314310981924,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.33224343664112554,
+        "maxAngularRate": 0.5280044579611939,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510008,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.047991183747209835,
+      "reward": -49.84860024973121,
+      "energyJ": 43.9785433533768,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 47.99118374720984,
+        "velocityCost": 1.8574165025213998,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.38195777874816633,
+        "maxAngularRate": 0.41520357244028994,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510009,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02336228717945508,
+      "reward": -24.48318444653483,
+      "energyJ": 43.99379404792621,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 23.36228717945508,
+        "velocityCost": 1.1208972670797024,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5603131625560687,
+        "maxAngularRate": 0.6281670262459588,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510010,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.0579758063578278,
+      "reward": -60.18072416631495,
+      "energyJ": 44.00806003088732,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 57.9758063578278,
+        "velocityCost": 2.204917808487105,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.6381198017103933,
+        "maxAngularRate": 0.6698986039917268,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510011,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007598879442555366,
+      "reward": -8.453793636775012,
+      "energyJ": 43.98701226057147,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.598879442555366,
+        "velocityCost": 0.8549141942196448,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.48815723597896515,
+        "maxAngularRate": 0.5583255649834383,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510012,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04843274051133934,
+      "reward": -50.304760214380245,
+      "energyJ": 43.97539309553376,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 48.43274051133934,
+        "velocityCost": 1.872019703040949,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.34374613986457486,
+        "maxAngularRate": 0.36583229021391445,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510013,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02669530307270741,
+      "reward": -27.90207473579751,
+      "energyJ": 43.9826912537376,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 26.69530307270741,
+        "velocityCost": 1.2067716630900736,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4547646110474745,
+        "maxAngularRate": 0.6490022722844702,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510014,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.009897529788396179,
+      "reward": -10.903303446677738,
+      "energyJ": 43.97393424456123,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 9.897529788396179,
+        "velocityCost": 1.0057736582815544,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3253625609949447,
+        "maxAngularRate": 0.49142183240616844,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510015,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.0467261111509713,
+      "reward": -48.54285709721479,
+      "energyJ": 44.00241691696527,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 46.7261111509713,
+        "velocityCost": 1.8167459462434445,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.6123697976937756,
+        "maxAngularRate": 0.6279337856217992,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510016,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05913590071116448,
+      "reward": -61.380524320485975,
+      "energyJ": 43.99912816656444,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 59.13590071116448,
+        "velocityCost": 2.2446236093214345,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5662016182632986,
+        "maxAngularRate": 0.6335406874187502,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510017,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.00705018950415863,
+      "reward": -7.914819290239263,
+      "energyJ": 43.97450377693087,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.05018950415863,
+        "velocityCost": 0.8646297860806357,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3523319199734672,
+        "maxAngularRate": 0.3951714559702037,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510018,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007551995159695647,
+      "reward": -8.478448566729444,
+      "energyJ": 43.97877288884725,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.551995159695647,
+        "velocityCost": 0.9264534070337864,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3951268355810634,
+        "maxAngularRate": 0.5591855587877247,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510019,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.017472215821410345,
+      "reward": -18.763039652796806,
+      "energyJ": 43.98144232697878,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 17.472215821410344,
+        "velocityCost": 1.2908238313864557,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4007057285820181,
+        "maxAngularRate": 0.6119710556935356,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510020,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.008658577533012479,
+      "reward": -9.524778597873485,
+      "energyJ": 43.961118240762715,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 8.658577533012478,
+        "velocityCost": 0.8662010648609905,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.05100765530680714,
+        "maxAngularRate": 0.056873477644510194,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510021,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04092324747591943,
+      "reward": -42.54900641828026,
+      "energyJ": 43.976966729784365,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 40.92324747591943,
+        "velocityCost": 1.625758942360767,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3802720013656155,
+        "maxAngularRate": 0.49157337758903646,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510022,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05915595068265047,
+      "reward": -61.39930306058245,
+      "energyJ": 43.983596142274365,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 59.15595068265047,
+        "velocityCost": 2.243352377932038,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.41725725764694505,
+        "maxAngularRate": 0.4264761349616732,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510023,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03768557073009299,
+      "reward": -39.20998628850856,
+      "energyJ": 43.9994581194433,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 37.68557073009299,
+        "velocityCost": 1.5244155584155863,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5989383900708599,
+        "maxAngularRate": 0.5968023635798183,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510024,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03431170948000029,
+      "reward": -35.73351218115906,
+      "energyJ": 43.97216639528336,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 34.31170948000029,
+        "velocityCost": 1.4218027011587044,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.32531098115187534,
+        "maxAngularRate": 0.446411524985632,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510025,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.027143375365376272,
+      "reward": -28.827793673901397,
+      "energyJ": 43.975653880361165,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 27.143375365376272,
+        "velocityCost": 1.6844183085251163,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.2807750279699569,
+        "maxAngularRate": 0.45591846608448294,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510026,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.01034071292412076,
+      "reward": -11.362203758681744,
+      "energyJ": 43.97362810258197,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.340712924120758,
+        "velocityCost": 1.0214908345609661,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3214881040535253,
+        "maxAngularRate": 0.43730354579973674,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510027,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.052445173987042196,
+      "reward": -54.453333507420005,
+      "energyJ": 43.973141393660605,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 52.445173987042196,
+        "velocityCost": 2.0081595203777463,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.29909785609016154,
+        "maxAngularRate": 0.3725342135119823,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510028,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.010614517465406013,
+      "reward": -11.492971514969897,
+      "energyJ": 43.97393936852456,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.614517465406013,
+        "velocityCost": 0.8784540495638822,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3476421801735408,
+        "maxAngularRate": 0.43491528687956293,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510029,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.017559106117607682,
+      "reward": -18.85099421935891,
+      "energyJ": 43.98874369199307,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 17.559106117607683,
+        "velocityCost": 1.2918881017512263,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4731353604455709,
+        "maxAngularRate": 0.6417707859803093,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510030,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007891950385760653,
+      "reward": -8.7482704734088,
+      "energyJ": 43.98176782235062,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.891950385760652,
+        "velocityCost": 0.8563200876481611,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4387931354614637,
+        "maxAngularRate": 0.53204491836764,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510031,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.012700483281244332,
+      "reward": -13.604516363561213,
+      "energyJ": 43.98928335584716,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 12.700483281244331,
+        "velocityCost": 0.9040330823168703,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5217968544129646,
+        "maxAngularRate": 0.6063213432024184,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510032,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.014525772811606144,
+      "reward": -15.465875502104062,
+      "energyJ": 43.972887101314555,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 14.525772811606144,
+        "velocityCost": 0.9401026904979232,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3358377788598559,
+        "maxAngularRate": 0.3873646798581065,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510033,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04817850711752824,
+      "reward": -50.042431927821795,
+      "energyJ": 43.98081846011427,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 48.17850711752824,
+        "velocityCost": 1.863924810293514,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4117622470621136,
+        "maxAngularRate": 0.4297040316254352,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510034,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.014516781160184896,
+      "reward": -15.69578750441334,
+      "energyJ": 43.96708142667577,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 14.516781160184896,
+        "velocityCost": 1.1790063442284475,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.1820435774346246,
+        "maxAngularRate": 0.24017000859290108,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510035,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.010599253475663989,
+      "reward": -11.478192498994105,
+      "energyJ": 43.971470344394554,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.59925347566399,
+        "velocityCost": 0.8789390233301227,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.310241996421421,
+        "maxAngularRate": 0.4519280764610442,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510036,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04679503200861404,
+      "reward": -48.61251632745174,
+      "energyJ": 43.983037813429114,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 46.795032008614044,
+        "velocityCost": 1.8174843188378256,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.43844093750234203,
+        "maxAngularRate": 0.5401731483829788,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510037,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.014934219674389652,
+      "reward": -16.129997328556016,
+      "energyJ": 43.96565581791895,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 14.934219674389652,
+        "velocityCost": 1.1957776541663478,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.14643043811348835,
+        "maxAngularRate": 0.17664015095667235,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510038,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04679308014579078,
+      "reward": -48.60958575275308,
+      "energyJ": 43.96915428995274,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 46.79308014579078,
+        "velocityCost": 1.8165056069622167,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.24885103879102952,
+        "maxAngularRate": 0.30049814311531886,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510039,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.025128309732227638,
+      "reward": -26.29469913712133,
+      "energyJ": 43.982618216987,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 25.12830973222764,
+        "velocityCost": 1.1663894048936962,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4585850565878969,
+        "maxAngularRate": 0.6289831485651171,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510040,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05213922326160531,
+      "reward": -54.1368528167449,
+      "energyJ": 43.9731408418981,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 52.13922326160531,
+        "velocityCost": 1.9976295551395262,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.29999120339597085,
+        "maxAngularRate": 0.40938755437593466,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510041,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.045609159596700144,
+      "reward": -47.38877107063698,
+      "energyJ": 44.00116827438554,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 45.609159596700145,
+        "velocityCost": 1.7796114739367583,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.6071746986656469,
+        "maxAngularRate": 0.6003886545041439,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510042,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05638057177564753,
+      "reward": -58.52510528864079,
+      "energyJ": 43.9737335315905,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 56.38057177564753,
+        "velocityCost": 2.144533512993264,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.2935239224614062,
+        "maxAngularRate": 0.38708005635447734,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510043,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.018341702385438616,
+      "reward": -19.35156669111971,
+      "energyJ": 43.986035740818686,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 18.341702385438616,
+        "velocityCost": 1.0098643056810797,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.48945438486905357,
+        "maxAngularRate": 0.6363112062292713,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510044,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05969033718221458,
+      "reward": -61.95489003604518,
+      "energyJ": 44.00265651727912,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 59.69033718221458,
+        "velocityCost": 2.264552853830612,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5945589935381376,
+        "maxAngularRate": 0.5701806280959325,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510045,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007346193918378329,
+      "reward": -8.27086914485407,
+      "energyJ": 43.965082308067466,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.346193918378329,
+        "velocityCost": 0.9246752264757488,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.17383391735198747,
+        "maxAngularRate": 0.250532872047172,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510046,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.023662540000397286,
+      "reward": -24.793140827374998,
+      "energyJ": 43.977807314865835,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 23.662540000397286,
+        "velocityCost": 1.1306008269777306,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4062217373816388,
+        "maxAngularRate": 0.42574211553486724,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510047,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03470976236972189,
+      "reward": -36.14323134812893,
+      "energyJ": 43.97668151595082,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 34.70976236972189,
+        "velocityCost": 1.4334689784070047,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.38332291599134716,
+        "maxAngularRate": 0.4610284352667462,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510048,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04777286529841276,
+      "reward": -49.62254722283416,
+      "energyJ": 43.97448736442625,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 47.77286529841276,
+        "velocityCost": 1.849681924421507,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.33171456533259847,
+        "maxAngularRate": 0.4563883815728207,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510049,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03639382890455044,
+      "reward": -37.878297654311815,
+      "energyJ": 43.9789100059713,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 36.39382890455044,
+        "velocityCost": 1.4844687497613407,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.40865791996738127,
+        "maxAngularRate": 0.5594030355565346,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510050,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02566662816995275,
+      "reward": -27.29010468701715,
+      "energyJ": 43.97776460224016,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 25.66662816995275,
+        "velocityCost": 1.6234765170644205,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.321640035150081,
+        "maxAngularRate": 0.4186801327084839,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510051,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03258669660149811,
+      "reward": -33.95715990057012,
+      "energyJ": 43.985228998596156,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 32.586696601498105,
+        "velocityCost": 1.3704632990720238,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.474578240606511,
+        "maxAngularRate": 0.5103543001953602,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510052,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02088820894241978,
+      "reward": -21.956312025005072,
+      "energyJ": 43.96619974920257,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 20.88820894241978,
+        "velocityCost": 1.068103082585253,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.23474124575400385,
+        "maxAngularRate": 0.33637552965221845,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510053,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05266843076216195,
+      "reward": -54.68616594306723,
+      "energyJ": 43.990863962762184,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 52.66843076216195,
+        "velocityCost": 2.0177351809052366,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5074693441897511,
+        "maxAngularRate": 0.5139665760212039,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510054,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03606568924868046,
+      "reward": -37.54017093074974,
+      "energyJ": 43.97875171407949,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 36.065689248680464,
+        "velocityCost": 1.4744816820692765,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4054932038068069,
+        "maxAngularRate": 0.5706237225907643,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510055,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.021945388611884623,
+      "reward": -23.035985522382923,
+      "energyJ": 43.973750577394256,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 21.945388611884624,
+        "velocityCost": 1.0905969104983504,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.35388150523571127,
+        "maxAngularRate": 0.46688890701498875,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510056,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.058055874728638636,
+      "reward": -60.261358327727805,
+      "energyJ": 43.98928877883102,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 58.055874728638635,
+        "velocityCost": 2.2054835990891286,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.47772758994263803,
+        "maxAngularRate": 0.6239626000573848,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510057,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.0126027226176247,
+      "reward": -13.509477003169506,
+      "energyJ": 43.97391068522864,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 12.6027226176247,
+        "velocityCost": 0.9067543855448176,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.35017536824367873,
+        "maxAngularRate": 0.43796262172774486,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510058,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04149014821916756,
+      "reward": -43.13470483745224,
+      "energyJ": 43.99071738858739,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 41.49014821916756,
+        "velocityCost": 1.6445566182846496,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5218016273913465,
+        "maxAngularRate": 0.5232283175210732,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510059,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.013359032131040078,
+      "reward": -14.491473550583558,
+      "energyJ": 43.97432179319485,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 13.359032131040077,
+        "velocityCost": 1.1324414195434616,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.32053197283818147,
+        "maxAngularRate": 0.4830611091315091,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510060,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04598851860645754,
+      "reward": -47.7785289021571,
+      "energyJ": 43.969024376288836,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 45.988518606457546,
+        "velocityCost": 1.7900102956996173,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.2483843302167283,
+        "maxAngularRate": 0.33426647529956904,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510061,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.039330370907442576,
+      "reward": -40.90553610772816,
+      "energyJ": 43.9655554174332,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 39.33037090744258,
+        "velocityCost": 1.5751652002855547,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.19429341351725715,
+        "maxAngularRate": 0.2185923040498665,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510062,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.053176781005847065,
+      "reward": -55.210629904417,
+      "energyJ": 43.97737197927188,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 53.17678100584707,
+        "velocityCost": 2.0338488985699312,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3582211005674194,
+        "maxAngularRate": 0.3749589596070282,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510063,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.00652521471926112,
+      "reward": -7.420979196264171,
+      "energyJ": 43.98383250271788,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 6.52521471926112,
+        "velocityCost": 0.895764477003054,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.45458834543046445,
+        "maxAngularRate": 0.6000102536084972,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510064,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.010382692482481077,
+      "reward": -11.252360892681713,
+      "energyJ": 43.99227410621646,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.382692482481076,
+        "velocityCost": 0.8696684102006412,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5433021955614407,
+        "maxAngularRate": 0.5628625992627322,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510065,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.027218715697250963,
+      "reward": -28.905886866677523,
+      "energyJ": 43.976990966633494,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 27.218715697250964,
+        "velocityCost": 1.687171169426621,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3019972867091866,
+        "maxAngularRate": 0.481829978939384,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510066,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.01858387743000623,
+      "reward": -19.598298415054476,
+      "energyJ": 43.98772602770438,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 18.58387743000623,
+        "velocityCost": 1.0144209850482486,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5074973753921354,
+        "maxAngularRate": 0.6466443999458833,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510067,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.018047916596989167,
+      "reward": -19.057800996567476,
+      "energyJ": 43.96093726206868,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 18.047916596989168,
+        "velocityCost": 1.0098843995782882,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.07713558251210965,
+        "maxAngularRate": 0.10951189388233414,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510068,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.024897879924756065,
+      "reward": -26.48914970022398,
+      "energyJ": 43.9799340539696,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 24.897879924756065,
+        "velocityCost": 1.5912697754679166,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3500737943722351,
+        "maxAngularRate": 0.42344204974162936,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510069,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.010929402978187569,
+      "reward": -11.812046861420933,
+      "energyJ": 43.97391886536933,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.929402978187568,
+        "velocityCost": 0.8826438832333827,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.35557691579694434,
+        "maxAngularRate": 0.38693931764545514,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510070,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.01237880489498619,
+      "reward": -13.476510486022038,
+      "energyJ": 43.96690011410966,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 12.378804894986189,
+        "velocityCost": 1.09770559103585,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.1899436463790689,
+        "maxAngularRate": 0.230030683572091,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510071,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05317636197463667,
+      "reward": -55.21073741604383,
+      "energyJ": 43.982481302883954,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 53.17636197463667,
+        "velocityCost": 2.034375441407221,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.419217562274664,
+        "maxAngularRate": 0.4537198626616258,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510072,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02233564490336435,
+      "reward": -23.43450790548094,
+      "energyJ": 43.97814594425083,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 22.33564490336435,
+        "velocityCost": 1.098863002116598,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.41130164984706796,
+        "maxAngularRate": 0.5841179701334863,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510073,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.06017715768846953,
+      "reward": -62.456711647040564,
+      "energyJ": 43.98568652124325,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 60.177157688469535,
+        "velocityCost": 2.2795539585710003,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4373293103106752,
+        "maxAngularRate": 0.5098978150991876,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510074,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007005558870693033,
+      "reward": -7.874282385614081,
+      "energyJ": 43.96667988729407,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.005558870693033,
+        "velocityCost": 0.8687235149210459,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.2181387518290445,
+        "maxAngularRate": 0.30177746883605444,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510075,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.033687601065943616,
+      "reward": -35.09038592084983,
+      "energyJ": 43.995251304318465,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 33.68760106594362,
+        "velocityCost": 1.4027848549061612,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5644694227873625,
+        "maxAngularRate": 0.5755038101307383,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510076,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02330379764430573,
+      "reward": -24.83079649323596,
+      "energyJ": 43.9781477345273,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 23.30379764430573,
+        "velocityCost": 1.5269988489302386,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.33660627468414134,
+        "maxAngularRate": 0.4859670582544838,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510077,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.028119082155797243,
+      "reward": -29.84536334713579,
+      "energyJ": 43.96934613638211,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 28.119082155797244,
+        "velocityCost": 1.7262811913385165,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.1376652879891145,
+        "maxAngularRate": 0.22662677385715466,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510078,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.017784768141252922,
+      "reward": -18.78585594346237,
+      "energyJ": 43.97610820566085,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 17.784768141252922,
+        "velocityCost": 1.0010878022094252,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3860833247560532,
+        "maxAngularRate": 0.559695248775012,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510079,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.04424581683098102,
+      "reward": -45.97850427441584,
+      "energyJ": 43.97014631068313,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 44.24581683098102,
+        "velocityCost": 1.7326874434347561,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.27095429879964733,
+        "maxAngularRate": 0.38509398353729146,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510080,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05656903193576739,
+      "reward": -58.72085012862872,
+      "energyJ": 43.97926727660541,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 56.56903193576739,
+        "velocityCost": 2.151818192861328,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3735161502132518,
+        "maxAngularRate": 0.44618267477826634,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510081,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.024523872886225543,
+      "reward": -26.103075924445353,
+      "energyJ": 43.96972184348302,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 24.523872886225544,
+        "velocityCost": 1.5792030382197946,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.17944639965057801,
+        "maxAngularRate": 0.2886261457620401,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510082,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05039510785407932,
+      "reward": -52.33647165888875,
+      "energyJ": 44.0093159278724,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 50.39510785407932,
+        "velocityCost": 1.941363804809371,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.6575693020155433,
+        "maxAngularRate": 0.6450058893617285,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510083,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02678368363677993,
+      "reward": -27.9949886048694,
+      "energyJ": 43.963885496120625,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 26.78368363677993,
+        "velocityCost": 1.2113049680894534,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.1806660581925255,
+        "maxAngularRate": 0.18614568241108173,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510084,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007505746580189201,
+      "reward": -8.431308612289463,
+      "energyJ": 43.977145790906974,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.505746580189201,
+        "velocityCost": 0.9255620321002543,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.37588502188536366,
+        "maxAngularRate": 0.5514588580518791,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510085,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05011689973021459,
+      "reward": -52.044942406999034,
+      "energyJ": 43.96654454675653,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 50.11689973021459,
+        "velocityCost": 1.9280426767845023,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.17603906076300474,
+        "maxAngularRate": 0.21199385161182518,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510086,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03896962195023691,
+      "reward": -40.53360854784787,
+      "energyJ": 43.97134154764589,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 38.96962195023691,
+        "velocityCost": 1.5639865976108793,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.30431893515784286,
+        "maxAngularRate": 0.3664132058473748,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510087,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.015295092113054078,
+      "reward": -16.49846692286038,
+      "energyJ": 43.98636628011117,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 15.295092113054078,
+        "velocityCost": 1.203374809806296,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4572147274791807,
+        "maxAngularRate": 0.5466508468220503,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510088,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.014595321859163438,
+      "reward": -15.539979590679406,
+      "energyJ": 43.961681285057146,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 14.595321859163437,
+        "velocityCost": 0.9446577315159647,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.11268711391774916,
+        "maxAngularRate": 0.1599986108769701,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510089,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.03294023799476012,
+      "reward": -34.32125518693995,
+      "energyJ": 43.9825386479419,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 32.94023799476012,
+        "velocityCost": 1.3810171921798027,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.44999464646345316,
+        "maxAngularRate": 0.63947190720065,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510090,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.013049860731431492,
+      "reward": -14.165206582575772,
+      "energyJ": 43.99154209406182,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 13.049860731431492,
+        "velocityCost": 1.1153458511443173,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.5091335471433182,
+        "maxAngularRate": 0.6179590850190027,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510091,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.011512462080740481,
+      "reward": -12.578823957839008,
+      "energyJ": 43.96446781463634,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 11.512462080740482,
+        "velocityCost": 1.0663618770985175,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.12040663129403717,
+        "maxAngularRate": 0.1480555364915717,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510092,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.06157559719538921,
+      "reward": -63.90590239654444,
+      "energyJ": 43.990508891730656,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 61.57559719538921,
+        "velocityCost": 2.3303052011552556,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.48510845706351635,
+        "maxAngularRate": 0.6410232740756325,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510093,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.007925845968643513,
+      "reward": -8.787945268905956,
+      "energyJ": 43.9676867479882,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 7.925845968643514,
+        "velocityCost": 0.8620993002624352,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.24500044906829585,
+        "maxAngularRate": 0.3323653152789122,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510094,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.022968217846532687,
+      "reward": -24.084432835485238,
+      "energyJ": 43.96384992221912,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 22.96821784653269,
+        "velocityCost": 1.1162149889525337,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.18332522536209153,
+        "maxAngularRate": 0.19366917758967708,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510095,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.023988112434996413,
+      "reward": -25.545644016049216,
+      "energyJ": 43.96907956966485,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 23.988112434996413,
+        "velocityCost": 1.5575315810528028,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.16952538569431433,
+        "maxAngularRate": 0.2702323312659009,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510096,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.05555177178983108,
+      "reward": -57.66763023194326,
+      "energyJ": 43.97769422232194,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 55.55177178983108,
+        "velocityCost": 2.115858442112198,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3577604656050573,
+        "maxAngularRate": 0.4814715977621624,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510097,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.010073598790682332,
+      "reward": -11.084501975855632,
+      "energyJ": 43.97690097317473,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 10.073598790682333,
+        "velocityCost": 1.0109031851732895,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.3636900599806603,
+        "maxAngularRate": 0.4887615319844322,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510098,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.01369422629242817,
+      "reward": -14.835738228924821,
+      "energyJ": 43.98651515939628,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 13.694226292428171,
+        "velocityCost": 1.1415119364966484,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4620786316736405,
+        "maxAngularRate": 0.569320212373442,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510099,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.02496270958805102,
+      "reward": -26.5590361928868,
+      "energyJ": 43.97210007111688,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 24.96270958805102,
+        "velocityCost": 1.5963266048356812,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.22629757792818234,
+        "maxAngularRate": 0.33691337941066823,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "seed": 510100,
+      "wind": true,
+      "successful": true,
+      "failed": false,
+      "failureReason": null,
+      "outcome": "Successful mission",
+      "steps": 1000,
+      "meanAltitudeErrorM": 0.029728957155492446,
+      "reward": -31.515656098416976,
+      "energyJ": 43.988246978210455,
+      "diagnostics": {
+        "trackingSteps": 125,
+        "altitudeCost": 29.728957155492445,
+        "velocityCost": 1.786698942924567,
+        "actionCost": 0,
+        "failureCost": 0,
+        "maxHorizontalSpeed": 0.4305560549204176,
+        "maxAngularRate": 0.5252292314985082,
+        "saturatedSteps": 0,
+        "actionCounts": [
+          125,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}
