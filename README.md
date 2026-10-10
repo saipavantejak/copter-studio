@@ -1,6 +1,6 @@
 # Copter Studios
 
-Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training, MAVLink HIL bridge, and Gemini-powered NLP control. Runs entirely in the browser.
+Browser-based drone flight simulator — RK4/BET dynamics, TF.js RL training, MAVLink HIL bridge, and Gemini-powered NLP control. The interactive simulator runs in the browser; bridges and training scripts run separately.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)
 ![React](https://img.shields.io/badge/React-19-61dafb)
@@ -33,7 +33,7 @@ Physics-accurate drone flight simulator — RK4/BET dynamics, TF.js RL training,
 
 ### Prerequisites
 
-- Node.js 18+ (LTS recommended)
+- Node.js 22.13+ or 24+ (required by the locked tooling)
 - npm 9+
 
 ### Installation
@@ -72,7 +72,7 @@ The app works fully without Gemini — Aether falls back to the local regex pars
 | `npm run gym-bridge` | Start WebSocket bridge for Python RL training |
 | `npm run hil-bridge` | Start MAVLink HIL bridge |
 | `npm run ci:benchmark` | Headless CI benchmark (50 episodes) |
-| `npm run ci:benchmark:strict` | Strict benchmark (100 episodes, 30% crash threshold) |
+| `npm run ci:benchmark:strict` | Strict benchmark (100 episodes, 30% mission non-success threshold) |
 
 ## Project Structure
 
@@ -122,7 +122,7 @@ Serve the `dist/` folder. Note: Aether AI requires a serverless backend for the 
 ## RL Training with Python
 
 1. Start the Gym Bridge: `npm run gym-bridge`
-2. In Python:
+2. Illustrative Python integration (requires registering the bridge-backed Gym environment; not an evaluated PPO result):
 
 ```python
 # See public/swash-bicop-colab-trainer.ipynb for full example
@@ -162,3 +162,34 @@ All Gemini API calls are disabled. Aether uses the local parser exclusively.
 ## License
 
 MIT
+
+<!-- BEGIN GENERATED ML EVALUATION -->
+## Reproducible ML evaluation
+
+The current simulation-only artifact is [`public/learning/residual-policy.json`](public/learning/residual-policy.json). `physicalValidation=false`, `passesSimulationGate=false`, and `promoted=false`. The existing controller remains active.
+
+Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bins, reward, physics, success criteria and the candidate gate are unchanged. Validation banks: 200001–200050 (calm), 201001–201050 (synthetic wind). Fresh final banks: 300001–300050 (calm), 301001–301050 (wind). No tuning or winner selection was performed. Legacy test banks were used only to reproduce and diagnose the historical run.
+
+| Training seed | Scenario | Baseline successes | Policy successes | Baseline altitude error (m) | Policy altitude error (m) | Baseline reward | Policy reward | Gate |
+|---|---|---|---|---|---|---|---|---|
+| 314159 | Calm | 50/50 | 50/50 | 0.026406 | 0.035383 | -27.751174 | -42.950386 | Fail |
+| 314159 | Wind | 0/50 | 0/50 | 0.158275 | 0.153262 | -1000.546097 | -999.968646 | Fail |
+| 271828 | Calm | 50/50 | 50/50 | 0.026406 | 0.044399 | -27.751174 | -50.181579 | Fail |
+| 271828 | Wind | 0/50 | 0/50 | 0.158275 | 0.172537 | -1000.546097 | -1002.149485 | Fail |
+| 161803 | Calm | 50/50 | 50/50 | 0.026406 | 0.045299 | -27.751174 | -50.365393 | Fail |
+| 161803 | Wind | 0/50 | 0/50 | 0.158275 | 0.166930 | -1000.546097 | -1002.425054 | Fail |
+
+| Scenario | Mean policy − baseline reward | Crossed-bootstrap 95% CI | Training-run t 95% CI (fixed episode bank) |
+|---|---|---|---|
+| Calm | -20.081278 | [-24.154069, -15.325759] | [-30.586678, -9.575878] |
+| Wind | -0.968298 | [-2.373722, 0.486239] | [-4.311276, 2.374680] |
+
+There are 50 unique final IC seeds per scenario, shared across the three policies: 100 unique baseline flights and 300 policy flights. Repeated baseline records are not independent observations. Each run's calm success rate has a Wilson 95% CI of [0.928652, 1.000000]; each wind success rate has CI [0.000000, 0.071348]. The crossed bootstrap resamples training runs and shared episode seeds; only three training runs are available. Degenerate observed success-difference intervals do not prove equal underlying success probabilities. The historical candidate gate is applied separately to every run; no seed is selected as a winner.
+
+### Limitations
+
+Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncalibrated for this nano configuration and every final wind flight terminates at the numerical operating envelope. Conditional pre-failure altitude error cannot establish robustness. No measured gust or battery-to-depletion endurance labels exist. The policy observes only altitude error and vertical speed and changes motor collective commands; no physical-flight performance claim is supported. The Q-table at the top level is the first predeclared run for compatibility, not a selected best policy.
+
+Reproduction commands, original and refreshed numeric-claim tables, diagnosis and a supported resume statement are in [`reports/ml-evaluation-audit.md`](reports/ml-evaluation-audit.md). The CI benchmark's mission non-success threshold is separate from the RL promotion gate.
+
+<!-- END GENERATED ML EVALUATION -->

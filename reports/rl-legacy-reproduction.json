@@ -1,0 +1,3630 @@
+{
+  "schemaVersion": 1,
+  "method": "Tabular Q-learning residual collective controller",
+  "scope": "Crazyflie 2.1 reference configuration in Copter PhysicsEngine only",
+  "physicalValidation": false,
+  "trainingEpisodes": 600,
+  "trainSeedRange": [
+    1,
+    600
+  ],
+  "evaluationSeedRanges": [
+    [
+      100001,
+      100050
+    ],
+    [
+      101001,
+      101050
+    ]
+  ],
+  "stepsPerEpisode": 1000,
+  "decisionEverySteps": 8,
+  "alpha": 0.1,
+  "gamma": 0.97,
+  "epsilon": [
+    0.3,
+    0.03
+  ],
+  "config": {
+    "droneType": "quadcopter",
+    "mass": 0.029,
+    "propDiameter": 1.7716535433070868,
+    "batteryVoltage": 3.7,
+    "armLength": 0.046,
+    "batteryCapacity": 250,
+    "maxThrustPerMotorN": 0.14715
+  },
+  "actions": [
+    0,
+    -0.04,
+    -0.02,
+    0.02,
+    0.04
+  ],
+  "q": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -220.8009572252791,
+      -147.08242359309833,
+      -214.7539540954506,
+      -227.39154808686192,
+      -212.93184436474627
+    ],
+    [
+      -109.37643568663866,
+      -108.33336026566212,
+      -8.205808334255309,
+      -97.46430540023374,
+      -8.334118026051144
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -84.49700709768092,
+      -85.62277536443072,
+      -83.44496032460528,
+      -82.81357305905222,
+      -83.00176132761294
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -155.6748340396391,
+      -150.50074481034108,
+      -94.96566004441455,
+      -156.14165703647322,
+      -192.81682555797613
+    ],
+    [
+      -149.71754815264288,
+      -171.39089812759448,
+      -121.96986066818725,
+      -159.64842287582934,
+      -152.22400918082604
+    ],
+    [
+      -8.656667059069594,
+      -97.51177963399891,
+      -8.325651800113429,
+      -100.37673554960658,
+      -8.474742685122154
+    ],
+    [
+      -43.16930010596518,
+      -8.079212525112318,
+      -8.155787603905871,
+      -97.28351552482049,
+      -8.559967672944412
+    ],
+    [
+      -106.36609100746877,
+      -33.03998914302399,
+      -30.29489735426819,
+      -33.83245272645321,
+      -48.19334262567324
+    ],
+    [
+      -7.497086556822806,
+      -7.352236178921057,
+      -8.082298097376961,
+      -7.282438234732246,
+      -42.78193754327162
+    ],
+    [
+      -5.081183980229588,
+      -5.008856177924053,
+      -6.733831594978567,
+      -5.0834532433031265,
+      -4.952156903598206
+    ],
+    [
+      -0.14408497500399703,
+      -0.5550322125394952,
+      -0.5045257278800465,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -96.68443321912913,
+      -7.851390042251439,
+      -10.351717612695708,
+      -10.573169994578844,
+      -10.563478283080764
+    ],
+    [
+      -18.074849230593916,
+      -72.49303576211265,
+      -57.25124816197664,
+      -62.41535174484085,
+      -93.94770783175711
+    ],
+    [
+      -68.73803794265847,
+      -14.6611963629576,
+      -63.436372391217084,
+      -139.8469101222152,
+      -115.68727642948251
+    ],
+    [
+      -108.94236136446513,
+      -68.4813693727762,
+      -14.16474178519455,
+      -119.12883258877929,
+      -60.0701631885171
+    ],
+    [
+      -61.114249720422144,
+      -17.169673866915808,
+      -149.12007714299327,
+      -44.12668387591775,
+      -64.60752243416806
+    ],
+    [
+      -34.02163689756761,
+      -16.141363792073506,
+      -23.696409236857072,
+      -85.36856622845536,
+      -95.72863257505699
+    ],
+    [
+      -109.47482297242215,
+      -51.44720334923999,
+      -18.519781643678698,
+      -57.58751098902001,
+      -33.75795941182246
+    ],
+    [
+      -4.121930482475529,
+      -72.84888533220624,
+      -3.5709569790705444,
+      -3.5105262872071132,
+      -4.115885265592442
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -3.4358568340746034,
+      -2.931938518188816,
+      -108.16315839845765,
+      -3.183399102982727,
+      -2.472898432026077
+    ],
+    [
+      -109.36506317442816,
+      -96.98852510696778,
+      -20.753213883246424,
+      -80.47126270716205,
+      -104.39575376926926
+    ],
+    [
+      -104.26697668166821,
+      -43.04157162234,
+      -54.946514614607466,
+      -15.619305554044745,
+      -17.31547621340566
+    ],
+    [
+      -75.81253897309337,
+      -22.302187218939153,
+      -94.66859283631719,
+      -55.489326846420454,
+      -102.66675517943109
+    ],
+    [
+      -97.38102820436174,
+      -57.93046188930181,
+      -14.393038200511388,
+      -55.04377526764016,
+      -60.8313803679049
+    ],
+    [
+      -48.2930521716933,
+      -87.48055941077409,
+      -51.69663142207043,
+      -109.73398899274753,
+      -17.173965266544986
+    ],
+    [
+      -56.33478075882609,
+      -19.31874571685119,
+      -16.929077015062095,
+      -21.6688232433186,
+      -105.67413265305855
+    ],
+    [
+      -104.30869422459082,
+      -9.63081010989546,
+      -9.737507204465826,
+      -247.52458972467537,
+      -100.17522435619767
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -0.8517523897756474,
+      -0.6341012534907788,
+      -1.4771255255792628,
+      -0.8259670934061798,
+      -0.3806596923723348
+    ],
+    [
+      -17.91661557689308,
+      -111.5477062682985,
+      -97.35022517945401,
+      -83.14562203188805,
+      -13.932070825310788
+    ],
+    [
+      -28.392984866781177,
+      -37.385673804535614,
+      -48.04568560870038,
+      -19.089737320657044,
+      -23.320305475666146
+    ],
+    [
+      -27.42964108690166,
+      -24.405673614699047,
+      -122.98032204457989,
+      -64.95080418928802,
+      -17.38889947254482
+    ],
+    [
+      -18.251043782702222,
+      -111.25149162345856,
+      -22.819448855579637,
+      -23.65415672290983,
+      -65.87215058921123
+    ],
+    [
+      -99.518699920778,
+      -94.35080066129056,
+      -100.55045907778165,
+      -25.685048599755724,
+      -96.27670232562605
+    ],
+    [
+      -125.51980272732565,
+      -76.85853724743181,
+      -124.78421736434761,
+      -106.45443278227461,
+      -111.43651682891063
+    ],
+    [
+      -111.69376972316037,
+      -171.07613020475043,
+      -111.76864341049426,
+      -87.95555544468553,
+      -196.21534023285324
+    ],
+    [
+      -0.07657005936756128,
+      -0.2935294930219777,
+      -0.14099830874477162,
+      0,
+      -102.71096266645057
+    ],
+    [
+      -0.482499187636085,
+      -0.9221878036393816,
+      -0.27210011212075036,
+      -0.31535346468288905,
+      -0.26108682116731885
+    ],
+    [
+      -82.62416043939116,
+      -21.489059473532507,
+      -25.509409914147483,
+      -24.048660259434683,
+      -25.185312592376192
+    ],
+    [
+      -121.00274840266135,
+      -61.05686143242073,
+      -108.10735906097749,
+      -95.48865108354238,
+      -128.71955401067174
+    ],
+    [
+      -81.54038666019102,
+      -58.659501756850474,
+      -114.8513858886908,
+      -52.3479367244441,
+      -51.963055150541365
+    ],
+    [
+      -108.08118082988594,
+      -65.54405755462753,
+      -67.53614139595,
+      -22.895155347910073,
+      -35.30647142538856
+    ],
+    [
+      -140.23302478523374,
+      -147.74179155880412,
+      -211.95681369363544,
+      -70.52553015382969,
+      -128.44002316511907
+    ],
+    [
+      -184.65738802520622,
+      -177.61523648288048,
+      -217.55598731510932,
+      -171.77202555736574,
+      -75.45991976937745
+    ],
+    [
+      -208.4633515218813,
+      -206.69466511704076,
+      -232.27635289341814,
+      -211.748682333062,
+      -124.24229548730202
+    ],
+    [
+      -127.62755448056274,
+      -130.1922644788513,
+      -34.463829090971856,
+      -107.5732321605246,
+      -103.0985321038744
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -15.155110980742123,
+      -15.431063567291643,
+      -15.750697365572327,
+      -15.561767099653332,
+      -15.288049107764962
+    ],
+    [
+      -24.526775190613765,
+      -24.086325838470245,
+      -23.003116426006148,
+      -30.801198645609034,
+      -124.36051602987956
+    ],
+    [
+      -22.6526834584841,
+      -19.92742290467975,
+      -22.801459437339336,
+      -25.07327258635969,
+      -24.64075946264185
+    ],
+    [
+      -31.769283971303658,
+      -29.579077386390303,
+      -29.862888986769274,
+      -29.02584275845917,
+      -31.49667598522002
+    ],
+    [
+      -50.32867331986607,
+      -50.68148750059173,
+      -50.72777243584044,
+      -50.80699015222788,
+      -50.166968936187345
+    ],
+    [
+      -88.02900897223945,
+      -89.8921308927884,
+      -108.78556485924285,
+      -91.96194746029377,
+      -63.1630437510063
+    ],
+    [
+      -140.66370328863917,
+      -119.13319941295049,
+      -135.47711753828432,
+      -56.52857670898242,
+      -136.85201805896185
+    ],
+    [
+      -38.872033033762946,
+      -30.92143751083641,
+      -30.759004172292233,
+      -28.434276973744577,
+      -107.45218474680608
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      -2.0057869572386595,
+      -1.7081475962131223,
+      -1.967928254992228,
+      -1.9566367996402052,
+      -1.8865056387717818
+    ],
+    [
+      -1.433520925133736,
+      -1.290536640391053,
+      -1.2976269075984446,
+      -0.9519520680526996,
+      -1.2308801552548843
+    ],
+    [
+      -1.580619568497296,
+      -1.4320344486180565,
+      -5.7472216760256085,
+      -1.389252052562761,
+      -1.9130675000785118
+    ],
+    [
+      -1.3761501347913647,
+      -0.5738955974732981,
+      -8.151501277225652,
+      -11.399859703443976,
+      -0.845099870635464
+    ],
+    [
+      -0.9450127351670119,
+      -1.4507312946530115,
+      -1.3924642689224636,
+      -6.181855542630693,
+      -6.986108201095167
+    ],
+    [
+      -12.21862646847026,
+      -2.9407892214337963,
+      -12.517134671821545,
+      -9.776349081236317,
+      -8.548205309162366
+    ],
+    [
+      -10.789736230224015,
+      -6.901818960919215,
+      -10.244580367503488,
+      -14.710703551058234,
+      -8.40752798295886
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "visits": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      15,
+      62,
+      39,
+      20,
+      56
+    ],
+    [
+      4,
+      1,
+      7,
+      4,
+      12
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      24,
+      31,
+      28,
+      27,
+      34
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      23,
+      32,
+      31,
+      61,
+      9
+    ],
+    [
+      27,
+      37,
+      23,
+      20,
+      100
+    ],
+    [
+      43,
+      38,
+      40,
+      24,
+      42
+    ],
+    [
+      26,
+      59,
+      55,
+      45,
+      41
+    ],
+    [
+      51,
+      92,
+      76,
+      84,
+      19
+    ],
+    [
+      38,
+      48,
+      44,
+      45,
+      12
+    ],
+    [
+      31,
+      20,
+      23,
+      37,
+      46
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      15,
+      9,
+      8,
+      8
+    ],
+    [
+      75,
+      26,
+      16,
+      9,
+      39
+    ],
+    [
+      313,
+      285,
+      385,
+      53,
+      237
+    ],
+    [
+      220,
+      416,
+      475,
+      135,
+      234
+    ],
+    [
+      506,
+      809,
+      180,
+      203,
+      255
+    ],
+    [
+      330,
+      387,
+      272,
+      153,
+      599
+    ],
+    [
+      109,
+      175,
+      343,
+      230,
+      272
+    ],
+    [
+      8,
+      4,
+      8,
+      11,
+      17
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      6,
+      5,
+      2,
+      6,
+      4
+    ],
+    [
+      19,
+      10,
+      44,
+      4,
+      44
+    ],
+    [
+      461,
+      545,
+      260,
+      416,
+      346
+    ],
+    [
+      700,
+      793,
+      1513,
+      923,
+      794
+    ],
+    [
+      2447,
+      1095,
+      1202,
+      1606,
+      1100
+    ],
+    [
+      918,
+      1125,
+      1100,
+      497,
+      1339
+    ],
+    [
+      263,
+      1024,
+      587,
+      79,
+      290
+    ],
+    [
+      11,
+      20,
+      19,
+      13,
+      56
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      2,
+      2,
+      2,
+      1
+    ],
+    [
+      33,
+      28,
+      12,
+      15,
+      29
+    ],
+    [
+      68,
+      151,
+      94,
+      234,
+      335
+    ],
+    [
+      149,
+      261,
+      97,
+      265,
+      648
+    ],
+    [
+      531,
+      366,
+      312,
+      110,
+      478
+    ],
+    [
+      188,
+      226,
+      217,
+      391,
+      528
+    ],
+    [
+      68,
+      386,
+      185,
+      362,
+      206
+    ],
+    [
+      45,
+      9,
+      32,
+      57,
+      48
+    ],
+    [
+      1,
+      2,
+      1,
+      0,
+      1
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1
+    ],
+    [
+      13,
+      39,
+      40,
+      31,
+      27
+    ],
+    [
+      47,
+      49,
+      17,
+      2,
+      39
+    ],
+    [
+      5,
+      7,
+      44,
+      47,
+      28
+    ],
+    [
+      42,
+      12,
+      62,
+      65,
+      43
+    ],
+    [
+      50,
+      11,
+      84,
+      50,
+      28
+    ],
+    [
+      75,
+      91,
+      60,
+      91,
+      92
+    ],
+    [
+      53,
+      106,
+      187,
+      44,
+      112
+    ],
+    [
+      11,
+      9,
+      10,
+      8,
+      39
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      39,
+      35,
+      37,
+      37,
+      29
+    ],
+    [
+      20,
+      54,
+      36,
+      15,
+      14
+    ],
+    [
+      10,
+      23,
+      12,
+      8,
+      8
+    ],
+    [
+      35,
+      78,
+      48,
+      38,
+      26
+    ],
+    [
+      19,
+      23,
+      19,
+      17,
+      16
+    ],
+    [
+      64,
+      16,
+      13,
+      52,
+      54
+    ],
+    [
+      18,
+      60,
+      70,
+      121,
+      120
+    ],
+    [
+      22,
+      9,
+      12,
+      37,
+      19
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      4,
+      5,
+      5,
+      5
+    ],
+    [
+      3,
+      3,
+      3,
+      2,
+      2
+    ],
+    [
+      3,
+      3,
+      2,
+      1,
+      3
+    ],
+    [
+      2,
+      1,
+      2,
+      1,
+      1
+    ],
+    [
+      2,
+      3,
+      3,
+      2,
+      2
+    ],
+    [
+      5,
+      2,
+      5,
+      4,
+      2
+    ],
+    [
+      4,
+      3,
+      3,
+      3,
+      6
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "results": [
+    {
+      "wind": false,
+      "baseline": {
+        "episodes": 50,
+        "successes": 50,
+        "failures": 0,
+        "meanAltitudeErrorM": 0.030327349610074522,
+        "meanReward": -31.793730857033314
+      },
+      "policy": {
+        "episodes": 50,
+        "successes": 50,
+        "failures": 0,
+        "meanAltitudeErrorM": 0.03713360473382307,
+        "meanReward": -44.6640456946885
+      }
+    },
+    {
+      "wind": true,
+      "baseline": {
+        "episodes": 50,
+        "successes": 0,
+        "failures": 50,
+        "meanAltitudeErrorM": 0.16361376517022166,
+        "meanReward": -1010.5898304734285
+      },
+      "policy": {
+        "episodes": 50,
+        "successes": 0,
+        "failures": 50,
+        "meanAltitudeErrorM": 0.1621453909156563,
+        "meanReward": -1011.0112439894168
+      }
+    }
+  ],
+  "passesSimulationGate": false,
+  "promoted": false,
+  "promotionReason": "Did not improve both held-out scenarios; existing controller retained",
+  "limitations": [
+    "Synthetic sinusoidal wind, not measured gusts.",
+    "No measured endurance labels.",
+    "Error is conditional on executed steps; use success/failure and penalized reward together.",
+    "Single training run; no statistical evidence of universal improvement."
+  ],
+  "evaluations": [
+    {
+      "baseline": {
+        "seed": 100001,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.016466908156552336,
+        "reward": -17.714055803216766,
+        "energyJ": 43.993915639394466
+      },
+      "policy": {
+        "seed": 100001,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.029525099840410532,
+        "reward": -37.316770012815354,
+        "energyJ": 44.0026188098934
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100002,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04177823628682621,
+        "reward": -43.431887739659246,
+        "energyJ": 43.987250616735494
+      },
+      "policy": {
+        "seed": 100002,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04179326979738623,
+        "reward": -49.47894775728397,
+        "energyJ": 44.00891452680417
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100003,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.027850308241829647,
+        "reward": -29.0898208166331,
+        "energyJ": 43.96381196984265
+      },
+      "policy": {
+        "seed": 100003,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.039000945354053636,
+        "reward": -46.776113107174254,
+        "energyJ": 44.01682573243482
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100004,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.05599347492364841,
+        "reward": -58.12678295994824,
+        "energyJ": 43.993444280113714
+      },
+      "policy": {
+        "seed": 100004,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04955116147410007,
+        "reward": -56.61136502227644,
+        "energyJ": 44.00557903039384
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100005,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.006441670592632839,
+        "reward": -7.317547463743106,
+        "energyJ": 43.9782791593172
+      },
+      "policy": {
+        "seed": 100005,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.028099847231487313,
+        "reward": -35.73622467189343,
+        "energyJ": 44.008078138071106
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100006,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.015252183743780718,
+        "reward": -16.20456108231502,
+        "energyJ": 43.977752568250104
+      },
+      "policy": {
+        "seed": 100006,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02774925188460349,
+        "reward": -35.43354409428086,
+        "energyJ": 44.07083762379797
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100007,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.007189210455633374,
+        "reward": -8.057226215727876,
+        "energyJ": 43.96378355531549
+      },
+      "policy": {
+        "seed": 100007,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02575317838394465,
+        "reward": -33.339210923887876,
+        "energyJ": 44.05800971435531
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100008,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.009117797792770135,
+        "reward": -9.983304445028363,
+        "energyJ": 43.96948868846346
+      },
+      "policy": {
+        "seed": 100008,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.027918282087616837,
+        "reward": -35.70969930429572,
+        "energyJ": 44.05281352184114
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100009,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.015671946925226436,
+        "reward": -16.632713392081154,
+        "energyJ": 43.97556169714335
+      },
+      "policy": {
+        "seed": 100009,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.025008474010685875,
+        "reward": -32.13110849249556,
+        "energyJ": 43.96958958598779
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100010,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.0329522109312318,
+        "reward": -34.33390728158885,
+        "energyJ": 43.96892373857717
+      },
+      "policy": {
+        "seed": 100010,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03950969875071018,
+        "reward": -47.256608592293546,
+        "energyJ": 44.003379429371925
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100011,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04115528674120124,
+        "reward": -42.78791793019322,
+        "energyJ": 43.96407543240578
+      },
+      "policy": {
+        "seed": 100011,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.041192264614662105,
+        "reward": -49.09476091810223,
+        "energyJ": 44.055597464875234
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100012,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.020945854934483532,
+        "reward": -22.37768857747204,
+        "energyJ": 43.97610900080442
+      },
+      "policy": {
+        "seed": 100012,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.034026090503521664,
+        "reward": -41.569003959914745,
+        "energyJ": 43.9683800798986
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100013,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.014988312727710897,
+        "reward": -15.939152270301122,
+        "energyJ": 43.96491602866253
+      },
+      "policy": {
+        "seed": 100013,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.027607404089532248,
+        "reward": -35.2841585431098,
+        "energyJ": 44.05730487775771
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100014,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04923057187594287,
+        "reward": -51.13051421062082,
+        "energyJ": 43.98736284545662
+      },
+      "policy": {
+        "seed": 100014,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04403006311092015,
+        "reward": -50.94659839717192,
+        "energyJ": 44.04761385752355
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100015,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.009508853769585318,
+        "reward": -10.376201698546728,
+        "energyJ": 43.97278953786722
+      },
+      "policy": {
+        "seed": 100015,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02806509858617718,
+        "reward": -35.86379365867392,
+        "energyJ": 44.05590964703897
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100016,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.044184896004261925,
+        "reward": -45.91600686784311,
+        "energyJ": 43.97704210186299
+      },
+      "policy": {
+        "seed": 100016,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04263255464097146,
+        "reward": -50.37698005319013,
+        "energyJ": 43.986755377788334
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100017,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.026099762372745312,
+        "reward": -27.740975173831895,
+        "energyJ": 43.97763546054379
+      },
+      "policy": {
+        "seed": 100017,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03808778511598648,
+        "reward": -46.43712168719459,
+        "energyJ": 44.053403468187426
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100018,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02846398062800608,
+        "reward": -30.201960613082303,
+        "energyJ": 43.97767049315735
+      },
+      "policy": {
+        "seed": 100018,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.036241693273557696,
+        "reward": -44.31458404351363,
+        "energyJ": 44.078185699085836
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100019,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.0390013606670816,
+        "reward": -40.566222962457665,
+        "energyJ": 43.96546756462299
+      },
+      "policy": {
+        "seed": 100019,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04063347768367922,
+        "reward": -48.53084093243123,
+        "energyJ": 44.06324157418816
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100020,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.019485043147245026,
+        "reward": -20.856933334296222,
+        "energyJ": 43.97943481541222
+      },
+      "policy": {
+        "seed": 100020,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03380737738593576,
+        "reward": -41.440337229509524,
+        "energyJ": 44.07037272950572
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100021,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03935355119443292,
+        "reward": -40.929401066671005,
+        "energyJ": 43.963977049374826
+      },
+      "policy": {
+        "seed": 100021,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04080988034523381,
+        "reward": -48.71394761887634,
+        "energyJ": 44.06178615720148
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100022,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.05365642681853238,
+        "reward": -55.707327157512026,
+        "energyJ": 43.98253792946108
+      },
+      "policy": {
+        "seed": 100022,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.045637939632450206,
+        "reward": -52.49887051338934,
+        "energyJ": 44.0627655112889
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100023,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.010341036108987523,
+        "reward": -11.365216553846075,
+        "energyJ": 43.964508944984836
+      },
+      "policy": {
+        "seed": 100023,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.029986839081002373,
+        "reward": -37.1641572522846,
+        "energyJ": 44.040141740666726
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100024,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.049003278527901456,
+        "reward": -50.89397814831958,
+        "energyJ": 43.96892627854316
+      },
+      "policy": {
+        "seed": 100024,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04384421721539738,
+        "reward": -50.906128459843984,
+        "energyJ": 43.98495541338633
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100025,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02605750686794866,
+        "reward": -27.69709036384711,
+        "energyJ": 43.977296389842095
+      },
+      "policy": {
+        "seed": 100025,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03806740458039239,
+        "reward": -46.41574148118735,
+        "energyJ": 44.05307462210557
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100026,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04942033276647208,
+        "reward": -51.32486913333475,
+        "energyJ": 43.9662697394213
+      },
+      "policy": {
+        "seed": 100026,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04407817353492772,
+        "reward": -50.99600339265069,
+        "energyJ": 44.02687929303089
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100027,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.05207538874330602,
+        "reward": -54.07256799119328,
+        "energyJ": 43.98997155006565
+      },
+      "policy": {
+        "seed": 100027,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04564957517392493,
+        "reward": -52.7712031524675,
+        "energyJ": 43.98276859136711
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100028,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.048084782307648184,
+        "reward": -49.94717574281558,
+        "energyJ": 44.00032923401532
+      },
+      "policy": {
+        "seed": 100028,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04690206537228826,
+        "reward": -54.822704153475634,
+        "energyJ": 44.04804478303144
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100029,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.022861550255729196,
+        "reward": -24.372755674132637,
+        "energyJ": 43.97059739785985
+      },
+      "policy": {
+        "seed": 100029,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03542541222967525,
+        "reward": -43.044857647048524,
+        "energyJ": 43.99177202590493
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100030,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02264422992242598,
+        "reward": -23.748521171191815,
+        "energyJ": 43.990416333540814
+      },
+      "policy": {
+        "seed": 100030,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.037066766796388595,
+        "reward": -45.01612914540791,
+        "energyJ": 44.06518701652794
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100031,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02470638950330923,
+        "reward": -26.29111824111209,
+        "energyJ": 43.97619146761095
+      },
+      "policy": {
+        "seed": 100031,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03310465291793612,
+        "reward": -41.13099982044344,
+        "energyJ": 43.96527933116756
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100032,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.006468503508336717,
+        "reward": -7.348315205077719,
+        "energyJ": 43.97015934485467
+      },
+      "policy": {
+        "seed": 100032,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.028119645980617215,
+        "reward": -35.758717864142675,
+        "energyJ": 44.00035739507827
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100033,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.029230901998436424,
+        "reward": -30.997724820573577,
+        "energyJ": 43.98665459461103
+      },
+      "policy": {
+        "seed": 100033,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03663970128969863,
+        "reward": -44.84214570226075,
+        "energyJ": 44.0546688954887
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100034,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02007536071076351,
+        "reward": -21.119029696496593,
+        "energyJ": 44.00020108827103
+      },
+      "policy": {
+        "seed": 100034,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03064249506119389,
+        "reward": -38.44996704909003,
+        "energyJ": 44.032338079810856
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100035,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.01916930604439381,
+        "reward": -20.19648940085648,
+        "energyJ": 43.985396873035626
+      },
+      "policy": {
+        "seed": 100035,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02996635671077274,
+        "reward": -38.01154202049504,
+        "energyJ": 44.082840709874674
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100036,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.006329597302740544,
+        "reward": -7.22120069711019,
+        "energyJ": 43.96213716129731
+      },
+      "policy": {
+        "seed": 100036,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.028149502729858278,
+        "reward": -35.78849260531249,
+        "energyJ": 43.99277235014354
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100037,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.006925330784262755,
+        "reward": -7.789496849138109,
+        "energyJ": 43.97893210052375
+      },
+      "policy": {
+        "seed": 100037,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.027084324336401115,
+        "reward": -34.64235832255702,
+        "energyJ": 44.04040978087144
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100038,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.054262724918676467,
+        "reward": -56.33690333740715,
+        "energyJ": 44.00566732965735
+      },
+      "policy": {
+        "seed": 100038,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04612038954607398,
+        "reward": -52.834268249466945,
+        "energyJ": 44.029677904050295
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100039,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.038704926663853625,
+        "reward": -40.260618350997625,
+        "energyJ": 43.970379773432704
+      },
+      "policy": {
+        "seed": 100039,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04049216927692429,
+        "reward": -48.3841876346145,
+        "energyJ": 44.068072684486864
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100040,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.030862839434675687,
+        "reward": -32.18373320557905,
+        "energyJ": 43.98707884259581
+      },
+      "policy": {
+        "seed": 100040,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04061582690614657,
+        "reward": -48.20625849099456,
+        "energyJ": 43.99064471504547
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100041,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.06118755762754907,
+        "reward": -63.504312237802566,
+        "energyJ": 43.993433019209384
+      },
+      "policy": {
+        "seed": 100041,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.053796505031279127,
+        "reward": -60.11992040959075,
+        "energyJ": 44.01387521388545
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100042,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.012699233391887662,
+        "reward": -13.611432702390237,
+        "energyJ": 43.96174827080457
+      },
+      "policy": {
+        "seed": 100042,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02475319554429486,
+        "reward": -32.36616198988091,
+        "energyJ": 43.98275925358061
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100043,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.06045085560984086,
+        "reward": -62.74055866904457,
+        "energyJ": 43.98889967253538
+      },
+      "policy": {
+        "seed": 100043,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.05197442721480286,
+        "reward": -57.59301672598504,
+        "energyJ": 44.002900427601304
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100044,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.0606907369765547,
+        "reward": -62.98751127672335,
+        "energyJ": 43.97788909882674
+      },
+      "policy": {
+        "seed": 100044,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.05359753086251141,
+        "reward": -59.90242846927276,
+        "energyJ": 43.99867585971745
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100045,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.052912046093325206,
+        "reward": -54.936680377356154,
+        "energyJ": 43.97672848042591
+      },
+      "policy": {
+        "seed": 100045,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04521670668738042,
+        "reward": -52.09620328256926,
+        "energyJ": 43.99857882796326
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100046,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.013736440978591832,
+        "reward": -14.881985477405479,
+        "energyJ": 43.97838861757593
+      },
+      "policy": {
+        "seed": 100046,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03008134897161562,
+        "reward": -37.421337996749635,
+        "energyJ": 44.06503473710593
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100047,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.020579691067088138,
+        "reward": -21.64107177632436,
+        "energyJ": 43.96596754165694
+      },
+      "policy": {
+        "seed": 100047,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.030215623567965234,
+        "reward": -38.20857242677123,
+        "energyJ": 44.06075209825943
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100048,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.03401705017951153,
+        "reward": -35.429926642516556,
+        "energyJ": 43.98103584874382
+      },
+      "policy": {
+        "seed": 100048,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04010944152194694,
+        "reward": -47.87475222644228,
+        "energyJ": 44.01504108717727
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100049,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04435239805009753,
+        "reward": -46.08890987620802,
+        "energyJ": 43.97523201725742
+      },
+      "policy": {
+        "seed": 100049,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.04272114426630847,
+        "reward": -50.46907201361065,
+        "energyJ": 43.98497469209977
+      }
+    },
+    {
+      "baseline": {
+        "seed": 100050,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.02372963522805047,
+        "reward": -25.275240170094953,
+        "energyJ": 43.97379060440023
+      },
+      "policy": {
+        "seed": 100050,
+        "wind": false,
+        "successful": true,
+        "failed": false,
+        "failureReason": null,
+        "steps": 1000,
+        "meanAltitudeErrorM": 0.0355779564858024,
+        "reward": -43.10436721603438,
+        "energyJ": 44.028010275573656
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101001,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 238,
+        "meanAltitudeErrorM": 0.042343097459033925,
+        "reward": -873.2206012034751,
+        "energyJ": 11.754738456768377
+      },
+      "policy": {
+        "seed": 101001,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 236,
+        "meanAltitudeErrorM": 0.050851865505391745,
+        "reward": -878.2971455443367,
+        "energyJ": 11.613160085112392
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101002,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 56,
+        "meanAltitudeErrorM": 0.28836211590135263,
+        "reward": -1060.7919696278952,
+        "energyJ": 2.8143573254196887
+      },
+      "policy": {
+        "seed": 101002,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 55,
+        "meanAltitudeErrorM": 0.28016625663962924,
+        "reward": -1061.2423394622665,
+        "energyJ": 2.82287537161142
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101003,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 20,
+        "meanAltitudeErrorM": 0.35030695094241904,
+        "reward": -1087.5271914133812,
+        "energyJ": 0.7037304794175351
+      },
+      "policy": {
+        "seed": 101003,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 20,
+        "meanAltitudeErrorM": 0.3505465742212966,
+        "reward": -1087.6115833468352,
+        "energyJ": 0.6649801360758306
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101004,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 54,
+        "meanAltitudeErrorM": 0.19583618113582962,
+        "reward": -1057.0948425849153,
+        "energyJ": 2.679342828231726
+      },
+      "policy": {
+        "seed": 101004,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 56,
+        "meanAltitudeErrorM": 0.22201436444016714,
+        "reward": -1057.200624083636,
+        "energyJ": 2.8326125444772807
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101005,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 190,
+        "meanAltitudeErrorM": 0.11518740572804095,
+        "reward": -933.2503073366053,
+        "energyJ": 9.31123842389203
+      },
+      "policy": {
+        "seed": 101005,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 193,
+        "meanAltitudeErrorM": 0.10986800681413572,
+        "reward": -930.4628126933272,
+        "energyJ": 9.488303607862548
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101006,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 31,
+        "meanAltitudeErrorM": 0.06272560575229917,
+        "reward": -1071.5144456496942,
+        "energyJ": 1.3825468556548788
+      },
+      "policy": {
+        "seed": 101006,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 31,
+        "meanAltitudeErrorM": 0.06363029676516353,
+        "reward": -1071.6509243571165,
+        "energyJ": 1.3594374186126352
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101007,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 87,
+        "meanAltitudeErrorM": 0.14155848501662,
+        "reward": -1026.7180482228289,
+        "energyJ": 4.084081594925307
+      },
+      "policy": {
+        "seed": 101007,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 90,
+        "meanAltitudeErrorM": 0.13988621610613164,
+        "reward": -1024.4089962701823,
+        "energyJ": 4.305542991759718
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101008,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 209,
+        "meanAltitudeErrorM": 0.06084405861755902,
+        "reward": -905.0118828026741,
+        "energyJ": 10.389271470686054
+      },
+      "policy": {
+        "seed": 101008,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 210,
+        "meanAltitudeErrorM": 0.06646273253136854,
+        "reward": -906.2128754562711,
+        "energyJ": 10.407266669940828
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101009,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 27,
+        "meanAltitudeErrorM": 0.04287136091430304,
+        "reward": -1074.6277931073664,
+        "energyJ": 1.1809161676975426
+      },
+      "policy": {
+        "seed": 101009,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 27,
+        "meanAltitudeErrorM": 0.04217395471193055,
+        "reward": -1074.6741235627678,
+        "energyJ": 1.2420947379145297
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101010,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 51,
+        "meanAltitudeErrorM": 0.15527781027353385,
+        "reward": -1057.3957395790235,
+        "energyJ": 2.506619010189522
+      },
+      "policy": {
+        "seed": 101010,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 55,
+        "meanAltitudeErrorM": 0.18914149048958298,
+        "reward": -1056.2471229295647,
+        "energyJ": 2.7710523623301033
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101011,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 20,
+        "meanAltitudeErrorM": 0.15888562074062273,
+        "reward": -1083.625339557894,
+        "energyJ": 0.7798933987528356
+      },
+      "policy": {
+        "seed": 101011,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 20,
+        "meanAltitudeErrorM": 0.15521002043850274,
+        "reward": -1083.6284888042926,
+        "energyJ": 0.7501373751094621
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101012,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 35,
+        "meanAltitudeErrorM": 0.30177778370058267,
+        "reward": -1076.4610123569316,
+        "energyJ": 1.4621990112417442
+      },
+      "policy": {
+        "seed": 101012,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 35,
+        "meanAltitudeErrorM": 0.2937285958167919,
+        "reward": -1076.3873095425586,
+        "energyJ": 1.4105796516086566
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101013,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 83,
+        "meanAltitudeErrorM": 0.34479677033559797,
+        "reward": -1047.0235267882604,
+        "energyJ": 4.199632037732179
+      },
+      "policy": {
+        "seed": 101013,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 81,
+        "meanAltitudeErrorM": 0.3340095142023623,
+        "reward": -1047.7320683170738,
+        "energyJ": 4.1270616014618255
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101014,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 31,
+        "meanAltitudeErrorM": 0.11082962999423668,
+        "reward": -1072.8540475066272,
+        "energyJ": 1.4634158737397391
+      },
+      "policy": {
+        "seed": 101014,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 31,
+        "meanAltitudeErrorM": 0.11101793211352728,
+        "reward": -1072.9856239719006,
+        "energyJ": 1.420089587647241
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101015,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 192,
+        "meanAltitudeErrorM": 0.07685475250851823,
+        "reward": -923.8296654393921,
+        "energyJ": 9.522962593526733
+      },
+      "policy": {
+        "seed": 101015,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 194,
+        "meanAltitudeErrorM": 0.09101463347446777,
+        "reward": -926.0621791640644,
+        "energyJ": 9.603916345323604
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101016,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 35,
+        "meanAltitudeErrorM": 0.05038402013347173,
+        "reward": -1067.2984783694335,
+        "energyJ": 1.594861975688092
+      },
+      "policy": {
+        "seed": 101016,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 36,
+        "meanAltitudeErrorM": 0.06289032400148163,
+        "reward": -1066.9752985586395,
+        "energyJ": 1.7003402076234477
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101017,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 22,
+        "meanAltitudeErrorM": 0.2469153146168546,
+        "reward": -1083.9648956659478,
+        "energyJ": 0.8570395255032159
+      },
+      "policy": {
+        "seed": 101017,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 22,
+        "meanAltitudeErrorM": 0.24670141180455232,
+        "reward": -1084.0412620618722,
+        "energyJ": 0.8208344318475229
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101018,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 19,
+        "meanAltitudeErrorM": 0.2723537146152479,
+        "reward": -1086.6408271652886,
+        "energyJ": 0.6986503089461643
+      },
+      "policy": {
+        "seed": 101018,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 19,
+        "meanAltitudeErrorM": 0.2728788985237152,
+        "reward": -1086.7146778670028,
+        "energyJ": 0.6676007997415873
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101019,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 161,
+        "meanAltitudeErrorM": 0.04419442718365814,
+        "reward": -946.9964636691025,
+        "energyJ": 7.92168278380437
+      },
+      "policy": {
+        "seed": 101019,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 158,
+        "meanAltitudeErrorM": 0.046694878968202014,
+        "reward": -950.8984711626205,
+        "energyJ": 7.7340294970207015
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101020,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 46,
+        "meanAltitudeErrorM": 0.2658177202340881,
+        "reward": -1067.348496503114,
+        "energyJ": 2.0808361168581904
+      },
+      "policy": {
+        "seed": 101020,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 47,
+        "meanAltitudeErrorM": 0.2447392959385336,
+        "reward": -1065.9563434302663,
+        "energyJ": 2.078209684924853
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101021,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 67,
+        "meanAltitudeErrorM": 0.3450065823257289,
+        "reward": -1057.101471714617,
+        "energyJ": 3.381970211968931
+      },
+      "policy": {
+        "seed": 101021,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 66,
+        "meanAltitudeErrorM": 0.33690311041844795,
+        "reward": -1057.46720929939,
+        "energyJ": 3.381140886146215
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101022,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 32,
+        "meanAltitudeErrorM": 0.2426516673146571,
+        "reward": -1076.528011560641,
+        "energyJ": 1.36715403392311
+      },
+      "policy": {
+        "seed": 101022,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 33,
+        "meanAltitudeErrorM": 0.23389847641907893,
+        "reward": -1075.6529692084903,
+        "energyJ": 1.3772351082447134
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101023,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 92,
+        "meanAltitudeErrorM": 0.29077293845316793,
+        "reward": -1036.1703847240942,
+        "energyJ": 4.4417991706386655
+      },
+      "policy": {
+        "seed": 101023,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 90,
+        "meanAltitudeErrorM": 0.2732866434613251,
+        "reward": -1036.3905020405443,
+        "energyJ": 4.366822121349257
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101024,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 41,
+        "meanAltitudeErrorM": 0.05657050185869228,
+        "reward": -1061.8785212058071,
+        "energyJ": 1.9656551119847478
+      },
+      "policy": {
+        "seed": 101024,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 42,
+        "meanAltitudeErrorM": 0.06690021405067052,
+        "reward": -1061.5850627862735,
+        "energyJ": 2.0942233178523844
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101025,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 179,
+        "meanAltitudeErrorM": 0.0350781418817311,
+        "reward": -928.1630245515116,
+        "energyJ": 8.73235069415225
+      },
+      "policy": {
+        "seed": 101025,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 177,
+        "meanAltitudeErrorM": 0.03495455837133319,
+        "reward": -930.9625376135817,
+        "energyJ": 8.57649714479869
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101026,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 30,
+        "meanAltitudeErrorM": 0.058815065981299895,
+        "reward": -1072.2345019394227,
+        "energyJ": 1.3941963459474438
+      },
+      "policy": {
+        "seed": 101026,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 30,
+        "meanAltitudeErrorM": 0.05768818959744073,
+        "reward": -1072.2672060519274,
+        "energyJ": 1.4717469433761947
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101027,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 133,
+        "meanAltitudeErrorM": 0.2034748778710295,
+        "reward": -995.7488327054875,
+        "energyJ": 6.216491685118378
+      },
+      "policy": {
+        "seed": 101027,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 132,
+        "meanAltitudeErrorM": 0.19163198495919848,
+        "reward": -995.4398798856898,
+        "energyJ": 6.090347203508318
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101028,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 232,
+        "meanAltitudeErrorM": 0.04994614105051281,
+        "reward": -880.810060871971,
+        "energyJ": 11.456838462292986
+      },
+      "policy": {
+        "seed": 101028,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 231,
+        "meanAltitudeErrorM": 0.05093382044734558,
+        "reward": -882.9014553103353,
+        "energyJ": 11.389618704533309
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101029,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 81,
+        "meanAltitudeErrorM": 0.363513919771504,
+        "reward": -1049.873831928014,
+        "energyJ": 3.9551250869615497
+      },
+      "policy": {
+        "seed": 101029,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 77,
+        "meanAltitudeErrorM": 0.3406360384653672,
+        "reward": -1050.9524101152595,
+        "energyJ": 3.7975961041950788
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101030,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 23,
+        "meanAltitudeErrorM": 0.28816069356191587,
+        "reward": -1084.2032086393854,
+        "energyJ": 0.8743511969364273
+      },
+      "policy": {
+        "seed": 101030,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 23,
+        "meanAltitudeErrorM": 0.2873998892883006,
+        "reward": -1084.293229912274,
+        "energyJ": 0.8241921216769276
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101031,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 33,
+        "meanAltitudeErrorM": 0.15549744373750707,
+        "reward": -1072.5104342400673,
+        "energyJ": 1.568586142918999
+      },
+      "policy": {
+        "seed": 101031,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 34,
+        "meanAltitudeErrorM": 0.1696429680527413,
+        "reward": -1072.3900665214617,
+        "energyJ": 1.5430801884970164
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101032,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 19,
+        "meanAltitudeErrorM": 0.1133258765279677,
+        "reward": -1083.5638074112173,
+        "energyJ": 0.7200107809598305
+      },
+      "policy": {
+        "seed": 101032,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 20,
+        "meanAltitudeErrorM": 0.10603147411908469,
+        "reward": -1082.6170994962033,
+        "energyJ": 0.7510840031704462
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101033,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 176,
+        "meanAltitudeErrorM": 0.09039013275522295,
+        "reward": -941.0413659150497,
+        "energyJ": 8.727301910549848
+      },
+      "policy": {
+        "seed": 101033,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 181,
+        "meanAltitudeErrorM": 0.11300926320417996,
+        "reward": -941.7203741825374,
+        "energyJ": 8.952490845644002
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101034,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 41,
+        "meanAltitudeErrorM": 0.10080454706388547,
+        "reward": -1063.5838094528747,
+        "energyJ": 1.9799017601242854
+      },
+      "policy": {
+        "seed": 101034,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 40,
+        "meanAltitudeErrorM": 0.08564149852387429,
+        "reward": -1064.0228471560285,
+        "energyJ": 2.0106325650085637
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101035,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 155,
+        "meanAltitudeErrorM": 0.20622035142028522,
+        "reward": -978.9081688031497,
+        "energyJ": 7.423817118645594
+      },
+      "policy": {
+        "seed": 101035,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 155,
+        "meanAltitudeErrorM": 0.1942832820024253,
+        "reward": -977.5236106327734,
+        "energyJ": 7.370388545117457
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101036,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 289,
+        "meanAltitudeErrorM": 0.047707047762261555,
+        "reward": -826.0944123927939,
+        "energyJ": 14.238585714417688
+      },
+      "policy": {
+        "seed": 101036,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 287,
+        "meanAltitudeErrorM": 0.051609114005645995,
+        "reward": -830.6489321128652,
+        "energyJ": 14.165895493718946
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101037,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 97,
+        "meanAltitudeErrorM": 0.30325092588935093,
+        "reward": -1034.0037616458117,
+        "energyJ": 4.770763660968156
+      },
+      "policy": {
+        "seed": 101037,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 94,
+        "meanAltitudeErrorM": 0.2896493436173036,
+        "reward": -1035.1448102735264,
+        "energyJ": 4.650014259283986
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101038,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 71,
+        "meanAltitudeErrorM": 0.24871726814166725,
+        "reward": -1047.4921971863816,
+        "energyJ": 3.5518313400982104
+      },
+      "policy": {
+        "seed": 101038,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 69,
+        "meanAltitudeErrorM": 0.23364358606917351,
+        "reward": -1048.291175743548,
+        "energyJ": 3.5230123675847858
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101039,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 15,
+        "meanAltitudeErrorM": 0.37306906293923564,
+        "reward": -1090.9738242184396,
+        "energyJ": 0.4689436210236042
+      },
+      "policy": {
+        "seed": 101039,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 15,
+        "meanAltitudeErrorM": 0.374023598360948,
+        "reward": -1091.0305264747792,
+        "energyJ": 0.4511179348753241
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101040,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 46,
+        "meanAltitudeErrorM": 0.10710896162593589,
+        "reward": -1059.395623866404,
+        "energyJ": 2.2492489790929273
+      },
+      "policy": {
+        "seed": 101040,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 47,
+        "meanAltitudeErrorM": 0.11578713401336577,
+        "reward": -1059.1656937497985,
+        "energyJ": 2.2230128205969497
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101041,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 256,
+        "meanAltitudeErrorM": 0.10987405112470552,
+        "reward": -873.6621291537199,
+        "energyJ": 12.497321665804948
+      },
+      "policy": {
+        "seed": 101041,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 255,
+        "meanAltitudeErrorM": 0.09165670321887467,
+        "reward": -871.3201662381169,
+        "energyJ": 12.421366199158962
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101042,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 195,
+        "meanAltitudeErrorM": 0.10036966215263585,
+        "reward": -925.8259480376169,
+        "energyJ": 9.598191168333955
+      },
+      "policy": {
+        "seed": 101042,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 197,
+        "meanAltitudeErrorM": 0.10792797476101808,
+        "reward": -926.6111657744647,
+        "energyJ": 9.682852864691045
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101043,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 93,
+        "meanAltitudeErrorM": 0.21155216129219806,
+        "reward": -1027.766941234712,
+        "energyJ": 4.5692612934149786
+      },
+      "policy": {
+        "seed": 101043,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 90,
+        "meanAltitudeErrorM": 0.18567548458575844,
+        "reward": -1028.2802320148915,
+        "energyJ": 4.39355194579445
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101044,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 76,
+        "meanAltitudeErrorM": 0.1210913034393346,
+        "reward": -1033.8631533111536,
+        "energyJ": 3.7359781008121944
+      },
+      "policy": {
+        "seed": 101044,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 78,
+        "meanAltitudeErrorM": 0.14351989175246013,
+        "reward": -1034.3351894150605,
+        "energyJ": 3.9438945720919882
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101045,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 139,
+        "meanAltitudeErrorM": 0.0637525896149013,
+        "reward": -970.7620121687773,
+        "energyJ": 6.794711777935345
+      },
+      "policy": {
+        "seed": 101045,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 137,
+        "meanAltitudeErrorM": 0.042869198552540344,
+        "reward": -970.1764537222315,
+        "energyJ": 6.662646010027597
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101046,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 202,
+        "meanAltitudeErrorM": 0.03970572164398678,
+        "reward": -906.9167280900512,
+        "energyJ": 10.013958081157595
+      },
+      "policy": {
+        "seed": 101046,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 199,
+        "meanAltitudeErrorM": 0.03480184449818936,
+        "reward": -909.6810119261951,
+        "energyJ": 9.849009770222935
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101047,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 184,
+        "meanAltitudeErrorM": 0.1441708488889726,
+        "reward": -944.1176080391881,
+        "energyJ": 9.01358391269798
+      },
+      "policy": {
+        "seed": 101047,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 175,
+        "meanAltitudeErrorM": 0.13066786802864955,
+        "reward": -950.1744780602208,
+        "energyJ": 8.544740935454747
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101048,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 281,
+        "meanAltitudeErrorM": 0.024707236262019632,
+        "reward": -826.822103055084,
+        "energyJ": 13.800974713584043
+      },
+      "policy": {
+        "seed": 101048,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 278,
+        "meanAltitudeErrorM": 0.03245702820528747,
+        "reward": -833.4694111137047,
+        "energyJ": 13.62306753514703
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101049,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 53,
+        "meanAltitudeErrorM": 0.20974964779244537,
+        "reward": -1058.636468616974,
+        "energyJ": 2.655008053400121
+      },
+      "policy": {
+        "seed": 101049,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 57,
+        "meanAltitudeErrorM": 0.23335971526595886,
+        "reward": -1057.0554765573636,
+        "energyJ": 2.9098568468490584
+      }
+    },
+    {
+      "baseline": {
+        "seed": 101050,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 216,
+        "meanAltitudeErrorM": 0.14751006256245502,
+        "reward": -917.6436024411554,
+        "energyJ": 10.540233849826782
+      },
+      "policy": {
+        "seed": 101050,
+        "wind": true,
+        "successful": false,
+        "failed": true,
+        "failureReason": "Numerical operating envelope exceeded",
+        "steps": 220,
+        "meanAltitudeErrorM": 0.12315238595989322,
+        "reward": -909.6007454947098,
+        "energyJ": 10.807895319386754
+      }
+    }
+  ]
+}
