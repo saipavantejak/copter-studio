@@ -1,0 +1,994 @@
+diff --git a/README.md b/README.md
+index 154c9d9..ef9d3b8 100644
+--- a/README.md
++++ b/README.md
+@@ -167 +167 @@ MIT
+-## Reproducible ML evaluation
++## Pre-registered ML improvement study
+@@ -169 +169 @@ MIT
+-The current simulation-only artifact is [`public/learning/residual-policy.json`](public/learning/residual-policy.json). `physicalValidation=false`, `passesSimulationGate=false`, and `promoted=false`. The existing controller remains active.
++**Conclusion A.** A: the selected candidate passes the unchanged simulation gate on fresh data, with the predeclared final evidence requirement also satisfied. Physical promotion remains false.
+@@ -171 +171 @@ The current simulation-only artifact is [`public/learning/residual-policy.json`]
+-Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bins, reward, physics, success criteria and the candidate gate are unchanged. Validation banks: 200001–200050 (calm), 201001–201050 (synthetic wind). Fresh final banks: 300001–300050 (calm), 301001–301050 (wind). No tuning or winner selection was performed. Legacy test banks were used only to reproduce and diagnose the historical run.
++Registration was committed before experiments: `bf89608`. The physically scaled wind correction was committed separately as `57fe174`, using manufacturer dimensions, a declared flat-plate drag proxy and relative airspeed. It is not measured aerodynamic calibration. Baseline qualification was 100/100 missions with 0 engine failures, so the registered mild-wind scenario was retained without further modification.
+@@ -173,13 +173 @@ Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bi
+-| Training seed | Scenario | Baseline successes | Policy successes | Baseline altitude error (m) | Policy altitude error (m) | Baseline reward | Policy reward | Gate |
+-|---|---|---|---|---|---|---|---|---|
+-| 314159 | Calm | 50/50 | 50/50 | 0.026406 | 0.035383 | -27.751174 | -42.950386 | Fail |
+-| 314159 | Wind | 0/50 | 0/50 | 0.158275 | 0.153262 | -1000.546097 | -999.968646 | Fail |
+-| 271828 | Calm | 50/50 | 50/50 | 0.026406 | 0.044399 | -27.751174 | -50.181579 | Fail |
+-| 271828 | Wind | 0/50 | 0/50 | 0.158275 | 0.172537 | -1000.546097 | -1002.149485 | Fail |
+-| 161803 | Calm | 50/50 | 50/50 | 0.026406 | 0.045299 | -27.751174 | -50.365393 | Fail |
+-| 161803 | Wind | 0/50 | 0/50 | 0.158275 | 0.166930 | -1000.546097 | -1002.425054 | Fail |
+-
+-| Scenario | Mean policy − baseline reward | Crossed-bootstrap 95% CI | Training-run t 95% CI (fixed episode bank) |
+-|---|---|---|---|
+-| Calm | -20.081278 | [-24.154069, -15.325759] | [-30.586678, -9.575878] |
+-| Wind | -0.968298 | [-2.373722, 0.486239] | [-4.311276, 2.374680] |
++Six one-factor candidates were evaluated, each with three training seeds. Validation used 500001–500100 (calm) and 501001–501100 (wind), with Bonferroni correction across twelve primary candidate/scenario comparisons. No consumed legacy/audit banks were used for tuning. Candidate **f (3000 episodes and visit-decaying alpha)** was selected by the committed validation-only rule. The final test used 600001–600200 / 601001–601200 exactly once, with no subsequent tuning.
+@@ -187 +175,4 @@ Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bi
+-There are 50 unique final IC seeds per scenario, shared across the three policies: 100 unique baseline flights and 300 policy flights. Repeated baseline records are not independent observations. Each run's calm success rate has a Wilson 95% CI of [0.928652, 1.000000]; each wind success rate has CI [0.000000, 0.071348]. The crossed bootstrap resamples training runs and shared episode seeds; only three training runs are available. Degenerate observed success-difference intervals do not prove equal underlying success probabilities. The historical candidate gate is applied separately to every run; no seed is selected as a winner.
++| Scenario | Baseline reward | Policy reward | Reward Δ | 95% crossed CI | Two-scenario 97.5% CI | Baseline / policy altitude error (m) | Baseline / policy successes | Engine failures |
++|---|---|---|---|---|---|---|---|---|
++| Calm | -27.050001 | -23.414768 | 3.635233 | [2.115323, 5.068377] | [1.941497, 5.235808] | 0.025703 / 0.021802 | 200/200 / 600/600 | 0/200 / 0/600 |
++| Wind | -29.419173 | -25.185662 | 4.233511 | [2.826502, 5.540468] | [2.631572, 5.687716] | 0.028017 / 0.023495 | 200/200 / 600/600 | 0/200 / 0/600 |
+@@ -189 +180 @@ There are 50 unique final IC seeds per scenario, shared across the three policie
+-### Limitations
++Policy figures pool three trained policies sharing 200 episode seeds per scenario; repeated baseline observations are not treated as independent. The ordinary 95% and two-scenario-adjusted reward intervals use a crossed bootstrap over training seeds and episode seeds. Only three training seeds limit the accuracy of interval coverage.
+@@ -191 +182 @@ There are 50 unique final IC seeds per scenario, shared across the three policie
+-Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncalibrated for this nano configuration and every final wind flight terminates at the numerical operating envelope. Conditional pre-failure altitude error cannot establish robustness. No measured gust or battery-to-depletion endurance labels exist. The policy observes only altitude error and vertical speed and changes motor collective commands; no physical-flight performance claim is supported. The Q-table at the top level is the first predeclared run for compatibility, not a selected best policy.
++Simulation only; `physicalValidation=false`, `passesSimulationGate=true`, `promoted=false`. The success criteria, original reward and per-run promotion gate are unchanged. Physics was frozen after the required calibration commit. A shorter-hold candidate retains the same decision-level gamma, so its temporal discount horizon also changes. No severe-wind, flight robustness or endurance claim is supported.
+@@ -193 +184 @@ Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncali
+-Reproduction commands, original and refreshed numeric-claim tables, diagnosis and a supported resume statement are in [`reports/ml-evaluation-audit.md`](reports/ml-evaluation-audit.md). The CI benchmark's mission non-success threshold is separate from the RL promotion gate.
++All six validation results, per-run final outcomes, calibration sources, registered selection and reproduction commands are in [the study audit](reports/study/improvement-study.md). The audit-era results are preserved separately. The final artifact is [residual-policy.json](public/learning/residual-policy.json).
+diff --git a/scripts/learning/README.md b/scripts/learning/README.md
+index b130982..bfa88e0 100644
+--- a/scripts/learning/README.md
++++ b/scripts/learning/README.md
+@@ -14,2 +14,5 @@ node --import tsx scripts/learning/train-residual-legacy.ts
+-npm run train:residual -- --stage=validation
+-npm run train:residual -- --stage=final
++node --import tsx scripts/learning/study/run-study.ts --stage=qualify
++node --import tsx scripts/learning/study/run-study.ts --stage=validation
++node --import tsx scripts/learning/study/run-study.ts --stage=select
++# Commit the generated selection before final; run in a fresh reproduction worktree.
++node --import tsx scripts/learning/study/run-study.ts --stage=final
+@@ -29 +32 @@ The measured source subset is in `data/training/reference-measurements.json`. It
+-- **Reinforcement learning:** unchanged tabular Q-learning settings are retrained across three predeclared runs, with separate validation and fresh final-test seed banks. All candidate policies are retained; none is selected based on test scores. The final artifact and generated results below are authoritative.
++- **Reinforcement learning:** six predeclared one-factor candidates use three training streams each under a frozen physically scaled wind proxy. Candidate selection uses new validation seeds only; the selected candidate is evaluated once on a separate fresh final bank. All validation candidates and negatives are retained. The final artifact and generated results below are authoritative.
+@@ -35 +38 @@ Bitcraze held-out MAE: 0.000637 N total thrust (approximately 0.065 g-force) and
+-The original single-run result reproduced exactly and is retained in `reports/rl-legacy-reproduction.json`. Its calm baseline/policy errors were 0.0303 / 0.0371 m; both wind controllers failed. The new final test also rejects promotion; see the generated results below. No controller or physics change is installed.
++The original single-run result reproduced exactly and is retained in `reports/rl-legacy-reproduction.json`. Its calm baseline/policy errors were 0.0303 / 0.0371 m; both wind controllers failed. Those historical scores use the old uncalibrated wind model. The preregistered improvement study below uses a separately committed wind proxy and new seed banks; its final candidate passes the simulation gate but is not physically validated or installed in the active controller.
+@@ -68 +71 @@ A future energy dataset should record test/session ID, source and usage terms, h
+-## Reproducible ML evaluation
++## Pre-registered ML improvement study
+@@ -70 +73 @@ A future energy dataset should record test/session ID, source and usage terms, h
+-The current simulation-only artifact is [`public/learning/residual-policy.json`](../../public/learning/residual-policy.json). `physicalValidation=false`, `passesSimulationGate=false`, and `promoted=false`. The existing controller remains active.
++**Conclusion A.** A: the selected candidate passes the unchanged simulation gate on fresh data, with the predeclared final evidence requirement also satisfied. Physical promotion remains false.
+@@ -72 +75 @@ The current simulation-only artifact is [`public/learning/residual-policy.json`]
+-Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bins, reward, physics, success criteria and the candidate gate are unchanged. Validation banks: 200001–200050 (calm), 201001–201050 (synthetic wind). Fresh final banks: 300001–300050 (calm), 301001–301050 (wind). No tuning or winner selection was performed. Legacy test banks were used only to reproduce and diagnose the historical run.
++Registration was committed before experiments: `bf89608`. The physically scaled wind correction was committed separately as `57fe174`, using manufacturer dimensions, a declared flat-plate drag proxy and relative airspeed. It is not measured aerodynamic calibration. Baseline qualification was 100/100 missions with 0 engine failures, so the registered mild-wind scenario was retained without further modification.
+@@ -74,13 +77 @@ Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bi
+-| Training seed | Scenario | Baseline successes | Policy successes | Baseline altitude error (m) | Policy altitude error (m) | Baseline reward | Policy reward | Gate |
+-|---|---|---|---|---|---|---|---|---|
+-| 314159 | Calm | 50/50 | 50/50 | 0.026406 | 0.035383 | -27.751174 | -42.950386 | Fail |
+-| 314159 | Wind | 0/50 | 0/50 | 0.158275 | 0.153262 | -1000.546097 | -999.968646 | Fail |
+-| 271828 | Calm | 50/50 | 50/50 | 0.026406 | 0.044399 | -27.751174 | -50.181579 | Fail |
+-| 271828 | Wind | 0/50 | 0/50 | 0.158275 | 0.172537 | -1000.546097 | -1002.149485 | Fail |
+-| 161803 | Calm | 50/50 | 50/50 | 0.026406 | 0.045299 | -27.751174 | -50.365393 | Fail |
+-| 161803 | Wind | 0/50 | 0/50 | 0.158275 | 0.166930 | -1000.546097 | -1002.425054 | Fail |
+-
+-| Scenario | Mean policy − baseline reward | Crossed-bootstrap 95% CI | Training-run t 95% CI (fixed episode bank) |
+-|---|---|---|---|
+-| Calm | -20.081278 | [-24.154069, -15.325759] | [-30.586678, -9.575878] |
+-| Wind | -0.968298 | [-2.373722, 0.486239] | [-4.311276, 2.374680] |
++Six one-factor candidates were evaluated, each with three training seeds. Validation used 500001–500100 (calm) and 501001–501100 (wind), with Bonferroni correction across twelve primary candidate/scenario comparisons. No consumed legacy/audit banks were used for tuning. Candidate **f (3000 episodes and visit-decaying alpha)** was selected by the committed validation-only rule. The final test used 600001–600200 / 601001–601200 exactly once, with no subsequent tuning.
+@@ -88 +79,4 @@ Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bi
+-There are 50 unique final IC seeds per scenario, shared across the three policies: 100 unique baseline flights and 300 policy flights. Repeated baseline records are not independent observations. Each run's calm success rate has a Wilson 95% CI of [0.928652, 1.000000]; each wind success rate has CI [0.000000, 0.071348]. The crossed bootstrap resamples training runs and shared episode seeds; only three training runs are available. Degenerate observed success-difference intervals do not prove equal underlying success probabilities. The historical candidate gate is applied separately to every run; no seed is selected as a winner.
++| Scenario | Baseline reward | Policy reward | Reward Δ | 95% crossed CI | Two-scenario 97.5% CI | Baseline / policy altitude error (m) | Baseline / policy successes | Engine failures |
++|---|---|---|---|---|---|---|---|---|
++| Calm | -27.050001 | -23.414768 | 3.635233 | [2.115323, 5.068377] | [1.941497, 5.235808] | 0.025703 / 0.021802 | 200/200 / 600/600 | 0/200 / 0/600 |
++| Wind | -29.419173 | -25.185662 | 4.233511 | [2.826502, 5.540468] | [2.631572, 5.687716] | 0.028017 / 0.023495 | 200/200 / 600/600 | 0/200 / 0/600 |
+@@ -90 +84 @@ There are 50 unique final IC seeds per scenario, shared across the three policie
+-### Limitations
++Policy figures pool three trained policies sharing 200 episode seeds per scenario; repeated baseline observations are not treated as independent. The ordinary 95% and two-scenario-adjusted reward intervals use a crossed bootstrap over training seeds and episode seeds. Only three training seeds limit the accuracy of interval coverage.
+@@ -92 +86 @@ There are 50 unique final IC seeds per scenario, shared across the three policie
+-Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncalibrated for this nano configuration and every final wind flight terminates at the numerical operating envelope. Conditional pre-failure altitude error cannot establish robustness. No measured gust or battery-to-depletion endurance labels exist. The policy observes only altitude error and vertical speed and changes motor collective commands; no physical-flight performance claim is supported. The Q-table at the top level is the first predeclared run for compatibility, not a selected best policy.
++Simulation only; `physicalValidation=false`, `passesSimulationGate=true`, `promoted=false`. The success criteria, original reward and per-run promotion gate are unchanged. Physics was frozen after the required calibration commit. A shorter-hold candidate retains the same decision-level gamma, so its temporal discount horizon also changes. No severe-wind, flight robustness or endurance claim is supported.
+@@ -94 +88 @@ Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncali
+-Reproduction commands, original and refreshed numeric-claim tables, diagnosis and a supported resume statement are in [`reports/ml-evaluation-audit.md`](../../reports/ml-evaluation-audit.md). The CI benchmark's mission non-success threshold is separate from the RL promotion gate.
++All six validation results, per-run final outcomes, calibration sources, registered selection and reproduction commands are in [the study audit](../../reports/study/improvement-study.md). The audit-era results are preserved separately. The final artifact is [residual-policy.json](../../public/learning/residual-policy.json).
+diff --git a/scripts/learning/audit-claims.py b/scripts/learning/audit-claims.py
+index d593973..fff3d88 100644
+--- a/scripts/learning/audit-claims.py
++++ b/scripts/learning/audit-claims.py
+@@ -4 +4 @@ Run reproduction commands first. Never fits/tunes policies or edits result JSON.
+-import csv,json,math,pathlib,re,subprocess
++import csv,json,math,pathlib,re,subprocess,gzip
+@@ -38,2 +38,2 @@ commands={
+- 'public/learning/residual-policy.json':'npm run train:residual -- --stage=final',
+- 'src/learning/rl-summary.json':'npm run train:residual -- --stage=final',
++ 'public/learning/residual-policy.json':'node --import tsx scripts/learning/study/run-study.ts --stage=final' if policy.get('schemaVersion')==3 else 'npm run train:residual -- --stage=final',
++ 'src/learning/rl-summary.json':'node --import tsx scripts/learning/study/run-study.ts --stage=final' if policy.get('schemaVersion')==3 else 'npm run train:residual -- --stage=final',
+@@ -41,2 +41,2 @@ commands={
+-for path in sorted((ROOT/'reports').glob('*.json')):
+- name=str(path.relative_to(ROOT));current=load(name);cmd=commands.get(name,'NO GENERATOR REGISTERED')
++for path in sorted(list((ROOT/'reports').glob('*.json')) + (list((ROOT/'reports/study').glob('*.json')) if policy.get('schemaVersion')==3 else [])):
++ name=str(path.relative_to(ROOT));current=load(name);cmd=commands.get(name,current.get('provenance',{}).get('command','NO GENERATOR REGISTERED'))
+@@ -121,0 +122,3 @@ for filename,rows in [('numeric-claims-original.csv',original),('numeric-claims-
++ if filename=='numeric-claims-final.csv':
++  # Deterministic compressed inventory for git; full CSV remains locally available.
++  (ROOT/'reports'/(filename+'.gz')).write_bytes(gzip.compress((ROOT/'reports'/filename).read_bytes(),mtime=0))
+diff --git a/scripts/learning/render-evaluation-report.py b/scripts/learning/render-evaluation-report.py
+index 045b3b8..948ecd5 100644
+--- a/scripts/learning/render-evaluation-report.py
++++ b/scripts/learning/render-evaluation-report.py
+@@ -6 +6,6 @@ load=lambda p:json.loads((ROOT/p).read_text())
+-p=load('public/learning/residual-policy.json');v=load('reports/rl-validation.json');old=load('reports/rl-legacy-reproduction.json')
++p=load('public/learning/residual-policy.json')
++if p.get('schemaVersion')==3:
++ import subprocess
++ subprocess.run(['python',str(ROOT/'scripts/learning/render-study-report.py')]+(['--check'] if args.check else []),check=True)
++ raise SystemExit(0)
++v=load('reports/rl-validation.json');old=load('reports/rl-legacy-reproduction.json')
+diff --git a/scripts/learning/render-study-report.py b/scripts/learning/render-study-report.py
+new file mode 100644
+index 0000000..4cd0cbf
+--- /dev/null
++++ b/scripts/learning/render-study-report.py
+@@ -0,0 +1,155 @@
++"""Render the pre-registered study from generated records; never runs controller episodes."""
++import argparse,json,pathlib,subprocess
++ROOT=pathlib.Path(__file__).resolve().parents[2]
++parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
++load=lambda p:json.loads((ROOT/p).read_text())
++v=load('reports/study/validation.json');q=load('reports/study/qualification.json');s=load('reports/study/selection.json');p=load('reports/study/final.json');reliability=load('reports/reliability-v3.json')
++f=lambda x:f'{x:.6f}'
++ci=lambda x:'['+', '.join(f(t) for t in x)+']'
++validation=['| Candidate | Scenario | Mean reward Δ vs baseline | 95% crossed CI | Bonferroni 99.5833% CI | Altitude-error Δ (m) | Successes / engine failures | All-run original gate | Eligible |', '|---|---|---|---|---|---|---|---|---|']
++for c in v['candidates']:
++ for r in c['results']:
++  d=r['comparisons']['reward'];a=r['comparisons']['meanAltitudeErrorM'];policy=r['policy'];validation.append(f"| {c['candidate']['id']}: {c['candidate']['label']} | {'Wind' if r['wind'] else 'Calm'} | {f(d['estimate'])} | {ci(d['ci95'])} | {ci(d['adjustedCI'])} | {f(a['estimate'])} | {policy['successes']}/{policy['episodes']} ; {policy['failures']}/{policy['episodes']} | {c['passesOriginalGate']} | {c['eligible']} |")
++validation_table='\n'.join(validation)
++final=['| Scenario | Baseline reward | Policy reward | Reward Δ | 95% crossed CI | Two-scenario 97.5% CI | Baseline / policy altitude error (m) | Baseline / policy successes | Engine failures |', '|---|---|---|---|---|---|---|---|---|']
++for r in p['results']:
++ d=r['comparisons']['reward'];b,a=r['baseline'],r['policy'];final.append(f"| {'Wind' if r['wind'] else 'Calm'} | {f(b['meanReward'])} | {f(a['meanReward'])} | {f(d['estimate'])} | {ci(d['ci95'])} | {ci(d['adjustedCI'])} | {f(b['meanAltitudeErrorM'])} / {f(a['meanAltitudeErrorM'])} | {b['successes']}/{b['episodes']} / {a['successes']}/{a['episodes']} | {b['failures']}/{b['episodes']} / {a['failures']}/{a['episodes']} |")
++final_table='\n'.join(final)
++perrun=['| Training exploration seed | Scenario | Baseline reward | Policy reward | Altitude error baseline / policy (m) | Successes baseline / policy | Original two-scenario gate |', '|---|---|---|---|---|---|---|']
++for run in p['runResults']:
++ for r in run['results']:
++  b,a=r['baseline'],r['policy'];perrun.append(f"| {run['explorationSeed']} | {'Wind' if r['wind'] else 'Calm'} | {f(b['meanReward'])} | {f(a['meanReward'])} | {f(b['meanAltitudeErrorM'])} / {f(a['meanAltitudeErrorM'])} | {b['successes']}/{b['episodes']} / {a['successes']}/{a['episodes']} | {run['passesOriginalGate']} |")
++perrun_table='\n'.join(perrun)
++reference=['| Reference training seed | Scenario | Baseline reward | Unchanged Q-learning reward |', '|---|---|---|---|']
++for run in v['reference']['runResults']:
++ for r in run['results']:reference.append(f"| {run['explorationSeed']} | {'Wind' if r['wind'] else 'Calm'} | {f(r['baseline']['meanReward'])} | {f(r['policy']['meanReward'])} |")
++ref_table='\n'.join(reference)
++verdict=('A: the selected candidate passes the unchanged simulation gate on fresh data, with the predeclared final evidence requirement also satisfied. Physical promotion remains false.' if p['conclusion']=='A' else 'B: nothing tested on the final bank passes the predeclared supported-promotion rule. The selected candidate did not establish a legitimate two-scenario improvement; promoted=false and the existing controller is retained.')
++if p['conclusion']=='B' and not p['passesSimulationGate']:
++ verdict='B: no selected candidate passes the unchanged gate on fresh final data. The validation-selected finalist fails. promoted=false; the existing controller is retained. The study stopped after this single final test.'
++gains=[100*(r['baseline']['meanAltitudeErrorM']-r['policy']['meanAltitudeErrorM'])/r['baseline']['meanAltitudeErrorM'] for r in p['results']]
++resume=("Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. " +
++ (f"A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by {gains[0]:.1f}% in calm and {gains[1]:.1f}% in mild synthetic wind; physical-flight validation was not performed." if p['conclusion']=='A' else "Retained the engineering controller when the selected policy did not pass the unchanged gate on fresh calm and mild synthetic-wind simulations."))
++commands='''npm ci
++# All experiment inputs and source must be committed before execution.
++node --import tsx scripts/learning/study/run-study.ts --stage=qualify
++node --import tsx scripts/learning/study/run-study.ts --stage=validation
++node --import tsx scripts/learning/study/run-study.ts --stage=select
++git add reports/study/qualification.json reports/study/validation.json reports/study/selection.json
++git commit -m "Freeze validation-only candidate selection before final study test"
++node --import tsx scripts/learning/study/run-study.ts --stage=final
++node --import tsx scripts/learning/verify-artifacts.ts
++python scripts/learning/render-study-report.py
++npm test
++npm run lint
++npm run build'''
++section=f'''## Pre-registered ML improvement study
++
++**Conclusion {p['conclusion']}.** {verdict}
++
++Registration was committed before experiments: `bf89608`. The physically scaled wind correction was committed separately as `57fe174`, using manufacturer dimensions, a declared flat-plate drag proxy and relative airspeed. It is not measured aerodynamic calibration. Baseline qualification was {q['result']['successes']}/{q['result']['episodes']} missions with {q['result']['failures']} engine failures, so the registered mild-wind scenario was retained without further modification.
++
++Six one-factor candidates were evaluated, each with three training seeds. Validation used 500001–500100 (calm) and 501001–501100 (wind), with Bonferroni correction across twelve primary candidate/scenario comparisons. No consumed legacy/audit banks were used for tuning. Candidate **{s['selectedId']} ({p['candidate']['label']})** was selected by the committed validation-only rule{' as a diagnostic finalist because none was eligible' if s['diagnosticOnly'] else ''}. The final test used 600001–600200 / 601001–601200 exactly once, with no subsequent tuning.
++
++{final_table}
++
++Policy figures pool three trained policies sharing 200 episode seeds per scenario; repeated baseline observations are not treated as independent. The ordinary 95% and two-scenario-adjusted reward intervals use a crossed bootstrap over training seeds and episode seeds. Only three training seeds limit the accuracy of interval coverage.
++
++Simulation only; `physicalValidation=false`, `passesSimulationGate={str(p['passesSimulationGate']).lower()}`, `promoted=false`. The success criteria, original reward and per-run promotion gate are unchanged. Physics was frozen after the required calibration commit. A shorter-hold candidate retains the same decision-level gamma, so its temporal discount horizon also changes. No severe-wind, flight robustness or endurance claim is supported.
++
++All six validation results, per-run final outcomes, calibration sources, registered selection and reproduction commands are in [the study audit](reports/study/improvement-study.md). The audit-era results are preserved separately. The final artifact is [residual-policy.json](public/learning/residual-policy.json).
++'''
++report=f'''# Preregistered residual-controller improvement study
++
++{verdict}
++
++## Pre-registration and execution order
++
++- [Pre-registration](preregistration.md), commit `bf89608`: exact six candidates, seeds, metrics, correction, selection and stopping rule. This file was committed before any study controller execution.
++- [Wind calibration justification](wind-calibration.md), commit `57fe174`: source-backed geometry/drag proxy, relative airspeed and fixed mild-gust scenario, before policy work.
++- Study implementation commit `adf410d`: all candidate definitions and guards committed before baseline qualification or training.
++- Qualification command/source commit: `{q['provenance']['command']}` / `{q['provenance']['sourceCommit']}`.
++- Validation command/source commit: `{v['provenance']['command']}` / `{v['provenance']['sourceCommit']}`.
++- Validation-only selection was frozen and committed before final execution; final source commit: `{p['provenance']['sourceCommit']}`. Full SHA-256 source and registration hashes are embedded in each artifact.
++
++The required wind correction is the only physics change. Study baseline and every candidate use the same frozen model. The default interactive engine and audit-era reproduction still use the legacy path unless explicitly opted into the study wind model. Results from the old overwhelming wind scenario must not be compared numerically as though they came from the new mild physical proxy.
++
++## Wind qualification
++
++Registered inputs: rho=1.225 kg/m³, Cd=1.28 flat-plate proxy, frontal rectangle 0.092×0.029=0.002668 m²; force 0.5 rho Cd A |air−vehicle velocity| (air−vehicle velocity). Sources and limitations are in [wind-calibration.md](wind-calibration.md), including NASA and Bitcraze links. This supplies correct dimensional scaling and an explicit geometric assumption, not a measured Crazyflie drag fit. No wind severity was adjusted after results.
++
++Qualification used separate baseline-only seeds 510001–510100: {q['result']['successes']}/{q['result']['episodes']} successes, {q['result']['failures']}/{q['result']['episodes']} engine failures, mean reward {f(q['result']['meanReward'])}, mean altitude error {f(q['result']['meanAltitudeErrorM'])} m. The registered threshold was >=20% success, <=20% engine failures and finite records. A 100% success rate was allowed beforehand; the benchmark discriminates continuous tracking/reward, not observed crash rates at this mild severity. Qualification accepted={q['accepted']}.
++
++## Every validation candidate
++
++Reward Δ is learned policy minus engineering baseline: positive is better. Altitude-error Δ is learned minus baseline: negative is better. All scores use the original reward function. Gate/eligibility columns evaluate both scenarios and all three runs. Pooled policy episodes share IC seeds; they are not 300 independent trials for binary CIs.
++
++{validation_table}
++
++Ordinary intervals are two-sided 95% crossed percentile bootstrap CIs. Reward intervals adjusted by Bonferroni use confidence 1−0.05/(6×2)=99.5833333333%, simultaneously protecting the twelve primary comparisons. There are 50,000 predeclared resamples per metric/scenario/candidate, with recorded bootstrap seeds. Altitude, success and engine-failure CIs are descriptive and are stored in [validation.json](validation.json). Complete per-run outcomes, tables, visit counts and raw episode rows are retained; no negative candidate is dropped.
++
++Three training streams use exploration seeds 424001/424002/424003 and IC ranges beginning 710001/720001/730001. Candidates a–e train 600 episodes each; f trains 3,000 with alpha=0.1/(1+state-action visits/100). Altitude-only, tilt, command magnitude, hold and table separation changes are isolated exactly as registered. Candidate d changes hold from 8 to 2 steps with gamma fixed at 0.97 per decision; its effective temporal discount horizon is therefore shorter, a confound within the declared hold factor. None changes the reward or success criteria.
++
++### Descriptive unchanged-learning control
++
++The unchanged Q-learning algorithm was also trained under the corrected physics to separate a new training environment from candidate changes. This control was not an additional candidate and was excluded from selection. It has no final-test access.
++
++{ref_table}
++
++## Frozen selection
++
++Selected: **{s['selectedId']} — {p['candidate']['label']}**. Eligible validation IDs: {s['eligibleIds']}. Diagnostic-only selection={s['diagnosticOnly']}. The registered score is the minimum mean reward difference across scenarios; selected score {f(s['selectionScore'])}. Eligibility additionally required every training run's unchanged gate and corrected lower confidence bounds >=0 in both scenarios with strict positivity in one. With no eligible candidate, the same score identifies a diagnostic finalist; it is not a validated winner. Tie-breaking retains registered order. No training seed was picked as a winner.
++
++[selection.json](selection.json) records the validation hash and was committed before final testing. [final-attempt.json](final-attempt.json) is written before accessing the first final seed and blocks subsequent study stages/final runs. No final-test data were used to fit, tune or select.
++
++## Single final test
++
++Final IC banks: 600001–600200 calm, 601001–601200 mild wind. All three selected policies are evaluated; baseline uses 200 unique seeds per scenario. There are 1,200 policy flights and 400 unique baseline trajectories, with paired reuse across training runs. Final primary reward comparisons use ordinary 95% intervals and Bonferroni-adjusted 97.5% intervals across the two scenarios.
++
++{final_table}
++
++{perrun_table}
++
++The unchanged gate requires no worse success/failure counts or mean reward in both scenarios and strict reward improvement in at least one. It is applied separately to every trained policy; all three must pass. The additional predeclared confidence requirement makes a legitimate conclusion stricter, never weaker. Physical promotion remains false regardless of simulation scores. Final original-gate pass={p['passesSimulationGate']}; final statistical-support check={p['statisticalSupport']}.
++
++{verdict}
++
++## Limitations
++
++Simulation only; physicalValidation=false. The bounding-envelope area and flat-plate Cd are proxies; unknown Reynolds-number effects, actual projected area, rotor flow and attitude-dependent drag are not measured. Wind is mild and synthetic. Only three training seeds limit bootstrap coverage reliability, especially for a candidate with unstable seed outcomes. Binary differences can have degenerate intervals when all trials succeed, which does not prove equal underlying failure probabilities. Altitude error is conditional on executed steps. No physical flight, severe wind or endurance label supports broader claims. Validation-wide intervals and final intervals are distinct; a favorable validation seed is never a final performance claim.
++
++## Reproduction commands
++
++Run in an isolated checkout of the committed study source. Existing result files and the final marker intentionally prevent another study evaluation in place. To independently reproduce, prepare a NEW worktree at `adf410d`, where the plan, calibration and implementation are committed but no study result/attempt files exist; then run the commands below. Use the committed selection step before final. This is an exact protocol replay, not a new opportunity to tune against consumed seeds.
++
++```sh
++git worktree add /tmp/copter-study-replay adf410d
++cd /tmp/copter-study-replay
++# Restore reporting helpers only; experiment source remains at the registered implementation.
++git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py
++{commands}
++```
++
++The reporting helpers are restored from the completed-study branch as shown; they only inspect recorded data and do not alter experiment source. Raw artifact generation commands are also embedded in provenance. `residual-policy.json` and `rl-summary.json` were generated only by the committed final-stage script. No result JSON was hand-edited. After final testing, presentation text was corrected to distinguish a passed simulation gate from missing physical validation, and an old test assumption that test seeds must be numerically larger than training seeds was corrected to check disjointness. These changes do not affect experimental code or data; execution-source hashes are verified against the recorded execution commits, rather than later presentation-only revisions.
++
++## Verification and numeric-claim inventory
++
++The current checkout passes {reliability['unitTestsPassed']} tests, TypeScript checking and the production build. `verify-artifacts.ts` reconstructs all six validation summaries/CIs, selection and final comparisons from recorded data, and verifies source hashes against their execution commits without simulating another episode. The complete refreshed inventory is [numeric-claims-final.csv.gz](../numeric-claims-final.csv.gz); `audit-claims.py` also writes the uncompressed CSV locally. The source diff is [improvement-code.patch](improvement-code.patch).
++
++## Supported resume statement
++
++{resume}
++'''
++start='<!-- BEGIN GENERATED ML EVALUATION -->';end='<!-- END GENERATED ML EVALUATION -->'
++def save(path,value):
++ target=ROOT/path
++ if args.check:
++  if target.read_text()!=value:raise SystemExit('Generated study evidence drift: '+path)
++ else:target.write_text(value)
++for path in ['README.md','scripts/learning/README.md']:
++ text=(ROOT/path).read_text();body=section if path=='README.md' else section.replace('](reports/','](../../reports/').replace('](public/','](../../public/')
++ lo=text.index(start);hi=text.index(end,lo)+len(end)
++ save(path,text[:lo]+start+'\n'+body+'\n'+end+text[hi:])
++save('reports/study/improvement-study.md',report)
++save('reports/ml-evaluation-audit.md','# Current ML evaluation audit\n\n'+report.replace('](preregistration.md)','](study/preregistration.md)').replace('](wind-calibration.md)','](study/wind-calibration.md)').replace('](validation.json)','](study/validation.json)').replace('](selection.json)','](study/selection.json)').replace('](final-attempt.json)','](study/final-attempt.json)').replace('](../numeric-claims-final.csv.gz)','](numeric-claims-final.csv.gz)').replace('](improvement-code.patch)','](study/improvement-code.patch)')+'\n\nThe preceding audit-era report is archived in [study/archive/audit-era-report.md](study/archive/audit-era-report.md).\n')
++print('Study documentation checked.' if args.check else 'Rendered all study outcomes and current README evidence.')
+diff --git a/scripts/learning/study/experiment.ts b/scripts/learning/study/experiment.ts
+new file mode 100644
+index 0000000..4541c4f
+--- /dev/null
++++ b/scripts/learning/study/experiment.ts
+@@ -0,0 +1,62 @@
++import { PhysicsEngine } from '../../../src/PhysicsEngine';
++import { VehicleController } from '../../../src/VehicleController';
++import { AIRCRAFT_PROFILES } from '../../../src/AircraftProfiles';
++import { SeededRandom } from '../../../src/SeededRandom';
++import { DEFAULT_MISSION, isTrackingMission } from '../../../src/MissionSpec';
++import { STUDY_WIND } from '../../../src/physics/studyWind';
++import { STUDY, REFERENCE, stateCount, stateIndex, type Candidate } from './protocol';
++export const config={...AIRCRAFT_PROFILES[0].config};
++export const table=(c:Candidate)=>Array.from({length:stateCount(c)},()=>c.actions.map(()=>0));
++export type Run={explorationSeed:number;trainSeedRange:number[];q:number[][];qWind:number[][];visits:number[][];visitsWind:number[][]};
++export const emptyRun=(c:Candidate):Run=>{const q=table(c),visits=table(c);return {explorationSeed:0,trainSeedRange:[],q,qWind:c.separate?table(c):q,visits,visitsWind:c.separate?table(c):visits};};
++export function episode(seed:number,wind:boolean,mode:'train'|'baseline'|'policy',c:Candidate=REFERENCE,run:Run=emptyRun(c),rng=new SeededRandom(1),epsilon=0){
++ const physics=new PhysicsEngine();physics.config={...config};physics.rng=new SeededRandom(seed);physics.studyWindModel={...STUDY_WIND};
++ physics.tests={windEnabled:wind,payloadShiftEnabled:false,batterySagEnabled:false,motorOutEnabled:false,missionPreset:'none'};physics.reset();
++ const ic=new SeededRandom(seed^0x271828);physics.setInitialConditions(ic.uniform(.5,1.5),ic.uniform(-.2,.2),ic.uniform(-.2,.2));
++ const controller=new VehicleController();const q=wind?run.qWind:run.q,visits=wind?run.visitsWind:run.visits;
++ let s=physics.getState(),steps=0,tracking=0,sumError=0,rewardTotal=0,altitudeCost=0,velocityCost=0,actionCost=0,failureCost=0;
++ let maxHorizontalSpeed=0,maxAngularRate=0,saturatedSteps=0;
++ const actionCounts=c.actions.map(()=>0);
++ while(steps<STUDY.steps&&!s.failureReason){
++  const state=stateIndex(c,s);
++  const a=mode==='baseline'?0:mode==='train'&&rng.next()<epsilon?Math.floor(rng.next()*c.actions.length):q[state].reduce((best,v,i)=>v>q[state][best]?i:best,0);
++  actionCounts[a]++;let reward=0;
++  // Baseline always updates every step; candidate hold only controls the residual.
++  for(let j=0;j<c.hold&&steps<STUDY.steps&&!s.failureReason;j++){
++   const command=controller.action(s,config).map((v,i)=>i<4?Math.max(-1,Math.min(1,v+c.actions[a])):v);
++   s=physics.step(command);steps++;
++   const error=Math.abs(s.z-1);sumError+=error;altitudeCost+=error;velocityCost+=.05*Math.abs(s.z_dot);actionCost+=.1*Math.abs(c.actions[a]);
++   reward-=error+.05*Math.abs(s.z_dot)+.1*Math.abs(c.actions[a]);
++   if(steps>STUDY.steps-125&&isTrackingMission(s,DEFAULT_MISSION))tracking++;
++   maxHorizontalSpeed=Math.max(maxHorizontalSpeed,Math.hypot(s.x_dot,s.y_dot));maxAngularRate=Math.max(maxAngularRate,Math.abs(s.p),Math.abs(s.q),Math.abs(s.r));
++   if(physics.lastSaturated)saturatedSteps++;
++  }
++  if(s.failureReason){const cost=100+STUDY.steps-steps;reward-=cost;failureCost+=cost;}rewardTotal+=reward;
++  if(mode==='train'){
++   const next=stateIndex(c,s),terminal=!!s.failureReason||steps===STUDY.steps;
++   const alpha=c.decay?.1/(1+visits[state][a]/100):.1;
++   q[state][a]+=alpha*(reward+(terminal?0:STUDY.gammaPerDecision*Math.max(...q[next]))-q[state][a]);visits[state][a]++;
++  }
++ }
++ return {seed,wind,successful:!s.failureReason&&steps===STUDY.steps&&tracking>=119,failed:!!s.failureReason,
++ failureReason:s.failureReason??null,outcome:s.failureReason??(tracking>=119?'Successful mission':'Tracking criterion not met'),steps,
++ meanAltitudeErrorM:sumError/steps,reward:rewardTotal,energyJ:s.energyConsumed,
++ diagnostics:{trackingSteps:tracking,altitudeCost,velocityCost,actionCost,failureCost,maxHorizontalSpeed,maxAngularRate,saturatedSteps,actionCounts}};
++}
++export type Episode=ReturnType<typeof episode>;
++export function train(c:Candidate,explorationSeed:number,startSeed:number){
++ const run=emptyRun(c);run.explorationSeed=explorationSeed;run.trainSeedRange=[startSeed,startSeed+c.episodes-1];const rng=new SeededRandom(explorationSeed);
++ for(let i=0;i<c.episodes;i++)episode(startSeed+i,i%2===1,'train',c,run,rng,.3-.27*i/(c.episodes-1));return run;
++}
++// Restores shared-table identity lost on JSON load; required only for reproducible training replays.
++export function restore(c:Candidate,run:Run){if(!c.separate){run.qWind=run.q;run.visitsWind=run.visits;}return run;}
++export type Pair={explorationSeed:number;baseline:Episode;policy:Episode};
++export function evaluate(c:Candidate,runs:Run[],ranges:number[][],includeWind:boolean){
++ const pairs:Pair[]=[],before=JSON.stringify(runs);
++ const baseline=new Map<string,Episode>();
++ for(const wind of includeWind?[false,true]:[false])for(let seed=ranges[Number(wind)][0];seed<=ranges[Number(wind)][1];seed++)baseline.set(`${wind}:${seed}`,episode(seed,wind,'baseline',c));
++ for(const run of runs)for(const wind of includeWind?[false,true]:[false])for(let seed=ranges[Number(wind)][0];seed<=ranges[Number(wind)][1];seed++){
++  pairs.push({explorationSeed:run.explorationSeed,baseline:baseline.get(`${wind}:${seed}`)!,policy:episode(seed,wind,'policy',c,run)});
++ }
++ if(JSON.stringify(runs)!==before)throw new Error('Evaluation mutated tables');return pairs;
++}
+diff --git a/scripts/learning/study/protocol.ts b/scripts/learning/study/protocol.ts
+new file mode 100644
+index 0000000..64504bd
+--- /dev/null
++++ b/scripts/learning/study/protocol.ts
+@@ -0,0 +1,28 @@
++export const ORIGINAL_CUTS = [-.5,-.25,-.1,-.03,.03,.1,.25,.5];
++export const ORIGINAL_ACTIONS = [0,-.04,-.02,.02,.04];
++export interface Candidate { id: string; label: string; errorCuts: number[]; tilt: boolean; actions: number[]; hold: number; separate: boolean; episodes: number; decay: boolean }
++const reference: Candidate = { id: 'reference', label: 'Unchanged Q-learning, calibrated physics', errorCuts: ORIGINAL_CUTS, tilt: false, actions: ORIGINAL_ACTIONS, hold: 8, separate: false, episodes: 600, decay: false };
++export const REFERENCE = reference;
++export const CANDIDATES: Candidate[] = [
++ { ...reference, id: 'a', label: 'Fine/nonuniform altitude bins', errorCuts: [-.5,-.25,-.1,-.05,-.02,-.01,-.005,.005,.01,.02,.05,.1,.25,.5] },
++ { ...reference, id: 'b', label: 'Add three tilt bins', tilt: true },
++ { ...reference, id: 'c', label: 'Smaller residual commands', actions: [0,-.01,-.005,.005,.01] },
++ { ...reference, id: 'd', label: 'Hold two physics steps', hold: 2 },
++ { ...reference, id: 'e', label: 'Separate calm/wind Q-tables', separate: true },
++ { ...reference, id: 'f', label: '3000 episodes and visit-decaying alpha', episodes: 3000, decay: true },
++];
++export const STUDY = {
++ planPath: 'reports/study/preregistration.md', planCommit: 'bf89608', calibrationCommit: '57fe174',
++ training: [ { explorationSeed: 424001, startSeed: 710001 }, { explorationSeed: 424002, startSeed: 720001 }, { explorationSeed: 424003, startSeed: 730001 } ],
++ qualification: [510001,510100], validation: [[500001,500100],[501001,501100]], final: [[600001,600200],[601001,601200]],
++ consumed: [[100001,100050],[101001,101050],[200001,200050],[201001,201050],[300001,300050],[301001,301050]],
++ steps: 1000, alpha: .1, gammaPerDecision: .97, epsilon: [.3,.03], bootstrapReplicates: 50000,
++ qualificationMinSuccess: .2, qualificationMaxEngineFailure: .2,
++ selection: 'Eligible: each run original gate, adjusted reward lower bounds >=0 in each scenario and >0 in one; maximize worst-scenario mean reward difference; if none eligible select same score diagnostically; ties listed order. No training-seed winner selection.',
++};
++export function stateCount(c: Candidate) { return (c.errorCuts.length+1)*9*(c.tilt?3:1); }
++export function stateIndex(c: Candidate,s: { z:number; z_dot:number; phi:number; theta:number }) {
++ const bin=(v:number,cuts:number[])=>{ const i=cuts.findIndex(x=>v<x);return i<0?cuts.length:i; };
++ const base=bin(1-s.z,c.errorCuts)*9+bin(s.z_dot,ORIGINAL_CUTS);
++ return c.tilt?base*3+bin(Math.max(Math.abs(s.phi),Math.abs(s.theta)),[.05,.15]):base;
++}
+diff --git a/scripts/learning/study/run-study.ts b/scripts/learning/study/run-study.ts
+new file mode 100644
+index 0000000..17699be
+--- /dev/null
++++ b/scripts/learning/study/run-study.ts
+@@ -0,0 +1,86 @@
++import { readFileSync,writeFileSync,readdirSync,existsSync } from 'node:fs';
++import { execFileSync } from 'node:child_process';
++import { createHash } from 'node:crypto';
++import { STUDY_WIND } from '../../../src/physics/studyWind';
++import { STUDY,CANDIDATES,REFERENCE } from './protocol';
++import { episode,train,evaluate,restore,config,type Run } from './experiment';
++import { aggregate,summarize } from './statistics';
++const args=process.argv.slice(2),stage=args.find(a=>a.startsWith('--stage='))?.slice(8);
++if(!['qualify','validation','select','final'].includes(stage??''))throw new Error('Use --stage=qualify|validation|select|final');
++const sha=(v:string|Buffer)=>createHash('sha256').update(v).digest('hex');
++const paths=['package-lock.json',STUDY.planPath,'reports/study/wind-calibration.md',
++ ...readdirSync('src',{recursive:true}).map(String).filter(p=>p.endsWith('.ts')&&!p.includes('__tests__')).map(p=>'src/'+p),
++ ...readdirSync('scripts/learning/study').filter(p=>p.endsWith('.ts')).map(p=>'scripts/learning/study/'+p)].sort();
++const sourceHashes=Object.fromEntries(paths.map(p=>[p,sha(readFileSync(p))]));
++const provenance={command:`node --import tsx scripts/learning/study/run-study.ts --stage=${stage}`,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
++ planCommit:STUDY.planCommit,calibrationCommit:STUDY.calibrationCommit,planSha256:sha(readFileSync(STUDY.planPath)),sourceHashes,node:process.version};
++// Every experiment must execute committed source. Output/document-only changes are allowed.
++for(const path of paths){const committed=execFileSync('git',['show',`HEAD:${path}`]);if(sha(committed)!==sourceHashes[path])throw new Error(`Uncommitted source: ${path}`);}
++const write=(path:string,value:unknown)=>writeFileSync(path,JSON.stringify(value,null,2)+'\n');
++const load=(path:string)=>JSON.parse(readFileSync(path,'utf8'));
++const sameSources=(report:any)=>{if(JSON.stringify(report.provenance.sourceHashes)!==JSON.stringify(sourceHashes))throw new Error('Source changed between study stages');};
++const finalMarker='reports/study/final-attempt.json';
++if(stage!=='final'&&existsSync(finalMarker))throw new Error('Final test consumed; no further study stages allowed');
++if(stage==='qualify'){
++ if(existsSync('reports/study/qualification.json'))throw new Error('Qualification already consumed; no severity iteration allowed');
++ const episodes=Array.from({length:STUDY.qualification[1]-STUDY.qualification[0]+1},(_,i)=>episode(STUDY.qualification[0]+i,true,'baseline'));
++ const result=aggregate(episodes),finite=episodes.every(r=>[r.reward,r.meanAltitudeErrorM,r.energyJ].every(Number.isFinite));
++ const accepted=finite&&result.successes/result.episodes>=STUDY.qualificationMinSuccess&&result.failures/result.episodes<=STUDY.qualificationMaxEngineFailure;
++ write('reports/study/qualification.json',{physicalValidation:false,provenance,windModel:STUDY_WIND,seeds:STUDY.qualification,result,accepted,episodes});
++ console.log(JSON.stringify({stage,result,accepted}));
++}else if(stage==='validation'){
++ if(existsSync('reports/study/validation.json'))throw new Error('Validation already executed; no unregistered candidate iteration');
++ const qualification=load('reports/study/qualification.json');sameSources(qualification);const includeWind=qualification.accepted;
++ const candidates=[];
++ for(const [index,candidate] of CANDIDATES.entries()){
++  console.log(`Training registered candidate ${candidate.id}`);
++  const runs=STUDY.training.map(r=>train(candidate,r.explorationSeed,r.startSeed));
++  const evaluations=evaluate(candidate,runs,STUDY.validation,includeWind),summary=summarize(evaluations,index,includeWind);
++  candidates.push({candidate,index,runs,evaluations,...summary});
++  console.log(JSON.stringify({candidate:candidate.id,results:summary.results,eligible:summary.eligible}));
++ }
++ const referenceRuns=STUDY.training.map(r=>train(REFERENCE,r.explorationSeed,r.startSeed));
++ const referenceEvaluations=evaluate(REFERENCE,referenceRuns,STUDY.validation,includeWind);
++ // Reference is descriptive only; not a seventh candidate or candidate-selection option.
++ const reference={candidate:REFERENCE,runs:referenceRuns,evaluations:referenceEvaluations,
++  runResults:STUDY.training.map(r=>({explorationSeed:r.explorationSeed,results:(includeWind?[false,true]:[false]).map(wind=>{
++   const eps=referenceEvaluations.filter(e=>e.explorationSeed===r.explorationSeed&&e.baseline.wind===wind);return {wind,baseline:aggregate(eps.map(e=>e.baseline)),policy:aggregate(eps.map(e=>e.policy))};})}))};
++ write('reports/study/validation.json',{schemaVersion:1,physicalValidation:false,provenance,protocol:STUDY,includeWind,candidates,reference});
++}else if(stage==='select'){
++ if(existsSync('reports/study/selection.json'))throw new Error('Selection already frozen');
++ const validation=load('reports/study/validation.json');sameSources(validation);
++ const eligible=validation.candidates.filter(c=>c.eligible),pool=eligible.length?eligible:validation.candidates;
++ // Stable sort retains preregistered listed order on exact ties.
++ const selected=[...pool].sort((a,b)=>b.selectionScore-a.selectionScore)[0];
++ write('reports/study/selection.json',{provenance,validationSha256:sha(readFileSync('reports/study/validation.json')),
++ selectedId:selected.candidate.id,eligibleIds:eligible.map(c=>c.candidate.id),diagnosticOnly:eligible.length===0,
++ selectionScore:selected.selectionScore,includeWind:validation.includeWind,rule:STUDY.selection});
++ console.log(JSON.stringify({selectedId:selected.candidate.id,eligibleIds:eligible.map(c=>c.candidate.id),diagnosticOnly:eligible.length===0}));
++}else{
++ if(existsSync(finalMarker))throw new Error('Final test already attempted; no rerun or iteration permitted by this study');
++ const selection=load('reports/study/selection.json'),validation=load('reports/study/validation.json');sameSources(selection);sameSources(validation);
++ const committed=execFileSync('git',['show','HEAD:reports/study/selection.json']);if(sha(committed)!==sha(readFileSync('reports/study/selection.json')))throw new Error('Selection must be committed before test');
++ if(selection.validationSha256!==sha(readFileSync('reports/study/validation.json')))throw new Error('Validation changed after selection');
++ const selected=validation.candidates.find(c=>c.candidate.id===selection.selectedId),candidate=selected.candidate;
++ // Write an irreversible study marker BEFORE any final seed is accessed.
++ write(finalMarker,{provenance,selectedId:candidate.id,seedRanges:STUDY.final,selectionSha256:sha(readFileSync('reports/study/selection.json')),note:'Final test attempted; no further tuning or final evaluation allowed.'});
++ const runs:Run[]=selected.runs.map(r=>restore(candidate,r));
++ const evaluations=evaluate(candidate,runs,STUDY.final,selection.includeWind),summary=summarize(evaluations,selected.index,selection.includeWind,true);
++ const conclusion=summary.passesOriginalGate&&summary.statisticalSupport?'A':'B';
++ const artifact={schemaVersion:3,method:'Tabular Q-learning residual collective controller',scope:'Preregistered six-factor study; Crazyflie 2.1 simulator reference only',
++ physicalValidation:false,trainingEpisodes:candidate.episodes,trainingEpisodesTotal:candidate.episodes*runs.length,trainingSeedCount:runs.length,
++ trainSeedRange:runs[0].trainSeedRange,evaluationSeedRanges:STUDY.final,validationSeedRanges:STUDY.validation,
++ stepsPerEpisode:STUDY.steps,decisionEverySteps:candidate.hold,alpha:STUDY.alpha,gamma:STUDY.gammaPerDecision,epsilon:STUDY.epsilon,
++ config,windModel:STUDY_WIND,candidate,stateDefinition:{errorCuts:candidate.errorCuts,verticalSpeedCuts:REFERENCE.errorCuts,tiltCuts:candidate.tilt?[.05,.15]:[]},
++ actions:candidate.actions,q:runs[0].q,visits:runs[0].visits,runs,protocol:STUDY,provenance:{...provenance,
++ trainingCommand:'node --import tsx scripts/learning/study/run-study.ts --stage=validation',qualificationCommand:'node --import tsx scripts/learning/study/run-study.ts --stage=qualify',
++ validationSha256:sha(readFileSync('reports/study/validation.json')),selectionSha256:sha(readFileSync('reports/study/selection.json'))},
++ results:summary.results,runResults:summary.runResults,passesSimulationGate:summary.passesOriginalGate,statisticalSupport:summary.statisticalSupport,
++ conclusion,promoted:false,promotionReason:conclusion==='A'?'Passed simulation study; physical validation still required':'No supported unchanged-gate pass on fresh final data; existing controller retained',
++ limitations:['Simulation only; physicalValidation=false.','Geometry-based flat-plate drag proxy, not measured aircraft drag calibration.','Mild synthetic sinusoidal wind, not measured severe gusts.',
++ 'Only three training seeds; percentile crossed-bootstrap coverage is approximate.','Altitude error is conditional on executed steps; inspect failures and non-successes.',
++ 'No physical-flight, wind robustness or endurance guarantee.','Reference Q-table is the first predeclared training run, not a seed-selected winner.'],evaluations};
++ write('reports/study/final.json',artifact);write('public/learning/residual-policy.json',artifact);
++ const {q:_q,visits:_v,runs:_r,evaluations:_e,...compact}=artifact;write('src/learning/rl-summary.json',compact);
++ console.log(JSON.stringify({selectedId:candidate.id,conclusion,passesSimulationGate:summary.passesOriginalGate,results:summary.results}));
++}
+diff --git a/scripts/learning/study/statistics.ts b/scripts/learning/study/statistics.ts
+new file mode 100644
+index 0000000..e04bd5c
+--- /dev/null
++++ b/scripts/learning/study/statistics.ts
+@@ -0,0 +1,47 @@
++import { SeededRandom } from '../../../src/SeededRandom';
++import { wilson } from '../residual-experiment';
++import { STUDY } from './protocol';
++import type { Pair, Episode } from './experiment';
++export const mean=(a:number[])=>a.reduce((s,v)=>s+v,0)/a.length;
++export function aggregate(rows:Episode[]){
++ const successes=rows.filter(r=>r.successful).length,failures=rows.filter(r=>r.failed).length;
++ const outcomeCounts:Record<string,number>={};for(const r of rows)outcomeCounts[r.outcome]=(outcomeCounts[r.outcome]??0)+1;
++ return {episodes:rows.length,successes,failures,nonSuccesses:rows.length-successes,meanReward:mean(rows.map(r=>r.reward)),meanAltitudeErrorM:mean(rows.map(r=>r.meanAltitudeErrorM)),
++ meanSteps:mean(rows.map(r=>r.steps)),successRate95CI:wilson(successes,rows.length),failureRate95CI:wilson(failures,rows.length),outcomeCounts};
++}
++export type Metric='reward'|'meanAltitudeErrorM'|'successful'|'failed';
++export function crossedCI(pairs:Pair[],wind:boolean,key:Metric,seed:number,adjustedAlpha:number){
++ const rows=pairs.filter(r=>r.baseline.wind===wind),runs=[...new Set(rows.map(r=>r.explorationSeed))],seeds=[...new Set(rows.map(r=>r.baseline.seed))];
++ if(runs.length!==3)throw new Error('Exactly three predeclared runs required');
++ const byKey=new Map(rows.map(r=>[`${r.explorationSeed}:${r.baseline.seed}`,r]));
++ const matrix=runs.map(id=>Float64Array.from(seeds.map(s=>{const row=byKey.get(`${id}:${s}`)!;return Number(row.policy[key])-Number(row.baseline[key]);})));
++ const estimate=mean(matrix.map(row=>mean(Array.from(row)))),rng=new SeededRandom(seed),samples:number[]=[];
++ const n=seeds.length;
++ for(let b=0;b<STUDY.bootstrapReplicates;b++){
++  const r0=Math.floor(rng.next()*3),r1=Math.floor(rng.next()*3),r2=Math.floor(rng.next()*3);let total=0;
++  for(let i=0;i<n;i++){const s=Math.floor(rng.next()*n);total+=matrix[r0][s]+matrix[r1][s]+matrix[r2][s];}
++  samples.push(total/(3*n));
++ }
++ samples.sort((a,b)=>a-b);
++ const quantile=(p:number)=>{const x=(samples.length-1)*p,lo=Math.floor(x),t=x-lo;return samples[lo]*(1-t)+samples[Math.min(lo+1,samples.length-1)]*t;};
++ return {estimate,ci95:[quantile(.025),quantile(.975)],adjustedCI:[quantile(adjustedAlpha/2),quantile(1-adjustedAlpha/2)],
++ adjustedConfidence:1-adjustedAlpha,bootstrapSeed:seed,bootstrapReplicates:STUDY.bootstrapReplicates,trainingRunMeans:matrix.map(row=>mean(Array.from(row)))};
++}
++export function originalGate(results:Array<{baseline:ReturnType<typeof aggregate>;policy:ReturnType<typeof aggregate>}>){
++ return results.length===2&&results.every(r=>r.policy.successes>=r.baseline.successes&&r.policy.failures<=r.baseline.failures&&r.policy.meanReward>=r.baseline.meanReward)&&results.some(r=>r.policy.meanReward>r.baseline.meanReward);
++}
++export function summarize(pairs:Pair[],candidateIndex:number,includeWind:boolean,final=false){
++ const ids=[...new Set(pairs.map(p=>p.explorationSeed))];
++ const runResults=ids.map(explorationSeed=>{const results=(includeWind?[false,true]:[false]).map(wind=>{const eps=pairs.filter(e=>e.explorationSeed===explorationSeed&&e.baseline.wind===wind);return {wind,baseline:aggregate(eps.map(e=>e.baseline)),policy:aggregate(eps.map(e=>e.policy))};});return {explorationSeed,results,passesOriginalGate:originalGate(results)};});
++ const results=(includeWind?[false,true]:[false]).map(wind=>{
++  const eps=pairs.filter(e=>e.baseline.wind===wind),baseline=aggregate(eps.filter(e=>e.explorationSeed===ids[0]).map(e=>e.baseline)),all=aggregate(eps.map(e=>e.policy));
++  const policy={...all,successRate95CI:undefined,failureRate95CI:undefined,intervalNote:'Shared episode seeds and three training runs; pooled episodes are not IID. Per-run Wilson intervals and paired crossed bootstrap reported separately.'};
++  const adjustedAlpha=final?.05/2:.05/(6*2);
++  const metrics:Metric[]=['reward','meanAltitudeErrorM','successful','failed'];
++  const comparisons=Object.fromEntries(metrics.map((key,metricIndex)=>[key,crossedCI(pairs,wind,key,900001+100*candidateIndex+10*Number(wind)+metricIndex,key==='reward'?adjustedAlpha:.05)]));
++  return {wind,baseline,policy,comparisons};
++ });
++ const passesOriginalGate=includeWind&&runResults.every(r=>r.passesOriginalGate);
++ const statisticalSupport=includeWind&&results.every(r=>r.comparisons.reward.adjustedCI[0]>=0)&&results.some(r=>r.comparisons.reward.adjustedCI[0]>0);
++ return {results,runResults,passesOriginalGate,statisticalSupport,eligible:passesOriginalGate&&statisticalSupport,selectionScore:Math.min(...results.map(r=>r.comparisons.reward.estimate))};
++}
+diff --git a/scripts/learning/train-residual-audit.ts b/scripts/learning/train-residual-audit.ts
+new file mode 100644
+index 0000000..d48d6a2
+--- /dev/null
++++ b/scripts/learning/train-residual-audit.ts
+@@ -0,0 +1,92 @@
++import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
++import { createHash } from 'node:crypto';
++import { execFileSync } from 'node:child_process';
++import { PROTOCOL, config, train, evaluate, aggregate, gate, comparisonCI, recordedEpisode, makeTable } from './residual-experiment';
++import { RESIDUAL_ACTIONS } from '../../src/learning/ResidualPolicy';
++
++const args = process.argv.slice(2);
++const stage = args.find(x => x.startsWith('--stage='))?.split('=')[1];
++if (!['validation', 'final'].includes(stage ?? '')) throw new Error('Specify --stage=validation or --stage=final. Historical reproduction: node --import tsx scripts/learning/train-residual-legacy.ts');
++const sha = (s: string | Buffer) => createHash('sha256').update(s).digest('hex');
++const sources = ['scripts/learning/residual-experiment.ts', 'scripts/learning/train-residual.ts', 'package-lock.json',
++  ...readdirSync('src', { recursive: true }).map(String).filter(p => p.endsWith('.ts') && !p.includes('__tests__')).map(p => `src/${p}`)].sort();
++const sourceHashes = Object.fromEntries(sources.map(path => [path, sha(readFileSync(path))]));
++const provenance = { command: `npm run train:residual -- --stage=${stage}`, sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), sourceHashes, node: process.version, protocolSha256: sha(JSON.stringify(PROTOCOL)) };
++const write = (path: string, value: unknown) => writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
++
++if (stage === 'validation') {
++  const runs = PROTOCOL.trainingRuns.map(r => train(r.explorationSeed, r.trainSeedRange[0]));
++  const pairs = evaluate(runs, PROTOCOL.validationSeedRanges);
++  const results = runs.map(run => ({ explorationSeed: run.explorationSeed, results: [false, true].map(wind => {
++    const eps = pairs.filter(p => p.explorationSeed === run.explorationSeed && p.baseline.wind === wind);
++    return { wind, baseline: aggregate(eps.map(p => p.baseline)), policy: aggregate(eps.map(p => p.policy)) };
++  }) }));
++  // Zero-residual equivalence under exactly matched ICs on validation seeds only.
++  for (const wind of [false, true]) for (const seed of PROTOCOL.validationSeedRanges[Number(wind)]) {
++    const a = recordedEpisode(seed, wind, 'baseline', makeTable());
++    const b = recordedEpisode(seed, wind, 'policy', makeTable(), undefined, 0, .47, true);
++    if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error('Zero residual differs from baseline');
++  }
++  // Diagnostic ablation only; no modified drag setting is selected or promoted.
++  const windSensitivity = [0, .0001, .001, .01, .47].map(dragCoefficient => {
++    const eps = Array.from({ length: 50 }, (_, i) => recordedEpisode(201001 + i, true, 'baseline', makeTable(), undefined, 0, dragCoefficient));
++    return { dragCoefficient, ...aggregate(eps) };
++  });
++  write('reports/rl-validation.json', { schemaVersion: 2, physicalValidation: false, provenance, protocol: PROTOCOL,
++    runs, results, evaluations: pairs, windSensitivity, zeroResidualEquivalencePassed: true,
++    decision: 'No hyperparameter changes or winner selection; all predeclared training runs proceed to final test.' });
++  console.log(JSON.stringify({ stage, results, windSensitivity }, null, 2));
++} else {
++  const validationBytes = readFileSync('reports/rl-validation.json');
++  const validation = JSON.parse(validationBytes.toString());
++  if (validation.provenance.protocolSha256 !== provenance.protocolSha256 || JSON.stringify(validation.provenance.sourceHashes) !== JSON.stringify(sourceHashes)) throw new Error('Protocol/source changed after validation: rerun validation before final testing');
++  const runs = validation.runs as ReturnType<typeof train>[];
++  // Fresh bank first accessed here. No fitting, tuning or selection after this point.
++  const evaluations = evaluate(runs, PROTOCOL.finalTestSeedRanges);
++  const runResults = runs.map(run => {
++    const results = [false, true].map(wind => {
++      const eps = evaluations.filter(p => p.explorationSeed === run.explorationSeed && p.baseline.wind === wind);
++      return { wind, baseline: aggregate(eps.map(p => p.baseline)), policy: aggregate(eps.map(p => p.policy)) };
++    });
++    return { explorationSeed: run.explorationSeed, results, passesSimulationGate: gate(results) };
++  });
++  // Pool means across policies; baseline is stored once per shared seed, never inflated.
++  const results = [false, true].map(wind => {
++    const eps = evaluations.filter(p => p.baseline.wind === wind);
++    const baseline = aggregate(eps.filter(p => p.explorationSeed === runs[0].explorationSeed).map(p => p.baseline));
++    const all = aggregate(eps.map(p => p.policy));
++    const policy = { ...all, successRate95CI: undefined, failureRate95CI: undefined,
++      intervalNote: '150 policy episodes share 50 IC seeds and three trained policies; use per-run Wilson and crossed-bootstrap comparisons, not an IID pooled binomial interval.' };
++    // Compare average per-run counts on the unchanged historical gate scale.
++    const gateBaseline = baseline, gatePolicy = { ...all, successes: all.successes / runs.length, failures: all.failures / runs.length };
++    return { wind, baseline, policy, comparison: {
++      rewardDifference: comparisonCI(evaluations, wind, 'reward', 424242 + Number(wind)),
++      altitudeErrorDifferenceM: comparisonCI(evaluations, wind, 'meanAltitudeErrorM', 424244 + Number(wind)),
++      successRateDifference: comparisonCI(evaluations, wind, 'successful', 424246 + Number(wind)),
++    }, passesScenarioChecks: gatePolicy.successes >= gateBaseline.successes && gatePolicy.failures <= gateBaseline.failures && gatePolicy.meanReward >= gateBaseline.meanReward };
++  });
++  // Preserve the original gate for every candidate separately; never pick the best seed.
++  const improves = runResults.every(r => r.passesSimulationGate);
++  const artifact = { schemaVersion: 2, method: 'Tabular Q-learning residual collective controller',
++    scope: 'Crazyflie 2.1 reference configuration in Copter PhysicsEngine only', physicalValidation: false,
++    trainingEpisodes: PROTOCOL.trainingEpisodes, trainingEpisodesTotal: PROTOCOL.trainingEpisodes * runs.length,
++    trainSeedRange: runs[0].trainSeedRange, trainingSeedCount: runs.length,
++    evaluationSeedRanges: PROTOCOL.finalTestSeedRanges, validationSeedRanges: PROTOCOL.validationSeedRanges,
++    stepsPerEpisode: PROTOCOL.stepsPerEpisode, decisionEverySteps: PROTOCOL.decisionEverySteps,
++    alpha: PROTOCOL.alpha, gamma: PROTOCOL.gammaPerDecision, epsilon: PROTOCOL.epsilon,
++    config, actions: RESIDUAL_ACTIONS, q: runs[0].q, visits: runs[0].visits, runs,
++    qTableRole: PROTOCOL.selection, protocol: PROTOCOL,
++    provenance: { ...provenance, validationArtifactSha256: sha(validationBytes), trainingCommand: 'npm run train:residual -- --stage=validation' },
++    results, runResults, passesSimulationGate: improves, promoted: false,
++    promotionReason: improves ? 'Independent physical testing still required' : 'Did not improve both held-out scenarios across all predeclared training runs; existing controller retained',
++    limitations: ['Simulation only; physicalValidation=false.', 'Synthetic sinusoidal wind is uncalibrated and overwhelms this nano configuration.',
++      'No measured endurance labels.', 'Altitude error is conditional on executed steps; inspect termination reasons and penalized reward.',
++      'Only three training runs; confidence intervals are approximate and cannot establish universal improvement.',
++      'Shared IC seeds across policies are paired, not independent repeated baseline trials.',
++      'Crossed-bootstrap CIs describe this protocol; training-run t intervals condition on the fixed episode bank.',
++      'Existing legacy tests were inspected for diagnosis, never used for tuning this protocol.', 'No hyperparameters, physics, success criterion or candidate gate changed.'], evaluations };
++  write('public/learning/residual-policy.json', artifact);
++  const { q: _q, visits: _visits, runs: _runs, evaluations: _evals, ...summary } = artifact;
++  write('src/learning/rl-summary.json', summary);
++  console.log(JSON.stringify({ stage, results, runResults, passesSimulationGate: improves, promoted: false }, null, 2));
++}
+diff --git a/scripts/learning/train-residual.ts b/scripts/learning/train-residual.ts
+index d48d6a2..cfdc3e5 100644
+--- a/scripts/learning/train-residual.ts
++++ b/scripts/learning/train-residual.ts
+@@ -1,92 +1,2 @@
+-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+-import { createHash } from 'node:crypto';
+-import { execFileSync } from 'node:child_process';
+-import { PROTOCOL, config, train, evaluate, aggregate, gate, comparisonCI, recordedEpisode, makeTable } from './residual-experiment';
+-import { RESIDUAL_ACTIONS } from '../../src/learning/ResidualPolicy';
+-
+-const args = process.argv.slice(2);
+-const stage = args.find(x => x.startsWith('--stage='))?.split('=')[1];
+-if (!['validation', 'final'].includes(stage ?? '')) throw new Error('Specify --stage=validation or --stage=final. Historical reproduction: node --import tsx scripts/learning/train-residual-legacy.ts');
+-const sha = (s: string | Buffer) => createHash('sha256').update(s).digest('hex');
+-const sources = ['scripts/learning/residual-experiment.ts', 'scripts/learning/train-residual.ts', 'package-lock.json',
+-  ...readdirSync('src', { recursive: true }).map(String).filter(p => p.endsWith('.ts') && !p.includes('__tests__')).map(p => `src/${p}`)].sort();
+-const sourceHashes = Object.fromEntries(sources.map(path => [path, sha(readFileSync(path))]));
+-const provenance = { command: `npm run train:residual -- --stage=${stage}`, sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), sourceHashes, node: process.version, protocolSha256: sha(JSON.stringify(PROTOCOL)) };
+-const write = (path: string, value: unknown) => writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
+-
+-if (stage === 'validation') {
+-  const runs = PROTOCOL.trainingRuns.map(r => train(r.explorationSeed, r.trainSeedRange[0]));
+-  const pairs = evaluate(runs, PROTOCOL.validationSeedRanges);
+-  const results = runs.map(run => ({ explorationSeed: run.explorationSeed, results: [false, true].map(wind => {
+-    const eps = pairs.filter(p => p.explorationSeed === run.explorationSeed && p.baseline.wind === wind);
+-    return { wind, baseline: aggregate(eps.map(p => p.baseline)), policy: aggregate(eps.map(p => p.policy)) };
+-  }) }));
+-  // Zero-residual equivalence under exactly matched ICs on validation seeds only.
+-  for (const wind of [false, true]) for (const seed of PROTOCOL.validationSeedRanges[Number(wind)]) {
+-    const a = recordedEpisode(seed, wind, 'baseline', makeTable());
+-    const b = recordedEpisode(seed, wind, 'policy', makeTable(), undefined, 0, .47, true);
+-    if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error('Zero residual differs from baseline');
+-  }
+-  // Diagnostic ablation only; no modified drag setting is selected or promoted.
+-  const windSensitivity = [0, .0001, .001, .01, .47].map(dragCoefficient => {
+-    const eps = Array.from({ length: 50 }, (_, i) => recordedEpisode(201001 + i, true, 'baseline', makeTable(), undefined, 0, dragCoefficient));
+-    return { dragCoefficient, ...aggregate(eps) };
+-  });
+-  write('reports/rl-validation.json', { schemaVersion: 2, physicalValidation: false, provenance, protocol: PROTOCOL,
+-    runs, results, evaluations: pairs, windSensitivity, zeroResidualEquivalencePassed: true,
+-    decision: 'No hyperparameter changes or winner selection; all predeclared training runs proceed to final test.' });
+-  console.log(JSON.stringify({ stage, results, windSensitivity }, null, 2));
+-} else {
+-  const validationBytes = readFileSync('reports/rl-validation.json');
+-  const validation = JSON.parse(validationBytes.toString());
+-  if (validation.provenance.protocolSha256 !== provenance.protocolSha256 || JSON.stringify(validation.provenance.sourceHashes) !== JSON.stringify(sourceHashes)) throw new Error('Protocol/source changed after validation: rerun validation before final testing');
+-  const runs = validation.runs as ReturnType<typeof train>[];
+-  // Fresh bank first accessed here. No fitting, tuning or selection after this point.
+-  const evaluations = evaluate(runs, PROTOCOL.finalTestSeedRanges);
+-  const runResults = runs.map(run => {
+-    const results = [false, true].map(wind => {
+-      const eps = evaluations.filter(p => p.explorationSeed === run.explorationSeed && p.baseline.wind === wind);
+-      return { wind, baseline: aggregate(eps.map(p => p.baseline)), policy: aggregate(eps.map(p => p.policy)) };
+-    });
+-    return { explorationSeed: run.explorationSeed, results, passesSimulationGate: gate(results) };
+-  });
+-  // Pool means across policies; baseline is stored once per shared seed, never inflated.
+-  const results = [false, true].map(wind => {
+-    const eps = evaluations.filter(p => p.baseline.wind === wind);
+-    const baseline = aggregate(eps.filter(p => p.explorationSeed === runs[0].explorationSeed).map(p => p.baseline));
+-    const all = aggregate(eps.map(p => p.policy));
+-    const policy = { ...all, successRate95CI: undefined, failureRate95CI: undefined,
+-      intervalNote: '150 policy episodes share 50 IC seeds and three trained policies; use per-run Wilson and crossed-bootstrap comparisons, not an IID pooled binomial interval.' };
+-    // Compare average per-run counts on the unchanged historical gate scale.
+-    const gateBaseline = baseline, gatePolicy = { ...all, successes: all.successes / runs.length, failures: all.failures / runs.length };
+-    return { wind, baseline, policy, comparison: {
+-      rewardDifference: comparisonCI(evaluations, wind, 'reward', 424242 + Number(wind)),
+-      altitudeErrorDifferenceM: comparisonCI(evaluations, wind, 'meanAltitudeErrorM', 424244 + Number(wind)),
+-      successRateDifference: comparisonCI(evaluations, wind, 'successful', 424246 + Number(wind)),
+-    }, passesScenarioChecks: gatePolicy.successes >= gateBaseline.successes && gatePolicy.failures <= gateBaseline.failures && gatePolicy.meanReward >= gateBaseline.meanReward };
+-  });
+-  // Preserve the original gate for every candidate separately; never pick the best seed.
+-  const improves = runResults.every(r => r.passesSimulationGate);
+-  const artifact = { schemaVersion: 2, method: 'Tabular Q-learning residual collective controller',
+-    scope: 'Crazyflie 2.1 reference configuration in Copter PhysicsEngine only', physicalValidation: false,
+-    trainingEpisodes: PROTOCOL.trainingEpisodes, trainingEpisodesTotal: PROTOCOL.trainingEpisodes * runs.length,
+-    trainSeedRange: runs[0].trainSeedRange, trainingSeedCount: runs.length,
+-    evaluationSeedRanges: PROTOCOL.finalTestSeedRanges, validationSeedRanges: PROTOCOL.validationSeedRanges,
+-    stepsPerEpisode: PROTOCOL.stepsPerEpisode, decisionEverySteps: PROTOCOL.decisionEverySteps,
+-    alpha: PROTOCOL.alpha, gamma: PROTOCOL.gammaPerDecision, epsilon: PROTOCOL.epsilon,
+-    config, actions: RESIDUAL_ACTIONS, q: runs[0].q, visits: runs[0].visits, runs,
+-    qTableRole: PROTOCOL.selection, protocol: PROTOCOL,
+-    provenance: { ...provenance, validationArtifactSha256: sha(validationBytes), trainingCommand: 'npm run train:residual -- --stage=validation' },
+-    results, runResults, passesSimulationGate: improves, promoted: false,
+-    promotionReason: improves ? 'Independent physical testing still required' : 'Did not improve both held-out scenarios across all predeclared training runs; existing controller retained',
+-    limitations: ['Simulation only; physicalValidation=false.', 'Synthetic sinusoidal wind is uncalibrated and overwhelms this nano configuration.',
+-      'No measured endurance labels.', 'Altitude error is conditional on executed steps; inspect termination reasons and penalized reward.',
+-      'Only three training runs; confidence intervals are approximate and cannot establish universal improvement.',
+-      'Shared IC seeds across policies are paired, not independent repeated baseline trials.',
+-      'Crossed-bootstrap CIs describe this protocol; training-run t intervals condition on the fixed episode bank.',
+-      'Existing legacy tests were inspected for diagnosis, never used for tuning this protocol.', 'No hyperparameters, physics, success criterion or candidate gate changed.'], evaluations };
+-  write('public/learning/residual-policy.json', artifact);
+-  const { q: _q, visits: _visits, runs: _runs, evaluations: _evals, ...summary } = artifact;
+-  write('src/learning/rl-summary.json', summary);
+-  console.log(JSON.stringify({ stage, results, runResults, passesSimulationGate: improves, promoted: false }, null, 2));
+-}
++/** Current pre-registered study entry point. Historical trainers remain explicitly named. */
++import './study/run-study';
+diff --git a/scripts/learning/verify-artifacts.ts b/scripts/learning/verify-artifacts.ts
+index 92e99fd..7728d2a 100644
+--- a/scripts/learning/verify-artifacts.ts
++++ b/scripts/learning/verify-artifacts.ts
+@@ -1 +1 @@
+-/** Recompute summaries/CIs from raw episode records; no new final-test simulation. */
++/** Verify recorded evidence without executing new controller episodes. */
+@@ -3,30 +3,3 @@ import { readFileSync } from 'node:fs';
+-import { isDeepStrictEqual } from 'node:util';
+-import { aggregate, comparisonCI, gate, type Pair } from './residual-experiment';
+-const p = JSON.parse(readFileSync('public/learning/residual-policy.json', 'utf8'));
+-const summary = JSON.parse(readFileSync('src/learning/rl-summary.json', 'utf8'));
+-const { q, visits, runs, evaluations, ...expectedSummary } = p;
+-if (!isDeepStrictEqual(expectedSummary, summary)) throw new Error('Summary differs from policy artifact');
+-const pairs = evaluations as Pair[];
+-for (const run of p.runResults) {
+-  for (const r of run.results) for (const mode of ['baseline', 'policy'] as const) {
+-    const rows = pairs.filter(e => e.explorationSeed === run.explorationSeed && e.baseline.wind === r.wind).map(e => e[mode]);
+-    if (!isDeepStrictEqual(aggregate(rows), r[mode])) throw new Error('Per-run aggregate mismatch');
+-  }
+-  if (gate(run.results) !== run.passesSimulationGate) throw new Error('Gate mismatch');
+-}
+-for (const r of p.results) {
+-  const rows = pairs.filter(e => e.baseline.wind === r.wind);
+-  const b = aggregate(rows.filter(e => e.explorationSeed === p.runs[0].explorationSeed).map(e => e.baseline));
+-  if (!isDeepStrictEqual(b, r.baseline)) throw new Error('Repeated baseline was pooled incorrectly');
+-  const a = aggregate(rows.map(e => e.policy));
+-  for (const k of ['episodes', 'successes', 'failures', 'nonSuccesses', 'meanAltitudeErrorM', 'meanReward', 'meanSteps', 'failureReasons'])
+-    if (!isDeepStrictEqual(a[k], r.policy[k])) throw new Error(`Pooled policy mismatch: ${k}`);
+-  for (const [name, key, seed] of [['rewardDifference', 'reward', 424242], ['altitudeErrorDifferenceM', 'meanAltitudeErrorM', 424244], ['successRateDifference', 'successful', 424246]] as const)
+-    if (!isDeepStrictEqual(comparisonCI(pairs, r.wind, key, seed + Number(r.wind)), r.comparison[name])) throw new Error('CI mismatch');
+-}
+-for (const e of pairs) for (const mode of ['baseline', 'policy'] as const) {
+-  const ep = e[mode], d = ep.diagnostics;
+-  if (Math.abs(ep.reward + d.altitudeCost + d.velocityCost + d.actionCost + d.failureCost) > 1e-8) throw new Error('Reward accounting mismatch');
+-}
+-if (p.passesSimulationGate !== p.runResults.every(r => r.passesSimulationGate) || p.promoted || p.physicalValidation) throw new Error('Invalid promotion claim');
+-console.log('Verified all per-run/pool summaries, paired confidence intervals, reward accounting, artifact parity and unchanged gates; no new test episodes run.');
++const report=JSON.parse(readFileSync('public/learning/residual-policy.json','utf8'));
++if(report.schemaVersion===3) await import('./verify-study');
++else await import('./verify-audit-artifacts');
+diff --git a/scripts/learning/verify-audit-artifacts.ts b/scripts/learning/verify-audit-artifacts.ts
+new file mode 100644
+index 0000000..92e99fd
+--- /dev/null
++++ b/scripts/learning/verify-audit-artifacts.ts
+@@ -0,0 +1,32 @@
++/** Recompute summaries/CIs from raw episode records; no new final-test simulation. */
++import { readFileSync } from 'node:fs';
++import { isDeepStrictEqual } from 'node:util';
++import { aggregate, comparisonCI, gate, type Pair } from './residual-experiment';
++const p = JSON.parse(readFileSync('public/learning/residual-policy.json', 'utf8'));
++const summary = JSON.parse(readFileSync('src/learning/rl-summary.json', 'utf8'));
++const { q, visits, runs, evaluations, ...expectedSummary } = p;
++if (!isDeepStrictEqual(expectedSummary, summary)) throw new Error('Summary differs from policy artifact');
++const pairs = evaluations as Pair[];
++for (const run of p.runResults) {
++  for (const r of run.results) for (const mode of ['baseline', 'policy'] as const) {
++    const rows = pairs.filter(e => e.explorationSeed === run.explorationSeed && e.baseline.wind === r.wind).map(e => e[mode]);
++    if (!isDeepStrictEqual(aggregate(rows), r[mode])) throw new Error('Per-run aggregate mismatch');
++  }
++  if (gate(run.results) !== run.passesSimulationGate) throw new Error('Gate mismatch');
++}
++for (const r of p.results) {
++  const rows = pairs.filter(e => e.baseline.wind === r.wind);
++  const b = aggregate(rows.filter(e => e.explorationSeed === p.runs[0].explorationSeed).map(e => e.baseline));
++  if (!isDeepStrictEqual(b, r.baseline)) throw new Error('Repeated baseline was pooled incorrectly');
++  const a = aggregate(rows.map(e => e.policy));
++  for (const k of ['episodes', 'successes', 'failures', 'nonSuccesses', 'meanAltitudeErrorM', 'meanReward', 'meanSteps', 'failureReasons'])
++    if (!isDeepStrictEqual(a[k], r.policy[k])) throw new Error(`Pooled policy mismatch: ${k}`);
++  for (const [name, key, seed] of [['rewardDifference', 'reward', 424242], ['altitudeErrorDifferenceM', 'meanAltitudeErrorM', 424244], ['successRateDifference', 'successful', 424246]] as const)
++    if (!isDeepStrictEqual(comparisonCI(pairs, r.wind, key, seed + Number(r.wind)), r.comparison[name])) throw new Error('CI mismatch');
++}
++for (const e of pairs) for (const mode of ['baseline', 'policy'] as const) {
++  const ep = e[mode], d = ep.diagnostics;
++  if (Math.abs(ep.reward + d.altitudeCost + d.velocityCost + d.actionCost + d.failureCost) > 1e-8) throw new Error('Reward accounting mismatch');
++}
++if (p.passesSimulationGate !== p.runResults.every(r => r.passesSimulationGate) || p.promoted || p.physicalValidation) throw new Error('Invalid promotion claim');
++console.log('Verified all per-run/pool summaries, paired confidence intervals, reward accounting, artifact parity and unchanged gates; no new test episodes run.');
+diff --git a/scripts/learning/verify-study.ts b/scripts/learning/verify-study.ts
+new file mode 100644
+index 0000000..a0f755d
+--- /dev/null
++++ b/scripts/learning/verify-study.ts
+@@ -0,0 +1,38 @@
++/** No simulator execution: reconstruct summaries, CIs, selection and gate from recorded rows. */
++import { readFileSync } from 'node:fs';
++import { isDeepStrictEqual } from 'node:util';
++import { createHash } from 'node:crypto';
++import { execFileSync } from 'node:child_process';
++import { aggregate,summarize } from './study/statistics';
++import { CANDIDATES,STUDY } from './study/protocol';
++const load=(p:string)=>JSON.parse(readFileSync(p,'utf8'));
++// Generated JSON omits undefined pooled-binomial CI fields by design.
++const same=(a:unknown,b:unknown,msg:string)=>{if(!isDeepStrictEqual(JSON.parse(JSON.stringify(a)),JSON.parse(JSON.stringify(b))))throw new Error(msg);};
++const qualification=load('reports/study/qualification.json'),validation=load('reports/study/validation.json'),selection=load('reports/study/selection.json'),final=load('reports/study/final.json');
++for(const report of [qualification,validation,selection,final])for(const [path,expectedHash] of Object.entries(report.provenance.sourceHashes)){
++ const bytes=execFileSync('git',['show',`${report.provenance.sourceCommit}:${path}`]);
++ if(createHash('sha256').update(bytes).digest('hex')!==expectedHash)throw new Error('Committed execution source hash mismatch: '+path);
++}
++same(aggregate(qualification.episodes),qualification.result,'Qualification aggregation');
++if(validation.candidates.length!==6)throw new Error('Dropped registered candidate');
++for(const [i,c] of validation.candidates.entries()){
++ same(c.candidate,CANDIDATES[i],'Candidate diverges from registration');
++ const expected=summarize(c.evaluations,i,validation.includeWind);
++ for(const key of Object.keys(expected))same(c[key],expected[key],'Validation summary/CI mismatch '+c.candidate.id+' '+key);
++}
++const eligible=validation.candidates.filter(c=>c.eligible),pool=eligible.length?eligible:validation.candidates;
++const selected=[...pool].sort((a,b)=>b.selectionScore-a.selectionScore)[0];
++if(selected.candidate.id!==selection.selectedId||selection.diagnosticOnly!==(eligible.length===0))throw new Error('Selection diverges from registration');
++const expected=summarize(final.evaluations,selected.index,validation.includeWind,true);
++same(expected.results,final.results,'Final aggregate/CI mismatch');same(expected.runResults,final.runResults,'Final per-run gate mismatch');
++if(final.passesSimulationGate!==expected.passesOriginalGate||final.statisticalSupport!==expected.statisticalSupport)throw new Error('Gate claim mismatch');
++if(final.conclusion!==(expected.passesOriginalGate&&expected.statisticalSupport?'A':'B')||final.promoted||final.physicalValidation)throw new Error('Unsupported final claim');
++same(final,load('public/learning/residual-policy.json'),'Public artifact mismatch');
++const {q,visits,runs,evaluations,...compact}=final;same(compact,load('src/learning/rl-summary.json'),'Summary mismatch');
++for(const pair of final.evaluations)for(const mode of ['baseline','policy']){
++ const r=pair[mode],d=r.diagnostics;
++ if(Math.abs(r.reward+d.altitudeCost+d.velocityCost+d.actionCost+d.failureCost)>1e-8)throw new Error('Original reward accounting mismatch');
++}
++const planHash=createHash('sha256').update(readFileSync(STUDY.planPath)).digest('hex');
++if(final.provenance.planSha256!==planHash)throw new Error('Registration changed');
++console.log('Verified all six validation candidates, crossed CIs, frozen selection, final gate, original reward and artifact parity; no controller episodes executed.');
+diff --git a/src/PhysicsEngine.ts b/src/PhysicsEngine.ts
+index 8955827..60903a1 100644
+--- a/src/PhysicsEngine.ts
++++ b/src/PhysicsEngine.ts
+@@ -26,0 +27 @@ import { computeDragForces, multiRotorGroundEffect, DEFAULT_DRAG_TENSOR, scaleDr
++import { horizontalRelativeDrag, studyGust, type StudyWindModel } from './physics/studyWind';
+@@ -107,0 +109,2 @@ export class PhysicsEngine {
++  /** Explicit opt-in preregistered study model. Undefined preserves historical behavior. */
++  public studyWindModel?: StudyWindModel;
+@@ -254 +257,11 @@ export class PhysicsEngine {
+-    if (this.tests.windEnabled || this.tests.missionPreset==='long-range') {
++    if (this.studyWindModel) {
++      if (hifi || this.tests.missionPreset !== 'none') throw new Error('Study wind supports the registered reference scenario only');
++      let airX = 0, airY = 0;
++      if (this.tests.windEnabled) {
++        this.windPhaseX += .5 * dt; this.windPhaseY += .7 * dt;
++        const gust = studyGust(this.windPhaseX, this.windPhaseY, this.z);
++        airX = gust.x; airY = gust.y;
++      }
++      const force = horizontalRelativeDrag(this.studyWindModel, airX, airY, this.x_dot, this.y_dot);
++      wfx = force.fx; wfy = force.fy;
++    } else if (this.tests.windEnabled || this.tests.missionPreset==='long-range') {
+diff --git a/src/__tests__/learning.test.ts b/src/__tests__/learning.test.ts
+index 4dd1320..1704dc3 100644
+--- a/src/__tests__/learning.test.ts
++++ b/src/__tests__/learning.test.ts
+@@ -47 +47,2 @@ describe('Measured learning evidence boundaries',()=>{
+-  expect(rl.evaluationSeedRanges.every(([start])=>start>rl.trainSeedRange[1])).toBe(true);
++  // Independence is disjointness, not numeric ordering of seed ranges.
++  expect(rl.evaluationSeedRanges.every(([start,end])=>end<rl.trainSeedRange[0]||start>rl.trainSeedRange[1])).toBe(true);
+@@ -54 +55,2 @@ describe('Measured learning evidence boundaries',()=>{
+-   expect(eps.length).toBe(50*(mode==='policy'?policy.trainingSeedCount:1));
++   const bank=policy.evaluationSeedRanges[Number(result.wind)];
++   expect(eps.length).toBe((bank[1]-bank[0]+1)*(mode==='policy'?policy.trainingSeedCount:1));
+diff --git a/src/__tests__/study-protocol.test.ts b/src/__tests__/study-protocol.test.ts
+new file mode 100644
+index 0000000..32d74c9
+--- /dev/null
++++ b/src/__tests__/study-protocol.test.ts
+@@ -0,0 +1,34 @@
++import { describe,it,expect } from 'vitest';
++import { CANDIDATES,REFERENCE,STUDY,stateCount,stateIndex } from '../../scripts/learning/study/protocol';
++import { crossedCI } from '../../scripts/learning/study/statistics';
++import type { Episode } from '../../scripts/learning/study/experiment';
++
++describe('Pre-registered study invariants (no simulator/controller execution)',()=>{
++ it('has exactly six listed one-factor changes',()=>{
++  expect(CANDIDATES.map(c=>c.id)).toEqual(['a','b','c','d','e','f']);
++  const expected=[['errorCuts'],['tilt'],['actions'],['hold'],['separate'],['episodes','decay']];
++  CANDIDATES.forEach((c,i)=>{
++   const changed=Object.keys(REFERENCE).filter(k=>!['id','label'].includes(k)&&JSON.stringify(c[k])!==JSON.stringify(REFERENCE[k]));
++   expect(changed).toEqual(expected[i]);
++  });
++ });
++ it('keeps qualification, validation and final banks disjoint from training and consumed banks',()=>{
++  const reserved=[STUDY.qualification,...STUDY.validation,...STUDY.final];
++  const training=STUDY.training.map(r=>[r.startSeed,r.startSeed+2999]);
++  for(const [i,[lo,hi]] of reserved.entries())for(const [a,b] of [...reserved.slice(i+1),...training,...STUDY.consumed])expect(hi<a||lo>b).toBe(true);
++ });
++ it('uses the exact state/action/hold definitions',()=>{
++  expect(CANDIDATES.map(stateCount)).toEqual([135,243,81,81,81,81]);
++  expect(CANDIDATES[2].actions).toEqual([0,-.01,-.005,.005,.01]);expect(CANDIDATES[3].hold).toBe(2);
++  const s={z:1,z_dot:0,phi:0,theta:0};expect(stateIndex(REFERENCE,s)).toBe(40);
++  expect(stateIndex(CANDIDATES[1],s)).toBe(120);
++ });
++ it('preserves crossed pairing and deterministic differences under bootstrap',()=>{
++  const base={seed:500001,wind:false,reward:-20,meanAltitudeErrorM:.02,successful:true,failed:false} as Episode;
++  const pairs=[1,2,3].flatMap(explorationSeed=>[500001,500002].map(seed=>({explorationSeed,
++   baseline:{...base,seed},policy:{...base,seed,reward:-22}})));
++  const ci=crossedCI(pairs,false,'reward',900001,.05/12);
++  expect(ci.estimate).toBe(-2);expect(ci.ci95).toEqual([-2,-2]);expect(ci.adjustedCI).toEqual([-2,-2]);
++  expect(ci.bootstrapReplicates).toBe(50000);
++ });
++});
+diff --git a/src/__tests__/study-wind.test.ts b/src/__tests__/study-wind.test.ts
+new file mode 100644
+index 0000000..0557a2a
+--- /dev/null
++++ b/src/__tests__/study-wind.test.ts
+@@ -0,0 +1,21 @@
++import { describe, it, expect } from 'vitest';
++import { STUDY_WIND, horizontalRelativeDrag, studyGust } from '../physics/studyWind';
++describe('Registered wind force model (no controller evaluation)', () => {
++  it('uses SI area and the vector drag equation', () => {
++    expect(STUDY_WIND.frontalAreaM2).toBeCloseTo(.002668, 12);
++    const force = horizontalRelativeDrag(STUDY_WIND, 3, 4, 0, 0);
++    const magnitude = .5 * 1.225 * 1.28 * .002668 * 25;
++    expect(Math.hypot(force.fx, force.fy)).toBeCloseTo(magnitude, 12);
++    expect(force.fx / force.fy).toBeCloseTo(3 / 4, 12);
++  });
++  it('has zero force at matched airspeed and opposes motion in calm air', () => {
++    expect(horizontalRelativeDrag(STUDY_WIND, 2, -1, 2, -1)).toEqual({ fx: 0, fy: 0 });
++    const force = horizontalRelativeDrag(STUDY_WIND, 0, 0, 2, 1);
++    expect(force.fx * 2 + force.fy).toBeLessThan(0);
++  });
++  it('preserves the registered gust ramp and rejects invalid parameters', () => {
++    expect(studyGust(1, 2, 0)).toEqual({ x: 0, y: 0 });
++    expect(Math.abs(studyGust(1, 2, 1).x)).toBeLessThanOrEqual(3 * Math.log(2) / Math.log(31));
++    expect(() => horizontalRelativeDrag({ ...STUDY_WIND, frontalAreaM2: -1 }, 0, 0, 0, 0)).toThrow();
++  });
++});
+diff --git a/src/learning/MeasuredPrediction.ts b/src/learning/MeasuredPrediction.ts
+index e749c05..3b28c6f 100644
+--- a/src/learning/MeasuredPrediction.ts
++++ b/src/learning/MeasuredPrediction.ts
+@@ -29 +29 @@ export function learningEvidenceContext():string {
+-  return `Measured-data training: ${report.measuredRows} rows across one Crazyflie 2.x 2015 bench sweep and four isolated propeller sweeps. ${report.heldOutRows} within-sweep held-out rows; no independent aircraft validation. Thrust/power regression and operating-point K-means trained. Measured gust-endurance samples: ${report.gustEnduranceSamples}. RL: ${rl.trainingEpisodes} synthetic training episodes; simulation gate passed=${rl.passesSimulationGate}; promoted=${rl.promoted}. These models do not change the active simulator physics. Cruise energy research: ${energy.sourceSamples} author-processed samples reduced to ${energy.flightRecords} Matrice 100 flight summaries. Neural backpropagation best epoch ${energy.bestValidationEpoch}; test MAE ${energy.test.maeW.toFixed(2)} W vs ridge ${energy.ridgeBaseline.maeW.toFixed(2)} W. Onboard airflow is not ambient wind; no maximum endurance labels. Research models only, no automatic physics promotion. Aether language-model weights were not fine-tuned. Do not infer battery endurance from shaft power or static PWM curves. Sources: ${report.supervised.map(m=>m.source).join(' ')}`;
++  return `Measured-data training: ${report.measuredRows} rows across one Crazyflie 2.x 2015 bench sweep and four isolated propeller sweeps. ${report.heldOutRows} within-sweep held-out rows; no independent aircraft validation. Thrust/power regression and operating-point K-means trained. Measured gust-endurance samples: ${report.gustEnduranceSamples}. RL: ${rl.trainingEpisodes} synthetic training episodes per run; simulation gate passed=${rl.passesSimulationGate}; promoted=${rl.promoted}. These models do not change the active simulator physics. Cruise energy research: ${energy.sourceSamples} author-processed samples reduced to ${energy.flightRecords} Matrice 100 flight summaries. Neural backpropagation best epoch ${energy.bestValidationEpoch}; test MAE ${energy.test.maeW.toFixed(2)} W vs ridge ${energy.ridgeBaseline.maeW.toFixed(2)} W. Onboard airflow is not ambient wind; no maximum endurance labels. Research models only, no automatic physics promotion. Aether language-model weights were not fine-tuned. Do not infer battery endurance from shaft power or static PWM curves. Sources: ${report.supervised.map(m=>m.source).join(' ')}`;
+@@ -33 +33,2 @@ export function trainingAudit():string {
+- return `**Measured-data training status**\n\n- Propulsion: ${report.measuredRows} bench measurements; ${report.heldOutRows} within-sweep holdouts. No independent flight validation.\n- Cruise power: ${energy.sourceSamples.toLocaleString()} author-processed rows from ${energy.flightRecords} Matrice 100 flights; ${energy.splitFlightIds.test.length} whole flights held out for testing.\n- Neural backpropagation: ${energy.epochsRun} epochs, restored validation checkpoint ${energy.bestValidationEpoch}. Mean test error: ${energy.initialUntrainedTest.maeW.toFixed(2)} W before training → ${energy.test.maeW.toFixed(2)} W after. Simpler regression: ${energy.ridgeBaseline.maeW.toFixed(2)} W.\n- Uncertainty: nominal 90% interval covered ${(energy.uncertainty.testCoverage*100).toFixed(1)}% of test flights.\n- RL: ${rl.trainingEpisodes} simulated training episodes; candidate not promoted because it failed the comparison gate.\n\nOnboard airflow is not ambient gust speed. No battery-to-empty gust endurance model or universal aircraft validation exists. Active simulator physics and controller remain unchanged. Aether's language-model weights were not fine-tuned. See Benchmark → Measured-data learning for source links and artifacts.`;
++ const rlStatus=rl.passesSimulationGate?'passed the simulation comparison gate; not promoted because physical validation is missing':'did not pass the simulation comparison gate; existing controller retained';
++ return `**Measured-data training status**\n\n- Propulsion: ${report.measuredRows} bench measurements; ${report.heldOutRows} within-sweep holdouts. No independent flight validation.\n- Cruise power: ${energy.sourceSamples.toLocaleString()} author-processed rows from ${energy.flightRecords} Matrice 100 flights; ${energy.splitFlightIds.test.length} whole flights held out for testing.\n- Neural backpropagation: ${energy.epochsRun} epochs, restored validation checkpoint ${energy.bestValidationEpoch}. Mean test error: ${energy.initialUntrainedTest.maeW.toFixed(2)} W before training → ${energy.test.maeW.toFixed(2)} W after. Simpler regression: ${energy.ridgeBaseline.maeW.toFixed(2)} W.\n- Uncertainty: nominal 90% interval covered ${(energy.uncertainty.testCoverage*100).toFixed(1)}% of test flights.\n- RL: ${rl.trainingEpisodes} simulated training episodes per run; ${rlStatus}.\n\nOnboard airflow is not ambient gust speed. No battery-to-empty gust endurance model or universal aircraft validation exists. Active simulator physics and controller remain unchanged. Aether's language-model weights were not fine-tuned. See Benchmark → Measured-data learning for source links and artifacts.`;
+diff --git a/src/physics/studyWind.ts b/src/physics/studyWind.ts
+new file mode 100644
+index 0000000..b59812d
+--- /dev/null
++++ b/src/physics/studyWind.ts
+@@ -0,0 +1,15 @@
++/** Geometry-scaled flat-plate proxy; NOT experimentally calibrated aircraft aerodynamics. */
++export interface StudyWindModel { densityKgM3: number; dragCoefficient: number; frontalAreaM2: number }
++export const STUDY_WIND: StudyWindModel = { densityKgM3: 1.225, dragCoefficient: 1.28, frontalAreaM2: .092 * .029 };
++export function horizontalRelativeDrag(model: StudyWindModel, airX: number, airY: number, velocityX: number, velocityY: number) {
++  if (![model.densityKgM3, model.dragCoefficient, model.frontalAreaM2].every(v => Number.isFinite(v) && v > 0)
++    || ![airX, airY, velocityX, velocityY].every(Number.isFinite)) throw new Error('Invalid study wind input');
++  const ux = airX - velocityX, uy = airY - velocityY;
++  const scale = .5 * model.densityKgM3 * model.dragCoefficient * model.frontalAreaM2 * Math.hypot(ux, uy);
++  return { fx: scale * ux, fy: scale * uy };
++}
++export function studyGust(phaseX: number, phaseY: number, altitudeM: number) {
++  const ramp = Math.min(1, Math.log(1 + Math.max(0, altitudeM)) / Math.log(31));
++  return { x: (2 * Math.sin(phaseX) + Math.sin(2.3 * phaseX)) * ramp,
++    y: (2 * Math.sin(phaseY) + Math.sin(1.7 * phaseY)) * ramp };
++}

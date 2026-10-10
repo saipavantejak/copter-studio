@@ -3,7 +3,7 @@ import argparse,json,pathlib,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
 load=lambda p:json.loads((ROOT/p).read_text())
-v=load('reports/study/validation.json');q=load('reports/study/qualification.json');s=load('reports/study/selection.json');p=load('reports/study/final.json')
+v=load('reports/study/validation.json');q=load('reports/study/qualification.json');s=load('reports/study/selection.json');p=load('reports/study/final.json');reliability=load('reports/reliability-v3.json')
 f=lambda x:f'{x:.6f}'
 ci=lambda x:'['+', '.join(f(t) for t in x)+']'
 validation=['| Candidate | Scenario | Mean reward Δ vs baseline | 95% crossed CI | Bonferroni 99.5833% CI | Altitude-error Δ (m) | Successes / engine failures | All-run original gate | Eligible |', '|---|---|---|---|---|---|---|---|---|']
@@ -27,8 +27,9 @@ ref_table='\n'.join(reference)
 verdict=('A: the selected candidate passes the unchanged simulation gate on fresh data, with the predeclared final evidence requirement also satisfied. Physical promotion remains false.' if p['conclusion']=='A' else 'B: nothing tested on the final bank passes the predeclared supported-promotion rule. The selected candidate did not establish a legitimate two-scenario improvement; promoted=false and the existing controller is retained.')
 if p['conclusion']=='B' and not p['passesSimulationGate']:
  verdict='B: no selected candidate passes the unchanged gate on fresh final data. The validation-selected finalist fails. promoted=false; the existing controller is retained. The study stopped after this single final test.'
-resume=(f"Designed and executed a preregistered six-candidate tabular Q-learning study for Copter Studios, using three training seeds per candidate and paired confidence intervals with multiple-comparison correction. " +
- (f"Validated the selected {p['candidate']['label'].lower()} policy against the engineering baseline on fresh calm and mild synthetic-wind simulations; physical-flight validation remains pending." if p['conclusion']=='A' else "Retained the engineering controller when the selected policy did not pass the unchanged gate on fresh calm and mild synthetic-wind simulations."))
+gains=[100*(r['baseline']['meanAltitudeErrorM']-r['policy']['meanAltitudeErrorM'])/r['baseline']['meanAltitudeErrorM'] for r in p['results']]
+resume=("Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. " +
+ (f"A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by {gains[0]:.1f}% in calm and {gains[1]:.1f}% in mild synthetic wind; physical-flight validation was not performed." if p['conclusion']=='A' else "Retained the engineering controller when the selected policy did not pass the unchanged gate on fresh calm and mild synthetic-wind simulations."))
 commands='''npm ci
 # All experiment inputs and source must be committed before execution.
 node --import tsx scripts/learning/study/run-study.ts --stage=qualify
@@ -125,11 +126,15 @@ Run in an isolated checkout of the committed study source. Existing result files
 git worktree add /tmp/copter-study-replay adf410d
 cd /tmp/copter-study-replay
 # Restore reporting helpers only; experiment source remains at the registered implementation.
-git restore --source={p['provenance']['sourceCommit']} -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py
+git restore --source=audit/ml-evaluation-integrity -- scripts/learning/verify-artifacts.ts scripts/learning/verify-audit-artifacts.ts scripts/learning/verify-study.ts scripts/learning/render-study-report.py
 {commands}
 ```
 
-The renderer/verifier can be taken from the completed study commit for a replay; they only inspect recorded data and do not alter experiment source. Raw artifact generation commands are also embedded in provenance. `residual-policy.json` and `rl-summary.json` were generated only by the committed final-stage script. No result JSON was hand-edited.
+The reporting helpers are restored from the completed-study branch as shown; they only inspect recorded data and do not alter experiment source. Raw artifact generation commands are also embedded in provenance. `residual-policy.json` and `rl-summary.json` were generated only by the committed final-stage script. No result JSON was hand-edited. After final testing, presentation text was corrected to distinguish a passed simulation gate from missing physical validation, and an old test assumption that test seeds must be numerically larger than training seeds was corrected to check disjointness. These changes do not affect experimental code or data; execution-source hashes are verified against the recorded execution commits, rather than later presentation-only revisions.
+
+## Verification and numeric-claim inventory
+
+The current checkout passes {reliability['unitTestsPassed']} tests, TypeScript checking and the production build. `verify-artifacts.ts` reconstructs all six validation summaries/CIs, selection and final comparisons from recorded data, and verifies source hashes against their execution commits without simulating another episode. The complete refreshed inventory is [numeric-claims-final.csv.gz](../numeric-claims-final.csv.gz); `audit-claims.py` also writes the uncompressed CSV locally. The source diff is [improvement-code.patch](improvement-code.patch).
 
 ## Supported resume statement
 
@@ -146,5 +151,5 @@ for path in ['README.md','scripts/learning/README.md']:
  lo=text.index(start);hi=text.index(end,lo)+len(end)
  save(path,text[:lo]+start+'\n'+body+'\n'+end+text[hi:])
 save('reports/study/improvement-study.md',report)
-save('reports/ml-evaluation-audit.md','# Current ML evaluation audit\n\n'+report.replace('](preregistration.md)','](study/preregistration.md)').replace('](wind-calibration.md)','](study/wind-calibration.md)').replace('](validation.json)','](study/validation.json)').replace('](selection.json)','](study/selection.json)').replace('](final-attempt.json)','](study/final-attempt.json)')+'\n\nThe preceding audit-era report is archived in [study/archive/audit-era-report.md](study/archive/audit-era-report.md).\n')
+save('reports/ml-evaluation-audit.md','# Current ML evaluation audit\n\n'+report.replace('](preregistration.md)','](study/preregistration.md)').replace('](wind-calibration.md)','](study/wind-calibration.md)').replace('](validation.json)','](study/validation.json)').replace('](selection.json)','](study/selection.json)').replace('](final-attempt.json)','](study/final-attempt.json)').replace('](../numeric-claims-final.csv.gz)','](numeric-claims-final.csv.gz)').replace('](improvement-code.patch)','](study/improvement-code.patch)')+'\n\nThe preceding audit-era report is archived in [study/archive/audit-era-report.md](study/archive/audit-era-report.md).\n')
 print('Study documentation checked.' if args.check else 'Rendered all study outcomes and current README evidence.')

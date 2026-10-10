@@ -44,7 +44,8 @@ describe('Measured learning evidence boundaries',()=>{
  });
  it('does not promote failed RL or claim Aether fine-tuning',()=>{
   expect(rl.promoted).toBe(false);expect(rl.physicalValidation).toBe(false);
-  expect(rl.evaluationSeedRanges.every(([start])=>start>rl.trainSeedRange[1])).toBe(true);
+  // Independence is disjointness, not numeric ordering of seed ranges.
+  expect(rl.evaluationSeedRanges.every(([start,end])=>end<rl.trainSeedRange[0]||start>rl.trainSeedRange[1])).toBe(true);
   const policy=JSON.parse(readFileSync('public/learning/residual-policy.json','utf8'));
   expect(policy.visits.flat().reduce((a,b)=>a+b,0)).toBeGreaterThan(0);
   expect(policy.q.flat().some(v=>v!==0)).toBe(true);

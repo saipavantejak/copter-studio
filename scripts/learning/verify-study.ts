@@ -2,11 +2,17 @@
 import { readFileSync } from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { aggregate,summarize } from './study/statistics';
 import { CANDIDATES,STUDY } from './study/protocol';
 const load=(p:string)=>JSON.parse(readFileSync(p,'utf8'));
-const same=(a:unknown,b:unknown,msg:string)=>{if(!isDeepStrictEqual(a,b))throw new Error(msg);};
+// Generated JSON omits undefined pooled-binomial CI fields by design.
+const same=(a:unknown,b:unknown,msg:string)=>{if(!isDeepStrictEqual(JSON.parse(JSON.stringify(a)),JSON.parse(JSON.stringify(b))))throw new Error(msg);};
 const qualification=load('reports/study/qualification.json'),validation=load('reports/study/validation.json'),selection=load('reports/study/selection.json'),final=load('reports/study/final.json');
+for(const report of [qualification,validation,selection,final])for(const [path,expectedHash] of Object.entries(report.provenance.sourceHashes)){
+ const bytes=execFileSync('git',['show',`${report.provenance.sourceCommit}:${path}`]);
+ if(createHash('sha256').update(bytes).digest('hex')!==expectedHash)throw new Error('Committed execution source hash mismatch: '+path);
+}
 same(aggregate(qualification.episodes),qualification.result,'Qualification aggregation');
 if(validation.candidates.length!==6)throw new Error('Dropped registered candidate');
 for(const [i,c] of validation.candidates.entries()){

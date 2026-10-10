@@ -1,33 +1,33 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "method": "Tabular Q-learning residual collective controller",
-  "scope": "Crazyflie 2.1 reference configuration in Copter PhysicsEngine only",
+  "scope": "Preregistered six-factor study; Crazyflie 2.1 simulator reference only",
   "physicalValidation": false,
-  "trainingEpisodes": 600,
-  "trainingEpisodesTotal": 1800,
-  "trainSeedRange": [
-    1,
-    600
-  ],
+  "trainingEpisodes": 3000,
+  "trainingEpisodesTotal": 9000,
   "trainingSeedCount": 3,
+  "trainSeedRange": [
+    710001,
+    713000
+  ],
   "evaluationSeedRanges": [
     [
-      300001,
-      300050
+      600001,
+      600200
     ],
     [
-      301001,
-      301050
+      601001,
+      601200
     ]
   ],
   "validationSeedRanges": [
     [
-      200001,
-      200050
+      500001,
+      500100
     ],
     [
-      201001,
-      201050
+      501001,
+      501100
     ]
   ],
   "stepsPerEpisode": 1000,
@@ -47,6 +47,60 @@
     "batteryCapacity": 250,
     "maxThrustPerMotorN": 0.14715
   },
+  "windModel": {
+    "densityKgM3": 1.225,
+    "dragCoefficient": 1.28,
+    "frontalAreaM2": 0.0026680000000000002
+  },
+  "candidate": {
+    "id": "f",
+    "label": "3000 episodes and visit-decaying alpha",
+    "errorCuts": [
+      -0.5,
+      -0.25,
+      -0.1,
+      -0.03,
+      0.03,
+      0.1,
+      0.25,
+      0.5
+    ],
+    "tilt": false,
+    "actions": [
+      0,
+      -0.04,
+      -0.02,
+      0.02,
+      0.04
+    ],
+    "hold": 8,
+    "separate": false,
+    "episodes": 3000,
+    "decay": true
+  },
+  "stateDefinition": {
+    "errorCuts": [
+      -0.5,
+      -0.25,
+      -0.1,
+      -0.03,
+      0.03,
+      0.1,
+      0.25,
+      0.5
+    ],
+    "verticalSpeedCuts": [
+      -0.5,
+      -0.25,
+      -0.1,
+      -0.03,
+      0.03,
+      0.1,
+      0.25,
+      0.5
+    ],
+    "tiltCuts": []
+  },
   "actions": [
     0,
     -0.04,
@@ -54,41 +108,49 @@
     0.02,
     0.04
   ],
-  "qTableRole": "No tuning; retain all three predeclared runs. The first Q-table is a compatibility representative, not a selected winner.",
   "protocol": {
-    "trainingEpisodes": 600,
-    "stepsPerEpisode": 1000,
-    "decisionEverySteps": 8,
-    "alpha": 0.1,
-    "gammaPerDecision": 0.97,
-    "epsilon": [
-      0.3,
-      0.03
-    ],
-    "trainingRuns": [
+    "planPath": "reports/study/preregistration.md",
+    "planCommit": "bf89608",
+    "calibrationCommit": "57fe174",
+    "training": [
       {
-        "explorationSeed": 314159,
-        "trainSeedRange": [
-          1,
-          600
-        ]
+        "explorationSeed": 424001,
+        "startSeed": 710001
       },
       {
-        "explorationSeed": 271828,
-        "trainSeedRange": [
-          1001,
-          1600
-        ]
+        "explorationSeed": 424002,
+        "startSeed": 720001
       },
       {
-        "explorationSeed": 161803,
-        "trainSeedRange": [
-          2001,
-          2600
-        ]
+        "explorationSeed": 424003,
+        "startSeed": 730001
       }
     ],
-    "legacyEvaluationSeedRanges": [
+    "qualification": [
+      510001,
+      510100
+    ],
+    "validation": [
+      [
+        500001,
+        500100
+      ],
+      [
+        501001,
+        501100
+      ]
+    ],
+    "final": [
+      [
+        600001,
+        600200
+      ],
+      [
+        601001,
+        601200
+      ]
+    ],
+    "consumed": [
       [
         100001,
         100050
@@ -96,9 +158,7 @@
       [
         101001,
         101050
-      ]
-    ],
-    "validationSeedRanges": [
+      ],
       [
         200001,
         200050
@@ -106,9 +166,7 @@
       [
         201001,
         201050
-      ]
-    ],
-    "finalTestSeedRanges": [
+      ],
       [
         300001,
         300050
@@ -118,17 +176,32 @@
         301050
       ]
     ],
-    "successCriterion": "No engine failure; 1000 steps; >=119 of final 125 steps satisfy unchanged DEFAULT_MISSION tracking limits",
-    "promotionGate": "For every scenario: policy successes >= baseline, failures <= baseline, mean reward >= baseline; strictly greater mean reward in at least one scenario. Physical validation required for deployment.",
-    "selection": "No tuning; retain all three predeclared runs. The first Q-table is a compatibility representative, not a selected winner."
+    "steps": 1000,
+    "alpha": 0.1,
+    "gammaPerDecision": 0.97,
+    "epsilon": [
+      0.3,
+      0.03
+    ],
+    "bootstrapReplicates": 50000,
+    "qualificationMinSuccess": 0.2,
+    "qualificationMaxEngineFailure": 0.2,
+    "selection": "Eligible: each run original gate, adjusted reward lower bounds >=0 in each scenario and >0 in one; maximize worst-scenario mean reward difference; if none eligible select same score diagnostically; ties listed order. No training-seed winner selection."
   },
   "provenance": {
-    "command": "npm run train:residual -- --stage=final",
-    "sourceCommit": "e2018dcf490db8245ebc3ffc3b6c118766f3a827",
+    "command": "node --import tsx scripts/learning/study/run-study.ts --stage=final",
+    "sourceCommit": "65180add7c821d5d37550409fcb46fb1876a4dd1",
+    "planCommit": "bf89608",
+    "calibrationCommit": "57fe174",
+    "planSha256": "0b5eda42eb9da01ccb05c8bafdf5f47c5859034252aeae3f7a1c701498aadcc6",
     "sourceHashes": {
       "package-lock.json": "851cce6faf121974e45fb7f2224a8a9c83a684570c6438763275225131c6b2f4",
-      "scripts/learning/residual-experiment.ts": "5e3d12e1362fd3293b863e61681a08c5ce5ede82cba3060b5698fce2181b88e1",
-      "scripts/learning/train-residual.ts": "b70f1286a2712c51a039d0bfa70325435dc214700edb7f7ab53b3d1723c8aa2a",
+      "reports/study/preregistration.md": "0b5eda42eb9da01ccb05c8bafdf5f47c5859034252aeae3f7a1c701498aadcc6",
+      "reports/study/wind-calibration.md": "4b6be27c56f497809fb2ebffdee69a4f2270bbca969ebc7dfbd56818ff207ddd",
+      "scripts/learning/study/experiment.ts": "0749eecdf13bdd5fb368936b5eb689fdf1b5866170fe7a382b616b8f57248c35",
+      "scripts/learning/study/protocol.ts": "2836327a2f572f134d65fa783fdfe5e271aaf9fd07ce54aade904f44846e7023",
+      "scripts/learning/study/run-study.ts": "8d42d68dace44858d2841715fefc749f50d1da66b108d5917610fff595f95196",
+      "scripts/learning/study/statistics.ts": "31cc2d959ea6e22b8c916480ec352a4daa62c8ff778a0f30d6b759d18492c4a1",
       "src/AircraftProfiles.ts": "371cef9ce0af2cbd816e24ca5c148a64f094fb066e0cd9b3755ee9991d5e6539",
       "src/BenchmarkAudit.ts": "e4411bc8c992f01988cc24fa9a6e88fa0949cda4675da2ebb79ba0703aa01b94",
       "src/BenchmarkEvidence.ts": "1934ee22168cc5202ad90a997cbfee3080a53f1f084a3d7094e705d4d85517c3",
@@ -137,7 +210,7 @@
       "src/MissionLogic.ts": "6a6712b33f302df25afab002a56c0392fa3c3643c301b0411352bbd9bfcc9120",
       "src/MissionSpec.ts": "f13d15e962dac98fc8a15e6db6450f40d63789a341f99006dae6ccc2a8e5c6a4",
       "src/OptimizationHook.ts": "96f7548daa12ac460741bc2c5e19c7ad59d0938510908359cb21d16a06c87b1a",
-      "src/PhysicsEngine.ts": "14e707592575fb008929f6f46be6f9ca98cfbd200374910a99262ee3c0896ff7",
+      "src/PhysicsEngine.ts": "6d90c6f3128025012fe37339a4219d9f4a82be4feb4b79d29d9ce08f287f08c0",
       "src/RLAgent.ts": "2866bce8fba4369fec07a393bb8ca5a7d77a64e16c2eae3ce0993834419ae83f",
       "src/SeededRandom.ts": "741586e553b81e70455aaf14246ab72d8b2ae6d4956787afb32476f789958f4a",
       "src/SensorNoise.ts": "e7d73917885d0853ff3282b2702a8c0478e232272c6b02b327fb960020a6af26",
@@ -171,6 +244,7 @@
       "src/physics/propTables.ts": "1707b58ff0be1312ccaa044cfe4c38acc315b7872094807f19ba30bafc6a44d8",
       "src/physics/propulsion.ts": "b34106863ef5f9b1be469d67f32d4667f83b40e48b0943f89858867deae1ee6c",
       "src/physics/sensorModels.ts": "f98a94dbe1fcd923789b195d3dc652a427d0d8d783568c523f7676f433633912",
+      "src/physics/studyWind.ts": "7e127fa4febac83ae7bf3b9b817caf33367741e1c3ef8d3fcae1b77d6a6e7911",
       "src/physics/thrustLimits.ts": "4947d513837f5d380fddbf0c80c60711a3615203466363edfc0ce3fc64ea3703",
       "src/productionDatabase.ts": "5ecf5ab81607b8b7c0aef2e6edc24ac8746f2cb6a650d5278e1dc48b087a9111",
       "src/test-setup.ts": "2fbf00cbf62962613289b3f34adf42932d95a485408886765ba58ad546b69f26",
@@ -178,476 +252,531 @@
       "src/workers/episodeWorker.ts": "e203d19797c383f4ab169b7dd046cf0368faf7e57f916f92068cfa915bb70a14"
     },
     "node": "v24.19.0",
-    "protocolSha256": "acf01056c579ceb965e9122e00e3369bdd7927b5a48249406f1ba80172d82ad7",
-    "validationArtifactSha256": "4cc45bb08150cf3ff3cf17fcc57ee31f2e09539a40a90f621aa10d913a29397d",
-    "trainingCommand": "npm run train:residual -- --stage=validation"
+    "trainingCommand": "node --import tsx scripts/learning/study/run-study.ts --stage=validation",
+    "qualificationCommand": "node --import tsx scripts/learning/study/run-study.ts --stage=qualify",
+    "validationSha256": "e7b1bfcb7ab95e9d8aa4f87c58464ead19f0aa05477974a007a4617bc1099d83",
+    "selectionSha256": "7a5ef658696971f1f3c59bdf948c33c6d872b21b4c83b486e47769c5a5cbc591"
   },
   "results": [
     {
       "wind": false,
       "baseline": {
-        "episodes": 50,
-        "successes": 50,
+        "episodes": 200,
+        "successes": 200,
         "failures": 0,
         "nonSuccesses": 0,
-        "meanAltitudeErrorM": 0.02640643265656979,
-        "meanReward": -27.75117421609464,
+        "meanReward": -27.050001254697094,
+        "meanAltitudeErrorM": 0.025702732333331903,
         "meanSteps": 1000,
         "successRate95CI": [
-          0.9286524008666414,
+          0.9811546736227335,
           1
         ],
         "failureRate95CI": [
-          6.938893903907228e-18,
-          0.07134759913335872
+          1.734723475976807e-18,
+          0.018845326377266575
         ],
-        "failureReasons": {
-          "Successful mission": 50
+        "outcomeCounts": {
+          "Successful mission": 200
         }
       },
       "policy": {
-        "episodes": 150,
-        "successes": 150,
+        "episodes": 600,
+        "successes": 600,
         "failures": 0,
         "nonSuccesses": 0,
-        "meanAltitudeErrorM": 0.04169362401169314,
-        "meanReward": -47.83245252069393,
+        "meanReward": -23.414767814821154,
+        "meanAltitudeErrorM": 0.021802316276176487,
         "meanSteps": 1000,
-        "failureReasons": {
-          "Successful mission": 150
+        "outcomeCounts": {
+          "Successful mission": 600
         },
-        "intervalNote": "150 policy episodes share 50 IC seeds and three trained policies; use per-run Wilson and crossed-bootstrap comparisons, not an IID pooled binomial interval."
+        "intervalNote": "Shared episode seeds and three training runs; pooled episodes are not IID. Per-run Wilson intervals and paired crossed bootstrap reported separately."
       },
-      "comparison": {
-        "rewardDifference": {
-          "estimate": -20.081278304599262,
-          "crossedBootstrap95CI": [
-            -24.154068662328793,
-            -15.325759228313155
+      "comparisons": {
+        "reward": {
+          "estimate": 3.6352334398759028,
+          "ci95": [
+            2.1153231075077024,
+            5.0683772713592266
           ],
-          "trainingRunT95CI": [
-            -30.586678385922717,
-            -9.57587822327581
+          "adjustedCI": [
+            1.9414971911414898,
+            5.235808035937834
           ],
+          "adjustedConfidence": 0.975,
+          "bootstrapSeed": 900501,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
-            -15.199211549584493,
-            -22.430405018507926,
-            -22.614218345705375
+            3.84167672094504,
+            4.997286588741838,
+            2.0667370099408298
           ]
         },
-        "altitudeErrorDifferenceM": {
-          "estimate": 0.015287191355123355,
-          "crossedBootstrap95CI": [
-            0.009461476020290438,
-            0.020101570578416775
+        "meanAltitudeErrorM": {
+          "estimate": -0.003900416057155414,
+          "ci95": [
+            -0.00529341378364987,
+            -0.0024513095434154733
           ],
-          "trainingRunT95CI": [
-            0.001664625239371548,
-            0.02890975747087516
+          "adjustedCI": [
+            -0.00529341378364987,
+            -0.0024513095434154733
           ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900502,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
-            0.008976413596467628,
-            0.01799218718545154,
-            0.0188929732834509
+            -0.0040635195877348805,
+            -0.005219603835923753,
+            -0.0024181247478076086
           ]
         },
-        "successRateDifference": {
+        "successful": {
           "estimate": 0,
-          "crossedBootstrap95CI": [
+          "ci95": [
             0,
             0
           ],
-          "trainingRunT95CI": [
+          "adjustedCI": [
             0,
             0
           ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900503,
+          "bootstrapReplicates": 50000,
+          "trainingRunMeans": [
+            0,
+            0,
+            0
+          ]
+        },
+        "failed": {
+          "estimate": 0,
+          "ci95": [
+            0,
+            0
+          ],
+          "adjustedCI": [
+            0,
+            0
+          ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900504,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
             0,
             0,
             0
           ]
         }
-      },
-      "passesScenarioChecks": false
+      }
     },
     {
       "wind": true,
       "baseline": {
-        "episodes": 50,
-        "successes": 0,
-        "failures": 50,
-        "nonSuccesses": 50,
-        "meanAltitudeErrorM": 0.1582746497398418,
-        "meanReward": -1000.5460967644881,
-        "meanSteps": 115.5,
+        "episodes": 200,
+        "successes": 200,
+        "failures": 0,
+        "nonSuccesses": 0,
+        "meanReward": -29.41917269441258,
+        "meanAltitudeErrorM": 0.02801656788049607,
+        "meanSteps": 1000,
         "successRate95CI": [
-          6.938893903907228e-18,
-          0.07134759913335872
-        ],
-        "failureRate95CI": [
-          0.9286524008666414,
+          0.9811546736227335,
           1
         ],
-        "failureReasons": {
-          "Numerical operating envelope exceeded": 50
+        "failureRate95CI": [
+          1.734723475976807e-18,
+          0.018845326377266575
+        ],
+        "outcomeCounts": {
+          "Successful mission": 200
         }
       },
       "policy": {
-        "episodes": 150,
-        "successes": 0,
-        "failures": 150,
-        "nonSuccesses": 150,
-        "meanAltitudeErrorM": 0.1642428978004848,
-        "meanReward": -1001.5143950152034,
-        "meanSteps": 115.92666666666666,
-        "failureReasons": {
-          "Numerical operating envelope exceeded": 150
+        "episodes": 600,
+        "successes": 600,
+        "failures": 0,
+        "nonSuccesses": 0,
+        "meanReward": -25.185662058697456,
+        "meanAltitudeErrorM": 0.023495294961335355,
+        "meanSteps": 1000,
+        "outcomeCounts": {
+          "Successful mission": 600
         },
-        "intervalNote": "150 policy episodes share 50 IC seeds and three trained policies; use per-run Wilson and crossed-bootstrap comparisons, not an IID pooled binomial interval."
+        "intervalNote": "Shared episode seeds and three training runs; pooled episodes are not IID. Per-run Wilson intervals and paired crossed bootstrap reported separately."
       },
-      "comparison": {
-        "rewardDifference": {
-          "estimate": -0.9682982507153565,
-          "crossedBootstrap95CI": [
-            -2.373721792850307,
-            0.4862385118575708
+      "comparisons": {
+        "reward": {
+          "estimate": 4.233510635715175,
+          "ci95": [
+            2.8265020995482746,
+            5.540467992140498
           ],
-          "trainingRunT95CI": [
-            -4.311276210067483,
-            2.3746797086367697
+          "adjustedCI": [
+            2.6315719910191464,
+            5.68771580324529
           ],
+          "adjustedConfidence": 0.975,
+          "bootstrapSeed": 900511,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
-            0.5774502742748087,
-            -1.6033878429530342,
-            -1.878957183467844
+            4.44002108759879,
+            5.4440155177669105,
+            2.8164953017798244
           ]
         },
-        "altitudeErrorDifferenceM": {
-          "estimate": 0.0059682480606428725,
-          "crossedBootstrap95CI": [
-            -0.004111601863769869,
-            0.014970268689938395
+        "meanAltitudeErrorM": {
+          "estimate": -0.004521272919160692,
+          "ci95": [
+            -0.0057844223492353,
+            -0.0031845077038114636
           ],
-          "trainingRunT95CI": [
-            -0.018659435129874412,
-            0.030595931251160155
+          "adjustedCI": [
+            -0.0057844223492353,
+            -0.0031845077038114636
           ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900512,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
-            -0.00501220345410446,
-            0.014261899539651427,
-            0.008655048096381653
+            -0.0046839184694556155,
+            -0.005694583859031912,
+            -0.0031853164289945496
           ]
         },
-        "successRateDifference": {
+        "successful": {
           "estimate": 0,
-          "crossedBootstrap95CI": [
+          "ci95": [
             0,
             0
           ],
-          "trainingRunT95CI": [
+          "adjustedCI": [
             0,
             0
           ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900513,
+          "bootstrapReplicates": 50000,
+          "trainingRunMeans": [
+            0,
+            0,
+            0
+          ]
+        },
+        "failed": {
+          "estimate": 0,
+          "ci95": [
+            0,
+            0
+          ],
+          "adjustedCI": [
+            0,
+            0
+          ],
+          "adjustedConfidence": 0.95,
+          "bootstrapSeed": 900514,
+          "bootstrapReplicates": 50000,
           "trainingRunMeans": [
             0,
             0,
             0
           ]
         }
-      },
-      "passesScenarioChecks": false
+      }
     }
   ],
   "runResults": [
     {
-      "explorationSeed": 314159,
+      "explorationSeed": 424001,
       "results": [
         {
           "wind": false,
           "baseline": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.02640643265656979,
-            "meanReward": -27.75117421609464,
+            "meanReward": -27.050001254697094,
+            "meanAltitudeErrorM": 0.025702732333331903,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.03538284625303742,
-            "meanReward": -42.95038576567913,
+            "meanReward": -23.208324533752034,
+            "meanAltitudeErrorM": 0.021639212745597027,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         },
         {
           "wind": true,
           "baseline": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.1582746497398418,
-            "meanReward": -1000.5460967644881,
-            "meanSteps": 115.5,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -29.41917269441258,
+            "meanAltitudeErrorM": 0.02801656788049607,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.1532624462857374,
-            "meanReward": -999.9686464902135,
-            "meanSteps": 115.84,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -24.979151606813815,
+            "meanAltitudeErrorM": 0.023332649411040435,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         }
       ],
-      "passesSimulationGate": false
+      "passesOriginalGate": true
     },
     {
-      "explorationSeed": 271828,
+      "explorationSeed": 424002,
       "results": [
         {
           "wind": false,
           "baseline": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.02640643265656979,
-            "meanReward": -27.75117421609464,
+            "meanReward": -27.050001254697094,
+            "meanAltitudeErrorM": 0.025702732333331903,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.044398619842021335,
-            "meanReward": -50.18157923460256,
+            "meanReward": -22.052714665955236,
+            "meanAltitudeErrorM": 0.020483128497408153,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         },
         {
           "wind": true,
           "baseline": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.1582746497398418,
-            "meanReward": -1000.5460967644881,
-            "meanSteps": 115.5,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -29.41917269441258,
+            "meanAltitudeErrorM": 0.02801656788049607,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.17253654927949325,
-            "meanReward": -1002.1494846074405,
-            "meanSteps": 116.36,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -23.9751571766457,
+            "meanAltitudeErrorM": 0.022321984021464146,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         }
       ],
-      "passesSimulationGate": false
+      "passesOriginalGate": true
     },
     {
-      "explorationSeed": 161803,
+      "explorationSeed": 424003,
       "results": [
         {
           "wind": false,
           "baseline": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.02640643265656979,
-            "meanReward": -27.75117421609464,
+            "meanReward": -27.050001254697094,
+            "meanAltitudeErrorM": 0.025702732333331903,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 50,
+            "episodes": 200,
+            "successes": 200,
             "failures": 0,
             "nonSuccesses": 0,
-            "meanAltitudeErrorM": 0.04529940594002071,
-            "meanReward": -50.365392561800014,
+            "meanReward": -24.98326424475627,
+            "meanAltitudeErrorM": 0.02328460758552431,
             "meanSteps": 1000,
             "successRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
             "failureRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
+              1.734723475976807e-18,
+              0.018845326377266575
             ],
-            "failureReasons": {
-              "Successful mission": 50
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         },
         {
           "wind": true,
           "baseline": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.1582746497398418,
-            "meanReward": -1000.5460967644881,
-            "meanSteps": 115.5,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -29.41917269441258,
+            "meanAltitudeErrorM": 0.02801656788049607,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           },
           "policy": {
-            "episodes": 50,
-            "successes": 0,
-            "failures": 50,
-            "nonSuccesses": 50,
-            "meanAltitudeErrorM": 0.16692969783622347,
-            "meanReward": -1002.4250539479558,
-            "meanSteps": 115.58,
+            "episodes": 200,
+            "successes": 200,
+            "failures": 0,
+            "nonSuccesses": 0,
+            "meanReward": -26.60267739263277,
+            "meanAltitudeErrorM": 0.024831251451501515,
+            "meanSteps": 1000,
             "successRate95CI": [
-              6.938893903907228e-18,
-              0.07134759913335872
-            ],
-            "failureRate95CI": [
-              0.9286524008666414,
+              0.9811546736227335,
               1
             ],
-            "failureReasons": {
-              "Numerical operating envelope exceeded": 50
+            "failureRate95CI": [
+              1.734723475976807e-18,
+              0.018845326377266575
+            ],
+            "outcomeCounts": {
+              "Successful mission": 200
             }
           }
         }
       ],
-      "passesSimulationGate": false
+      "passesOriginalGate": true
     }
   ],
-  "passesSimulationGate": false,
+  "passesSimulationGate": true,
+  "statisticalSupport": true,
+  "conclusion": "A",
   "promoted": false,
-  "promotionReason": "Did not improve both held-out scenarios across all predeclared training runs; existing controller retained",
+  "promotionReason": "Passed simulation study; physical validation still required",
   "limitations": [
     "Simulation only; physicalValidation=false.",
-    "Synthetic sinusoidal wind is uncalibrated and overwhelms this nano configuration.",
-    "No measured endurance labels.",
-    "Altitude error is conditional on executed steps; inspect termination reasons and penalized reward.",
-    "Only three training runs; confidence intervals are approximate and cannot establish universal improvement.",
-    "Shared IC seeds across policies are paired, not independent repeated baseline trials.",
-    "Crossed-bootstrap CIs describe this protocol; training-run t intervals condition on the fixed episode bank.",
-    "Existing legacy tests were inspected for diagnosis, never used for tuning this protocol.",
-    "No hyperparameters, physics, success criterion or candidate gate changed."
+    "Geometry-based flat-plate drag proxy, not measured aircraft drag calibration.",
+    "Mild synthetic sinusoidal wind, not measured severe gusts.",
+    "Only three training seeds; percentile crossed-bootstrap coverage is approximate.",
+    "Altitude error is conditional on executed steps; inspect failures and non-successes.",
+    "No physical-flight, wind robustness or endurance guarantee.",
+    "Reference Q-table is the first predeclared training run, not a seed-selected winner."
   ]
 }

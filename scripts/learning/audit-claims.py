@@ -1,7 +1,7 @@
 """Inventory original/current numeric claims against code-generated reproductions.
 Run reproduction commands first. Never fits/tunes policies or edits result JSON.
 """
-import csv,json,math,pathlib,re,subprocess
+import csv,json,math,pathlib,re,subprocess,gzip
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 BASE='e2018dcf490db8245ebc3ffc3b6c118766f3a827'
 load=lambda path:json.loads((ROOT/path).read_text())
@@ -119,3 +119,6 @@ for filename,rows in [('numeric-claims-original.csv',original),('numeric-claims-
  with (ROOT/'reports'/filename).open('w',newline='') as f:
   writer=csv.DictWriter(f,fieldnames=fields,lineterminator='\n');writer.writeheader();writer.writerows(rows)
  print(filename,len(rows),'claims;',sum('MISMATCH' in r['match_or_mismatch'] for r in rows),'mismatches')
+ if filename=='numeric-claims-final.csv':
+  # Deterministic compressed inventory for git; full CSV remains locally available.
+  (ROOT/'reports'/(filename+'.gz')).write_bytes(gzip.compress((ROOT/'reports'/filename).read_bytes(),mtime=0))

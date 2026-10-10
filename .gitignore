@@ -37,3 +37,6 @@ __pycache__/
 .claude/
 
 .vercel
+
+# Full numeric inventory is generated locally; commit its deterministic gzip copy.
+/reports/numeric-claims-final.csv

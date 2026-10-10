@@ -11,8 +11,11 @@ python -m pip install -r scripts/learning/requirements.txt
 npm ci
 npm run train:measured
 node --import tsx scripts/learning/train-residual-legacy.ts
-npm run train:residual -- --stage=validation
-npm run train:residual -- --stage=final
+node --import tsx scripts/learning/study/run-study.ts --stage=qualify
+node --import tsx scripts/learning/study/run-study.ts --stage=validation
+node --import tsx scripts/learning/study/run-study.ts --stage=select
+# Commit the generated selection before final; run in a fresh reproduction worktree.
+node --import tsx scripts/learning/study/run-study.ts --stage=final
 node --import tsx scripts/learning/verify-artifacts.ts
 npm run train:energy
 npm test
@@ -26,13 +29,13 @@ The measured source subset is in `data/training/reference-measurements.json`. It
 
 - **Supervised:** quadratic regressions from 60 measured rows; 20 predeclared interior rows held out. The Bitcraze model uses nonnegative coefficients for total thrust and electrical input power vs PWM. Four UIUC propeller models fit dimensionless Ct and Cp vs RPM. Each model is restricted to its exact source setup and measured range. These are small engineering regressions, not a general drone foundation model.
 - **Unsupervised:** three K-means clusters fitted to 48 training operating points using standardized diameter, pitch/diameter and RPM. Centers and scaling are exported. Distance beyond the largest training distance flags poor support; it is not a confidence probability. No held-out labels are used.
-- **Reinforcement learning:** unchanged tabular Q-learning settings are retrained across three predeclared runs, with separate validation and fresh final-test seed banks. All candidate policies are retained; none is selected based on test scores. The final artifact and generated results below are authoritative.
+- **Reinforcement learning:** six predeclared one-factor candidates use three training streams each under a frozen physically scaled wind proxy. Candidate selection uses new validation seeds only; the selected candidate is evaluated once on a separate fresh final bank. All validation candidates and negatives are retained. The final artifact and generated results below are authoritative.
 
 ## Findings and promotion decision
 
 Bitcraze held-out MAE: 0.000637 N total thrust (approximately 0.065 g-force) and 0.0755 W electrical input. This is **within-sweep interpolation** from one 2015 experiment. It cannot establish repeatability, uncertainty coverage, accuracy on modern variants or performance in flight. Full metrics and a mean-prediction baseline are exported for every target. The baseline is a simple statistical reference, not a comparison with the existing physics engine.
 
-The original single-run result reproduced exactly and is retained in `reports/rl-legacy-reproduction.json`. Its calm baseline/policy errors were 0.0303 / 0.0371 m; both wind controllers failed. The new final test also rejects promotion; see the generated results below. No controller or physics change is installed.
+The original single-run result reproduced exactly and is retained in `reports/rl-legacy-reproduction.json`. Its calm baseline/policy errors were 0.0303 / 0.0371 m; both wind controllers failed. Those historical scores use the old uncalibrated wind model. The preregistered improvement study below uses a separately committed wind proxy and new seed banks; its final candidate passes the simulation gate but is not physically validated or installed in the active controller.
 
 The Benchmark learning panel provides restricted bench predictions and the training evidence. Aether receives the same provenance and limitations in its context; its underlying language model is not retrained. The supervised models are intentionally not silently inserted into the flight engine: the Bitcraze data are whole-system measurements with covarying external supply voltage, whereas the engine's propulsion interface requires per-motor nominal-voltage curves. Dividing total power by four would incorrectly distribute electronics draw and conceal the voltage mismatch.
 
@@ -65,32 +68,23 @@ Collect independent test sessions across airframes, motors/props, batteries, pay
 A future energy dataset should record test/session ID, source and usage terms, hardware revision, payload, commanded speed/altitude, wind reference frame and sampling rate, gust-window definition, temperature, pressure, measured duration, energy and termination reason. Battery-to-cutoff tests must be distinguished from completed short missions. Require held-out error by regime, calibrated uncertainty coverage, failure-rate comparisons, independent physical validation and a documented supported envelope before default promotion.
 
 <!-- BEGIN GENERATED ML EVALUATION -->
-## Reproducible ML evaluation
+## Pre-registered ML improvement study
 
-The current simulation-only artifact is [`public/learning/residual-policy.json`](../../public/learning/residual-policy.json). `physicalValidation=false`, `passesSimulationGate=false`, and `promoted=false`. The existing controller remains active.
+**Conclusion A.** A: the selected candidate passes the unchanged simulation gate on fresh data, with the predeclared final evidence requirement also satisfied. Physical promotion remains false.
 
-Training: 3 predeclared runs × 600 episodes = 1800 episodes. Settings, state bins, reward, physics, success criteria and the candidate gate are unchanged. Validation banks: 200001–200050 (calm), 201001–201050 (synthetic wind). Fresh final banks: 300001–300050 (calm), 301001–301050 (wind). No tuning or winner selection was performed. Legacy test banks were used only to reproduce and diagnose the historical run.
+Registration was committed before experiments: `bf89608`. The physically scaled wind correction was committed separately as `57fe174`, using manufacturer dimensions, a declared flat-plate drag proxy and relative airspeed. It is not measured aerodynamic calibration. Baseline qualification was 100/100 missions with 0 engine failures, so the registered mild-wind scenario was retained without further modification.
 
-| Training seed | Scenario | Baseline successes | Policy successes | Baseline altitude error (m) | Policy altitude error (m) | Baseline reward | Policy reward | Gate |
+Six one-factor candidates were evaluated, each with three training seeds. Validation used 500001–500100 (calm) and 501001–501100 (wind), with Bonferroni correction across twelve primary candidate/scenario comparisons. No consumed legacy/audit banks were used for tuning. Candidate **f (3000 episodes and visit-decaying alpha)** was selected by the committed validation-only rule. The final test used 600001–600200 / 601001–601200 exactly once, with no subsequent tuning.
+
+| Scenario | Baseline reward | Policy reward | Reward Δ | 95% crossed CI | Two-scenario 97.5% CI | Baseline / policy altitude error (m) | Baseline / policy successes | Engine failures |
 |---|---|---|---|---|---|---|---|---|
-| 314159 | Calm | 50/50 | 50/50 | 0.026406 | 0.035383 | -27.751174 | -42.950386 | Fail |
-| 314159 | Wind | 0/50 | 0/50 | 0.158275 | 0.153262 | -1000.546097 | -999.968646 | Fail |
-| 271828 | Calm | 50/50 | 50/50 | 0.026406 | 0.044399 | -27.751174 | -50.181579 | Fail |
-| 271828 | Wind | 0/50 | 0/50 | 0.158275 | 0.172537 | -1000.546097 | -1002.149485 | Fail |
-| 161803 | Calm | 50/50 | 50/50 | 0.026406 | 0.045299 | -27.751174 | -50.365393 | Fail |
-| 161803 | Wind | 0/50 | 0/50 | 0.158275 | 0.166930 | -1000.546097 | -1002.425054 | Fail |
+| Calm | -27.050001 | -23.414768 | 3.635233 | [2.115323, 5.068377] | [1.941497, 5.235808] | 0.025703 / 0.021802 | 200/200 / 600/600 | 0/200 / 0/600 |
+| Wind | -29.419173 | -25.185662 | 4.233511 | [2.826502, 5.540468] | [2.631572, 5.687716] | 0.028017 / 0.023495 | 200/200 / 600/600 | 0/200 / 0/600 |
 
-| Scenario | Mean policy − baseline reward | Crossed-bootstrap 95% CI | Training-run t 95% CI (fixed episode bank) |
-|---|---|---|---|
-| Calm | -20.081278 | [-24.154069, -15.325759] | [-30.586678, -9.575878] |
-| Wind | -0.968298 | [-2.373722, 0.486239] | [-4.311276, 2.374680] |
+Policy figures pool three trained policies sharing 200 episode seeds per scenario; repeated baseline observations are not treated as independent. The ordinary 95% and two-scenario-adjusted reward intervals use a crossed bootstrap over training seeds and episode seeds. Only three training seeds limit the accuracy of interval coverage.
 
-There are 50 unique final IC seeds per scenario, shared across the three policies: 100 unique baseline flights and 300 policy flights. Repeated baseline records are not independent observations. Each run's calm success rate has a Wilson 95% CI of [0.928652, 1.000000]; each wind success rate has CI [0.000000, 0.071348]. The crossed bootstrap resamples training runs and shared episode seeds; only three training runs are available. Degenerate observed success-difference intervals do not prove equal underlying success probabilities. The historical candidate gate is applied separately to every run; no seed is selected as a winner.
+Simulation only; `physicalValidation=false`, `passesSimulationGate=true`, `promoted=false`. The success criteria, original reward and per-run promotion gate are unchanged. Physics was frozen after the required calibration commit. A shorter-hold candidate retains the same decision-level gamma, so its temporal discount horizon also changes. No severe-wind, flight robustness or endurance claim is supported.
 
-### Limitations
-
-Simulation only; `physicalValidation=false`. Synthetic sinusoidal wind is uncalibrated for this nano configuration and every final wind flight terminates at the numerical operating envelope. Conditional pre-failure altitude error cannot establish robustness. No measured gust or battery-to-depletion endurance labels exist. The policy observes only altitude error and vertical speed and changes motor collective commands; no physical-flight performance claim is supported. The Q-table at the top level is the first predeclared run for compatibility, not a selected best policy.
-
-Reproduction commands, original and refreshed numeric-claim tables, diagnosis and a supported resume statement are in [`reports/ml-evaluation-audit.md`](../../reports/ml-evaluation-audit.md). The CI benchmark's mission non-success threshold is separate from the RL promotion gate.
+All six validation results, per-run final outcomes, calibration sources, registered selection and reproduction commands are in [the study audit](../../reports/study/improvement-study.md). The audit-era results are preserved separately. The final artifact is [residual-policy.json](../../public/learning/residual-policy.json).
 
 <!-- END GENERATED ML EVALUATION -->

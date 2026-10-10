@@ -3,10 +3,10 @@
   "date": "2026-10-10",
   "scope": "Current-checkout headless software regression; simulation only; no physical validation",
   "physicalValidation": false,
-  "unitTestsPassed": 192,
+  "unitTestsPassed": 199,
   "provenance": {
     "command": "node --import tsx scripts/audit-reliability.ts --date=2026-10-10",
-    "sourceCommit": "e2018dcf490db8245ebc3ffc3b6c118766f3a827",
+    "sourceCommit": "65180add7c821d5d37550409fcb46fb1876a4dd1",
     "note": "Regenerated current-checkout software regression. Previous dated reports remain in git history; historical test counts are not asserted for this checkout."
   },
   "protocol": {
