@@ -1,6 +1,6 @@
 # Evaluation errata
 
-## Hiring-manager integrity audit: blocked
+## Hiring-manager integrity audit: discovered blocker, now repaired
 
 Observed against branch `audit/ml-evaluation-integrity` at `69e469b`.
 
@@ -28,6 +28,23 @@ evidence. No result JSON was edited. The audit generator correction and
 regeneration have **not** been performed: the user's explicit stop-on-failure
 rule stopped this task at the discrepancy. A future correction must regenerate
 the inventory, retain this erratum, and rerun the independent check.
+
+**Repair and regeneration.** Following explicit authorization to continue,
+commit `6ee28ab` repaired the generator and regenerated
+`reports/numeric-claims-final.csv.gz`. The resume row now contains the actual
+resume paragraph and structured facts derived from `reports/study/final.json`:
+training budget, training-seed count, altitude reductions, simulation gate,
+physical-validation flag and promotion flag. These flags are no longer
+conflated. Generic raw artifact leaves are labelled `RECORDED VALUE` or
+`RECORDED INPUT`, rather than falsely presenting copied values as independent
+`MATCH` checks. Historical evidence remains available at `7335e7e`.
+
+The independent verifier now parses the CSV and the actual resume paragraph,
+checks their numbers and flags against the final artifact, and checks generated
+README, study and audit text for drift. It exits zero after the repair. CI runs
+this verifier before software build checks. The previous stop report is a
+historical record, not the current audit status. No experimental result JSON
+was edited or regenerated during this repair.
 
 **Additional verification gap.** The former verifier imports the production
 statistics implementation. The former inventory copies numeric leaves into

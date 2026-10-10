@@ -11720,34 +11720,123 @@
       "status": "PASS"
     },
     {
-      "claim": "resume altitude reduction (%)",
+      "claim": "actual resume altitude reduction (%)",
       "source": "reports/ml-evaluation-audit.md",
-      "recomputed": 15.2,
-      "reported": 15.2,
+      "recomputed": [
+        15.2,
+        16.1
+      ],
+      "reported": [
+        15.2,
+        16.1
+      ],
       "status": "PASS"
     },
     {
-      "claim": "resume altitude reduction (%)",
+      "claim": "actual resume training seeds",
       "source": "reports/ml-evaluation-audit.md",
-      "recomputed": 16.1,
-      "reported": 16.1,
+      "recomputed": 3,
+      "reported": 3,
       "status": "PASS"
     },
     {
-      "claim": "resume inventory gate reconciliation",
+      "claim": "actual resume episode budget",
+      "source": "reports/ml-evaluation-audit.md",
+      "recomputed": 3000,
+      "reported": 3000,
+      "status": "PASS"
+    },
+    {
+      "claim": "actual resume simulation gate",
+      "source": "reports/ml-evaluation-audit.md",
+      "recomputed": true,
+      "reported": true,
+      "status": "PASS"
+    },
+    {
+      "claim": "actual resume physical validation",
+      "source": "reports/ml-evaluation-audit.md",
+      "recomputed": false,
+      "reported": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "exactly one resume inventory row",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": 1,
+      "reported": 1,
+      "status": "PASS"
+    },
+    {
+      "claim": "inventory matches actual resume paragraph",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": "Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by 15.2% in calm and 16.1% in mild synthetic wind; physical-flight validation was not performed.",
+      "reported": "Executed a preregistered six-candidate tabular Q-learning study with three training seeds per candidate and multiple-comparison-corrected paired evaluation. A 3,000-episode candidate with a decaying learning rate passed the unchanged held-out simulation gate, reducing mean altitude error by 15.2% in calm and 16.1% in mild synthetic wind; physical-flight validation was not performed.",
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory trainingSeedCount",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": 3,
+      "reported": 3,
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory trainingEpisodes",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": 3000,
+      "reported": 3000,
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory passesSimulationGate",
       "source": "reports/numeric-claims-final.csv.gz",
       "recomputed": true,
-      "reported": false,
-      "status": "FAIL"
+      "reported": true,
+      "status": "PASS"
     },
     {
-      "claim": "resume inventory must not disclaim its actual improvement claim",
+      "claim": "resume inventory physicalValidation",
       "source": "reports/numeric-claims-final.csv.gz",
       "recomputed": false,
+      "reported": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory promoted",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": false,
+      "reported": false,
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory altitudeReductionPct",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": [
+        15.2,
+        16.1
+      ],
+      "reported": [
+        15.2,
+        16.1
+      ],
+      "status": "PASS"
+    },
+    {
+      "claim": "resume inventory MATCH is earned",
+      "source": "reports/numeric-claims-final.csv.gz",
+      "recomputed": "MATCH",
+      "reported": "MATCH",
+      "status": "PASS"
+    },
+    {
+      "claim": "generated study claims match committed artifacts",
+      "source": "README.md; scripts/learning/README.md; reports/study/improvement-study.md; reports/ml-evaluation-audit.md",
+      "recomputed": true,
       "reported": true,
-      "status": "FAIL"
+      "status": "PASS"
     }
   ],
-  "passed": 1348,
-  "failed": 2
+  "passed": 1361,
+  "failed": 0
 }

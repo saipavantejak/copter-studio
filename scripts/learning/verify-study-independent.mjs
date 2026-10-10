@@ -4,6 +4,7 @@
  */
 import {readFileSync, writeFileSync, mkdirSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import {execFileSync} from 'node:child_process';
 const load=p=>JSON.parse(readFileSync(p,'utf8'));
 const final=load('reports/study/final.json');
 const validation=load('reports/study/validation.json');
@@ -69,16 +70,41 @@ function study(pairs,results,runResults,path){
 }
 for(const c of validation.candidates)check('candidate unchanged gate','reports/study/validation.json#'+c.candidate.id,study(c.evaluations,c.results,c.runResults,'validation/'+c.candidate.id),c.passesOriginalGate);
 check('final unchanged simulation gate','reports/study/final.json',study(final.evaluations,final.results,final.runResults,'final'),final.passesSimulationGate);
-for(const r of final.results){const change=100*(1-r.policy.meanAltitudeErrorM/r.baseline.meanAltitudeErrorM);check('resume altitude reduction (%)','reports/ml-evaluation-audit.md',Number(change.toFixed(1)),r.wind?16.1:15.2);}
-// Explicit regression detector for the false MATCH in the committed audit inventory.
+const resume=readFileSync('reports/ml-evaluation-audit.md','utf8').split('## Supported resume statement\n\n')[1]?.split('\n\n')[0].trim();
+if(!resume)throw Error('Missing actual resume statement');
+const percentages=[...resume.matchAll(/([\d.]+)%/g)].map(m=>Number(m[1]));
+const reductions=final.results.map(r=>Number((100*(1-r.policy.meanAltitudeErrorM/r.baseline.meanAltitudeErrorM)).toFixed(1)));
+check('actual resume altitude reduction (%)','reports/ml-evaluation-audit.md',reductions,percentages);
+const words={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
+const count=resume.match(/with (\w+) training seeds/);
+check('actual resume training seeds','reports/ml-evaluation-audit.md',final.trainingSeedCount,words[count?.[1]]??Number(count?.[1]));
+check('actual resume episode budget','reports/ml-evaluation-audit.md',final.trainingEpisodes,Number(resume.match(/([\d,]+)-episode candidate/)?.[1].replaceAll(',','')));
+check('actual resume simulation gate','reports/ml-evaluation-audit.md',final.passesSimulationGate,/passed the unchanged held-out simulation gate/.test(resume));
+check('actual resume physical validation','reports/ml-evaluation-audit.md',final.physicalValidation,!/physical-flight validation was not performed/.test(resume));
+// RFC4180-style parser: quoted commas and multi-line claims must remain intact.
+function* csvRows(text){let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){
+ const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){field+='"';i++;}else quoted=!quoted;}
+ else if(!quoted&&(c===','||c==='\n')){row.push(field);field='';if(c==='\n'){yield row;row=[];}}
+ else field+=c;
+}if(quoted)throw Error('Unclosed CSV quote');if(field||row.length){row.push(field);yield row;}}
 const inventory=gunzipSync(readFileSync('reports/numeric-claims-final.csv.gz')).toString();
-const resumeRow=inventory.split('\n').find(line=>line.includes('runs × 3000 episodes; all gates false; promoted=false'));
-check('resume inventory gate reconciliation','reports/numeric-claims-final.csv.gz',final.passesSimulationGate,resumeRow?false:final.passesSimulationGate);
-check('resume inventory must not disclaim its actual improvement claim','reports/numeric-claims-final.csv.gz',false,inventory.includes('No improvement or physical validation claimed'));
+let header,resumeRows=[];for(const row of csvRows(inventory)){if(!header){header=row;continue;}const fields=Object.fromEntries(header.map((k,i)=>[k,row[i]]));if(fields.source_file==='reports/ml-evaluation-audit.md#supported-resume-statement')resumeRows.push(fields);}
+check('exactly one resume inventory row','reports/numeric-claims-final.csv.gz',1,resumeRows.length);
+const resumeRow=resumeRows[0];
+check('inventory matches actual resume paragraph','reports/numeric-claims-final.csv.gz',resume,resumeRow?.claim);
+let facts;try{facts=JSON.parse(resumeRow?.recomputed_value);}catch{facts={};}
+for(const [key,value]of Object.entries({trainingSeedCount:final.trainingSeedCount,trainingEpisodes:final.trainingEpisodes,passesSimulationGate:final.passesSimulationGate,physicalValidation:final.physicalValidation,promoted:final.promoted,altitudeReductionPct:reductions}))check('resume inventory '+key,'reports/numeric-claims-final.csv.gz',value,facts[key]);
+check('resume inventory MATCH is earned','reports/numeric-claims-final.csv.gz','MATCH',resumeRow?.match_or_mismatch);
+// Verify all generated study claims in both READMEs and study/audit documents.
+// This only renders/checks text; it does not perform statistical analysis.
+let docsMatch=true;try{execFileSync('python',['scripts/learning/render-evaluation-report.py','--check'],{stdio:'pipe'});}catch(error){docsMatch=false;console.error(String(error.stderr));}
+check('generated study claims match committed artifacts','README.md; scripts/learning/README.md; reports/study/improvement-study.md; reports/ml-evaluation-audit.md',true,docsMatch);
 const failed=checks.filter(c=>c.status==='FAIL');
 mkdirSync('reports/integrity',{recursive:true});
 const report={scope:'Independent raw-episode recomputation of existing six-candidate validation and selected final study; not a whole-repository certification or simulator replay.',checks,passed:checks.length-failed.length,failed:failed.length};
 writeFileSync('reports/integrity/independent-verifier.json',JSON.stringify(report,null,2)+'\n');
+const csvCell=value=>'"'+String(typeof value==='string'?value:JSON.stringify(value)).replaceAll('"','""')+'"';
+writeFileSync('reports/integrity/claim-to-source.csv',[['claim','source','recomputed','reported','status'].join(','),...checks.map(c=>[c.claim,c.source,c.recomputed,c.reported,c.status].map(csvCell).join(','))].join('\n')+'\n');
 console.log(`Independent study audit: ${report.passed} PASS, ${report.failed} FAIL`);
 for(const r of failed)console.error(JSON.stringify(r));
 if(failed.length)process.exitCode=1;

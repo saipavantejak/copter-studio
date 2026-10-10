@@ -1,5 +1,9 @@
 # Integrity audit: stopped at claim reconciliation
 
+> Historical stop report at `7335e7e`. The known resume inventory defect was
+> subsequently repaired and regenerated in `6ee28ab`; consult the current
+> independent verifier output and `docs/ERRATA.md` for current status.
+
 The first task failed its audit integrity check. No follow-up training, validation, final test, PPO run, physics modification, analytics integration or deployment verification was started. No GitHub push was performed.
 
 ## Recomputed existing final study

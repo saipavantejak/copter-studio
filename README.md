@@ -1,11 +1,10 @@
 # Copter Studios
 
-> **Claim-audit status: blocked.** An independent recorded-data check confirms
-> the existing study metrics but detects a contradictory resume row labelled
-> `MATCH` in the numeric claim inventory. Do not treat that inventory as a
-> certification. See the [integrity stop report](reports/integrity/STOP-REPORT.md)
-> and [errata](docs/ERRATA.md). Further polishing and experiments stopped under
-> the requested stop-on-failure rule; the simulator result artifacts are unchanged.
+> **Recorded study claims independently checked.** The contradictory resume
+> inventory row has been repaired and regenerated; see [errata](docs/ERRATA.md)
+> and the [claim-to-source checks](reports/integrity/claim-to-source.csv).
+> This checks the existing study's recorded metrics and generated claims; it
+> does not certify physical-flight accuracy or every repository document.
 
 Browser-based drone flight simulator — RK4/BET dynamics, TF.js RL training, MAVLink HIL bridge, and Gemini-powered NLP control. The interactive simulator runs in the browser; bridges and training scripts run separately.
 

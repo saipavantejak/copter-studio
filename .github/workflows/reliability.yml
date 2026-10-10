@@ -11,11 +11,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Independently check recorded study metrics and generated claims
+        run: node scripts/learning/verify-study-independent.mjs
       - run: npm run lint
       - run: npm run type-check:server
       - run: npm test
