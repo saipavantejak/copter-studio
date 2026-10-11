@@ -52,6 +52,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     test: {
+      coverage: {thresholds:{statements:45,branches:45,functions:38,lines:48,'src/physics/core.ts':{statements:90,branches:80,functions:90,lines:90}},provider:'v8', reporter:['text','json-summary'], reportsDirectory:'reports/quality/coverage', include:['src/**/*.{ts,tsx}','server/**/*.ts','api/**/*.ts','scripts/learning/study/**/*.ts'], exclude:['**/*.test.*','src/__tests__/**','src/test-setup.ts','src/vite-env.d.ts']},
       environment: 'jsdom',
       setupFiles: ['./src/test-setup.ts'],
       globals: true,

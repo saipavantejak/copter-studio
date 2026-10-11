@@ -1,0 +1,128 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> copter-studios@1.0.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.0 /workspace/scratch/e865dd4b9f08/copter-studio
+      Coverage enabled with v8
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  20 passed (20)
+      Tests  220 passed (220)
+   Start at  21:05:31
+   Duration  33.26s (transform 2.67s, setup 1.00s, import 4.73s, tests 74.78s, environment 10.04s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   46.42 |    46.82 |   40.46 |   50.17 |                   
+ api               |     100 |      100 |     100 |     100 |                   
+  analytics.ts     |       0 |        0 |       0 |       0 |                   
+  gemini.ts        |     100 |      100 |     100 |     100 |                   
+ ...learning/study |   27.79 |    16.37 |   35.22 |    28.3 |                   
+  experiment.ts    |   13.08 |     7.57 |   45.45 |      10 | 14-55,59-65       
+  integrity.ts     |   90.62 |       85 |      90 |     100 | 11,21,28          
+  protocol.ts      |     100 |    83.33 |     100 |     100 | 25                
+  run-study.ts     |       0 |        0 |       0 |       0 | 2-86              
+  statistics.ts    |   47.12 |     3.57 |   33.33 |   46.87 | 7-10,31-46        
+ server            |   21.49 |    38.53 |   29.41 |      14 |                   
+  ...eAnalytics.ts |   26.22 |    27.02 |     100 |    37.5 | 16-31             
+  geminiGateway.ts |   76.76 |       75 |     100 |   89.47 | 35-38             
+  gymBridge.ts     |       0 |        0 |       0 |       0 | 17-148            
+  ...kHILBridge.ts |       0 |        0 |       0 |       0 | 32-459            
+ src               |   43.71 |    44.11 |   31.89 |   46.76 |                   
+  ...Interface.tsx |   19.81 |    21.65 |   15.71 |   21.83 | ...26-542,552-554 
+  ...ftProfiles.ts |   73.33 |    78.12 |   85.71 |   72.72 | 39-41             
+  App.tsx          |   58.33 |     61.7 |   44.44 |   54.54 | 68-109            
+  AuthForm.tsx     |   82.22 |    81.01 |    90.9 |   93.22 | 44-46,86          
+  ...hmarkAudit.ts |     100 |    44.44 |     100 |     100 | 6-12              
+  ...rkEvidence.ts |      90 |    88.88 |     100 |     100 | 3                 
+  CloudHistory.tsx |   17.56 |        5 |    9.09 |   27.58 | 15-18,22-46       
+  ...Forensics.tsx |    9.37 |        0 |       0 |      12 | 31-42,72-165      
+  CrashReplay.tsx  |    1.25 |        0 |       0 |    1.68 | 19-259            
+  ...alibrator.tsx |    0.43 |        0 |       0 |    0.62 | 30-198,211-371    
+  ...Randomizer.ts |      60 |    66.66 |   42.85 |      60 | 58,110-120        
+  DroneSim.tsx     |   37.86 |    20.17 |   57.14 |   35.57 | ...79,384,403-404 
+  EfficiencyUI.tsx |   42.85 |        0 |       0 |   42.85 | 12-66,88          
+  EpisodeRunner.ts |   84.84 |    82.69 |   89.47 |   89.58 | ...97-199,203-205 
+  ...rBoundary.tsx |      50 |    16.66 |      60 |      50 | 33-39,50-63       
+  Leaderboard.tsx  |       4 |        0 |       0 |    4.76 | 16-23,29-123      
+  MissionLogic.ts  |   96.92 |    79.54 |     100 |     100 | ...86,104-105,123 
+  MissionSpec.ts   |   72.22 |    86.48 |     100 |     100 | 26-30             
+  ModelLoader.tsx  |   18.34 |    21.59 |   11.11 |   21.27 | ...59,164-189,227 
+  ObsActionViz.tsx |    9.09 |        0 |       0 |   11.11 | 17-22,49-118      
+  ...rdingTour.tsx |   73.68 |    33.33 |      60 |   76.47 | 72-141            
+  ...zationHook.ts |   56.25 |     6.25 |   28.57 |   66.66 | 30-35,43,45       
+  PhysicsEngine.ts |   80.07 |    68.59 |   92.85 |   82.06 | ...86-388,400-401 
+  PolicyXRay.tsx   |    6.66 |        0 |       0 |    7.89 | 46-64,68-128      
+  RLAgent.ts       |   29.82 |    13.46 |    37.5 |   35.41 | ...04-170,212-214 
+  ...nessPanel.tsx |   32.69 |    18.84 |   36.36 |      35 | ...-71,89,123-137 
+  SeededRandom.ts  |   81.25 |      100 |   66.66 |   81.25 | 42,52,57          
+  SensorNoise.ts   |   96.42 |       50 |     100 |     100 | 54                
+  ...valDialog.tsx |   16.66 |        0 |       0 |      20 | 35-57,76-220      
+  ...tionParser.ts |   92.63 |    84.77 |      75 |   96.77 | 77,164,187,278    
+  SplitPane.tsx    |   33.33 |    38.46 |   42.85 |   32.43 | 52-86             
+  ...etryExport.ts |    3.33 |        0 |       0 |    3.84 | 19-294            
+  ...Dashboard.tsx |   25.58 |    36.36 |   27.27 |   32.35 | ...78,117,144-186 
+  ...ersalMixer.ts |   22.22 |    15.78 |      50 |   22.22 | 18-22,45-97       
+  UserGuide.tsx    |   16.98 |        0 |       0 |   19.14 | ...69-292,309-387 
+  ...eSettings.tsx |       0 |        0 |       0 |       0 | 5-27              
+  ...Controller.ts |   94.44 |     65.3 |   83.33 |    92.1 | 46-48             
+  ...meOverlay.tsx |     100 |      100 |     100 |     100 |                   
+  ...eAnalytics.ts |      80 |       75 |      50 |     100 | 5                 
+  authFlow.ts      |   90.47 |    86.11 |     100 |     100 | 23-25,36-39       
+  cloudDatabase.ts |   67.64 |    67.56 |      75 |   76.92 | 20,25-29          
+  ...Validation.ts |   77.55 |    83.54 |     100 |     100 | ...23,26,30-31,34 
+  geminiClient.ts  |   29.03 |    14.28 |   33.33 |   34.61 | ...5-74,92-97,111 
+  main.tsx         |       0 |        0 |       0 |       0 | 7-9               
+  ...onDatabase.ts |     100 |      100 |     100 |     100 |                   
+  ...sodeWorker.ts |   25.45 |        0 |   33.33 |   23.52 | ...9,43-48,52-101 
+ src/agent         |   32.79 |    39.08 |   27.65 |   49.69 |                   
+  AgentCore.ts     |   86.17 |    80.39 |     100 |   96.15 | 26,57             
+  AgentExecutor.ts |   46.26 |    42.42 |   27.27 |   64.28 | 27-36             
+  AgentHistory.ts  |       0 |        0 |       0 |       0 | 4-18              
+  AgentPlanner.ts  |       0 |        0 |       0 |       0 | 6-14              
+  ...Workspace.tsx |    0.96 |        0 |       0 |    2.85 | 11-60             
+  CloudJobCore.ts  |   81.25 |    68.18 |     100 |     100 | 8-9,16-20         
+  CloudJobs.tsx    |     1.9 |        0 |       0 |      10 | 12-34             
+ src/calibration   |   72.86 |    81.14 |   86.84 |    87.5 |                   
+  ...ionBinding.ts |     100 |    91.17 |     100 |     100 | 11                
+  ...tionPanel.tsx |   19.51 |    11.53 |   16.66 |   33.33 | 12-17,30-43       
+  ...alibration.ts |   89.01 |     87.8 |     100 |     100 | ...34,37-40,57,72 
+  ...Validation.ts |   79.62 |    90.19 |     100 |     100 | 21-27,29-33,39,45 
+ src/context       |   60.97 |       30 |    42.3 |   68.62 |                   
+  AppContext.tsx   |   60.97 |       30 |    42.3 |   68.62 | ...55-269,273-303 
+ src/hooks         |   84.61 |       50 |      80 |     100 |                   
+  useMediaQuery.ts |   84.61 |       50 |      80 |     100 | 7                 
+ src/learning      |   90.43 |    90.62 |    92.3 |    95.5 |                   
+  ...Prediction.ts |   92.85 |     91.3 |     100 |     100 | 7,19              
+  ...ningPanel.tsx |   66.66 |       70 |      70 |    90.9 | 16                
+  ...Prediction.ts |   87.87 |    83.33 |      90 |      90 | 33-34             
+  NativePolicy.ts  |   83.33 |     92.3 |   83.33 |   85.71 | 11                
+  ...dualPolicy.ts |   94.44 |    94.73 |     100 |     100 | 11                
+  TrainingJob.ts   |    96.7 |    94.36 |     100 |     100 | 30-31,38,44       
+ src/physics       |   90.67 |    74.66 |   88.67 |   91.47 |                   
+  atmosphere.ts    |   91.02 |       50 |   83.33 |   91.89 | 218-223           
+  constants.ts     |     100 |      100 |     100 |     100 |                   
+  core.ts          |   91.95 |    84.61 |   92.85 |   93.42 | 26-28,55-56       
+  groundEffect.ts  |      90 |       75 |      75 |    92.3 | 54-55             
+  propTables.ts    |   93.54 |    61.53 |   83.33 |    93.1 | 138,167           
+  propulsion.ts    |     100 |    88.23 |     100 |     100 | 11,36             
+  sensorModels.ts  |   80.95 |    66.66 |   77.77 |   81.25 | 180-196,237,240   
+  studyWind.ts     |     100 |      100 |     100 |     100 |                   
+  thrustLimits.ts  |   94.11 |       50 |     100 |     100 | 75                
+ src/tabs          |   21.11 |     32.2 |   14.58 |   23.88 |                   
+  BenchmarkTab.tsx |   23.07 |    25.71 |   28.57 |      25 | 69-73,89-201      
+  ...alTwinTab.tsx |       0 |      100 |       0 |       0 | 7-28              
+  GymBridgeTab.tsx |       0 |      100 |       0 |       0 | 8-71              
+  ...rboardTab.tsx |       0 |      100 |       0 |       0 | 7-9               
+  ...cyXRayTab.tsx |       0 |        0 |       0 |       0 | 7-35              
+  ...lationTab.tsx |   27.77 |    43.47 |    5.88 |   34.48 | ...23,145-180,195 
+ src/workers       |       0 |        0 |       0 |       0 |                   
+  episodeWorker.ts |       0 |        0 |       0 |       0 | 4-25              
+-------------------|---------|----------|---------|---------|-------------------

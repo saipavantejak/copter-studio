@@ -3,10 +3,11 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import subprocess
 
 root = Path(__file__).resolve().parents[2]
 def read(path):
-    return json.loads((root / path).read_text())
+    return json.loads(subprocess.check_output(['git','show','28d224c:'+path],cwd=root))
 
 study = read('reports/study/final.json')
 independent = read('reports/integrity/independent-verifier.json')
@@ -27,7 +28,9 @@ for result in study['results']:
     lo, hi = difference['ci95']
     rows.append(f"| {label} | {b['meanReward']:.2f} | {p['meanReward']:.2f} | {difference['estimate']:.2f} [{lo:.2f}, {hi:.2f}] | {b['meanAltitudeErrorM']:.4f} | {p['meanAltitudeErrorM']:.4f} | PASS, study verifier |")
 calm, wind = study['results']
-text = f'''# Quality work stop report
+text = f'''# Historical quality work stop report
+
+Recorded at 28d224c; superseded by reports/quality/STATUS.md.
 
 This is a scoped stop report, not a declaration that the requested quality gates pass.
 No follow-up ablation or PPO training was started. No deployment or GitHub push occurred.

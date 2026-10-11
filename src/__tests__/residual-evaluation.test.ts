@@ -9,7 +9,7 @@ describe('Residual evaluation integrity', () => {
     expect(run.q).toEqual(legacy.q); expect(run.visits).toEqual(legacy.visits);
     for (const row of legacy.evaluations.slice(0, 3)) for (const mode of ['baseline', 'policy'] as const) {
       const original = row[mode], actual = recordedEpisode(original.seed, original.wind, mode, run.q);
-      for (const key of Object.keys(original)) expect(actual[key]).toEqual(original[key]);
+      for (const key of Object.keys(original) as (keyof typeof actual)[]) expect(actual[key]).toEqual(original[key]);
     }
   }, 60000);
   it('keeps every validation/test seed out of every training range and the legacy test banks', () => {

@@ -1,4 +1,6 @@
-# Quality work stop report
+# Historical quality work stop report
+
+Recorded at 28d224c; superseded by reports/quality/STATUS.md.
 
 This is a scoped stop report, not a declaration that the requested quality gates pass.
 No follow-up ablation or PPO training was started. No deployment or GitHub push occurred.

@@ -18,9 +18,9 @@ if(validation.candidates.length!==6)throw new Error('Dropped registered candidat
 for(const [i,c] of validation.candidates.entries()){
  same(c.candidate,CANDIDATES[i],'Candidate diverges from registration');
  const expected=summarize(c.evaluations,i,validation.includeWind);
- for(const key of Object.keys(expected))same(c[key],expected[key],'Validation summary/CI mismatch '+c.candidate.id+' '+key);
+ for(const key of Object.keys(expected) as (keyof typeof expected)[])same(c[key],expected[key],'Validation summary/CI mismatch '+c.candidate.id+' '+key);
 }
-const eligible=validation.candidates.filter(c=>c.eligible),pool=eligible.length?eligible:validation.candidates;
+const eligible=validation.candidates.filter((c:{eligible:boolean})=>c.eligible),pool=eligible.length?eligible:validation.candidates;
 const selected=[...pool].sort((a,b)=>b.selectionScore-a.selectionScore)[0];
 if(selected.candidate.id!==selection.selectedId||selection.diagnosticOnly!==(eligible.length===0))throw new Error('Selection diverges from registration');
 const expected=summarize(final.evaluations,selected.index,validation.includeWind,true);

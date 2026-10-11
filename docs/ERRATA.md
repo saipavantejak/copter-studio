@@ -177,3 +177,22 @@ During implementation, the simulation counter was initially placed before the
 confirmation dialog. It was moved after confirmation before finalizing this
 task, so canceled clicks are not counted as simulation starts. Collection was
 disabled and no live numbers were affected.
+
+## Strict types and seed-access assurance
+
+Strict checking was disabled. It exposed missing package declarations, nullable
+cloud clients captured by callbacks, unchecked dynamic property keys and
+untyped JSON/array boundaries. These are now explicitly typed or narrowed,
+without compiler suppressions. Cloud function input is serialized as JSON
+instead of forwarding an unknown-typed body. The study runner now uses a
+whitelisted tuning file reader and validates selection rows against validation
+seed banks. Runtime guards reject training/evaluation overlap before controller
+execution. No training, final evaluation, physics or reward was rerun or changed.
+Historical execution source hashes remain valid against their original commits.
+
+Coverage previously had no enforced threshold. Broad application/server/study
+coverage is now measured with explicit modest regression floors and a stricter
+rigid-body primitive floor; uncovered UI and bridge code remains visible rather
+than excluded to inflate coverage. This is a coverage floor, not full coverage.
+The previous stop report is now explicitly historical, avoiding stale status
+claims as work continues.

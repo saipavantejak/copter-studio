@@ -1,3 +1,4 @@
+import {readTuningInput,selectValidation,type ValidationInput,type ValidationCandidate} from './integrity';
 import { readFileSync,writeFileSync,readdirSync,existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -30,7 +31,7 @@ if(stage==='qualify'){
  console.log(JSON.stringify({stage,result,accepted}));
 }else if(stage==='validation'){
  if(existsSync('reports/study/validation.json'))throw new Error('Validation already executed; no unregistered candidate iteration');
- const qualification=load('reports/study/qualification.json');sameSources(qualification);const includeWind=qualification.accepted;
+ const qualification=readTuningInput('reports/study/qualification.json') as ReturnType<typeof load>;sameSources(qualification);const includeWind=qualification.accepted;
  const candidates=[];
  for(const [index,candidate] of CANDIDATES.entries()){
   console.log(`Training registered candidate ${candidate.id}`);
@@ -48,20 +49,20 @@ if(stage==='qualify'){
  write('reports/study/validation.json',{schemaVersion:1,physicalValidation:false,provenance,protocol:STUDY,includeWind,candidates,reference});
 }else if(stage==='select'){
  if(existsSync('reports/study/selection.json'))throw new Error('Selection already frozen');
- const validation=load('reports/study/validation.json');sameSources(validation);
+ const validation=readTuningInput('reports/study/validation.json') as ValidationInput;sameSources(validation);
  const eligible=validation.candidates.filter(c=>c.eligible),pool=eligible.length?eligible:validation.candidates;
  // Stable sort retains preregistered listed order on exact ties.
- const selected=[...pool].sort((a,b)=>b.selectionScore-a.selectionScore)[0];
+ const selected=selectValidation(validation);
  write('reports/study/selection.json',{provenance,validationSha256:sha(readFileSync('reports/study/validation.json')),
  selectedId:selected.candidate.id,eligibleIds:eligible.map(c=>c.candidate.id),diagnosticOnly:eligible.length===0,
  selectionScore:selected.selectionScore,includeWind:validation.includeWind,rule:STUDY.selection});
  console.log(JSON.stringify({selectedId:selected.candidate.id,eligibleIds:eligible.map(c=>c.candidate.id),diagnosticOnly:eligible.length===0}));
 }else{
  if(existsSync(finalMarker))throw new Error('Final test already attempted; no rerun or iteration permitted by this study');
- const selection=load('reports/study/selection.json'),validation=load('reports/study/validation.json');sameSources(selection);sameSources(validation);
+ const selection=load('reports/study/selection.json'),validation=load('reports/study/validation.json') as ValidationInput;sameSources(selection);sameSources(validation);
  const committed=execFileSync('git',['show','HEAD:reports/study/selection.json']);if(sha(committed)!==sha(readFileSync('reports/study/selection.json')))throw new Error('Selection must be committed before test');
  if(selection.validationSha256!==sha(readFileSync('reports/study/validation.json')))throw new Error('Validation changed after selection');
- const selected=validation.candidates.find(c=>c.candidate.id===selection.selectedId),candidate=selected.candidate;
+ const selected=validation.candidates.find(c=>c.candidate.id===selection.selectedId);if(!selected)throw Error('Selected candidate absent');const candidate=selected.candidate;
  // Write an irreversible study marker BEFORE any final seed is accessed.
  write(finalMarker,{provenance,selectedId:candidate.id,seedRanges:STUDY.final,selectionSha256:sha(readFileSync('reports/study/selection.json')),note:'Final test attempted; no further tuning or final evaluation allowed.'});
  const runs:Run[]=selected.runs.map(r=>restore(candidate,r));

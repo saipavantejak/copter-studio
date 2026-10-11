@@ -4,7 +4,7 @@ import type { BatchStats } from './EpisodeRunner';
 export function benchmarkAudit(s: BatchStats): string {
   const percent=(v:number)=>(v*100).toFixed(1)+'%';
   const sec=s.efficiencySampleCount && Number.isFinite(s.meanSEC) && s.meanSEC!=null ? s.meanSEC.toFixed(5)+' J/(g payload·km)' : 'N/A — no applicable successful samples';
-  const sd=s.efficiencySampleCount>=2 && Number.isFinite(s.stdSEC) && s.stdSEC!=null ? s.stdSEC.toFixed(5) : 'N/A — fewer than two applicable samples';
+  const sd=(s.efficiencySampleCount??0)>=2 && Number.isFinite(s.stdSEC) && s.stdSEC!=null ? s.stdSEC.toFixed(5) : 'N/A — fewer than two applicable samples';
   return `**Recorded benchmark assessment**\n\n`+
     `- Completed episodes: ${s.numEpisodes}; mission success: ${percent(s.successRate??0)}; crashes: ${percent(s.crashRate)}. Duration: ${s.durationSeconds??'unknown'} s.\n`+
     `- Mean altitude error: ${s.meanAltError.toFixed(5)} m. Conditional SEC: ${sec}; SEC standard deviation: ${sd}.\n`+

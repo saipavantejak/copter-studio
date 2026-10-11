@@ -12,7 +12,7 @@ async function request(body:unknown){
  if(!cloudDatabase)throw new Error('Cloud connection unavailable. Open copterstudios.com and sign in.');
  const {data:auth,error:authError}=await cloudDatabase.auth.getUser();
  if(authError||!auth.user)throw new Error('Sign in through Account before starting a cloud job.');
- const {data,error}=await cloudDatabase.functions.invoke('aether-jobs',{body});
+ const {data,error}=await cloudDatabase.functions.invoke('aether-jobs',{body:JSON.stringify(body)});
  if(error){let message=error.message;try{const details=await error.context?.json();if(typeof details?.error==='string')message=details.error;}catch{}throw new Error(message);}
  if(data?.error)throw new Error(data.error);return data;
 }

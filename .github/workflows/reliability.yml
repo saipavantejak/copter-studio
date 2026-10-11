@@ -36,7 +36,7 @@ jobs:
           python scripts/physics/render-report.py --check
       - run: npm run lint
       - run: npm run type-check:server
-      - run: npm test
+      - run: npm run test:coverage
       - run: npm run build
       - name: Ensure server and mistakenly VITE-prefixed API keys stay out of client output
         run: python scripts/security/check-client-bundle.py --check

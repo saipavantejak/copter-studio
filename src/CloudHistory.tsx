@@ -19,24 +19,25 @@ export function CloudHistory(){
   },[]);
   const task=async(fn:()=>Promise<void>)=>{setBusy(true);setMessage('');try{await fn();}catch(e){setMessage(e instanceof Error?e.message:'Cloud operation failed');}finally{setBusy(false);}};
   if(!cloudDatabase)return <section className="border border-line-strong rounded p-3 text-sm"><h3>Cloud history</h3><p>Cloud database is not connected. Benchmarks still work; export JSON to keep your results.</p></section>;
+  const database=cloudDatabase;
   return <section className="border border-line-strong rounded p-3 text-sm space-y-2">
     <h3 className="font-bold">Private cloud history</h3>
     {!user ? <AuthForm client={cloudDatabase} connection={authConnection} /> : <>
       <p>Signed in as {user.email}. Records are private to your account.</p>
       <UsernameSettings key={user.id} client={cloudDatabase} userId={user.id} />
-      <button disabled={busy} className="underline mr-3" onClick={()=>void task(async()=>{const {error}=await cloudDatabase.auth.signOut();if(error)throw error;})}>Sign out</button>
+      <button disabled={busy} className="underline mr-3" onClick={()=>void task(async()=>{const {error}=await database.auth.signOut();if(error)throw error;})}>Sign out</button>
       <input aria-label="Cloud record name" placeholder="Optional record name" maxLength={120} value={name} onChange={e=>setName(e.target.value)} className="bg-surface p-2" />
       <button disabled={busy||!batchStats} className="underline p-2" onClick={()=>void task(async()=>{
         const payload=benchmarkRecord(batchStats!);
-        const {error}=await cloudDatabase.from('benchmark_runs').upsert({id:batchStats!.runId??crypto.randomUUID(),user_id:user.id,name:name||'Benchmark',payload},{onConflict:'id'});
+        const {error}=await database.from('benchmark_runs').upsert({id:batchStats!.runId??crypto.randomUUID(),user_id:user.id,name:name||'Benchmark',payload},{onConflict:'id'});
         if(error)throw error;setMessage('Benchmark saved to your cloud account.');
       })}>Save benchmark</button>
       <button disabled={busy} className="underline p-2" onClick={()=>void task(async()=>{
-        const {error}=await cloudDatabase.from('aircraft_configurations').insert({user_id:user.id,name:name||'Aircraft configuration',config:configurationRecord(config)});
+        const {error}=await database.from('aircraft_configurations').insert({user_id:user.id,name:name||'Aircraft configuration',config:configurationRecord(config)});
         if(error)throw error;setMessage('Configuration saved to your cloud account.');
       })}>Save configuration</button>
       <button disabled={busy} className="underline p-2" onClick={()=>void task(async()=>{
-        const [a,b]=await Promise.all([cloudDatabase.from('benchmark_runs').select('id,name,created_at,payload').order('created_at',{ascending:false}).limit(20),cloudDatabase.from('aircraft_configurations').select('id,name,created_at,config').order('created_at',{ascending:false}).limit(20)]);
+        const [a,b]=await Promise.all([database.from('benchmark_runs').select('id,name,created_at,payload').order('created_at',{ascending:false}).limit(20),database.from('aircraft_configurations').select('id,name,created_at,config').order('created_at',{ascending:false}).limit(20)]);
         if(a.error)throw a.error;if(b.error)throw b.error;setRuns(a.data??[]);setConfigs(b.data??[]);setMessage('Loaded your latest 20 records of each type.');
       })}>Load saved records</button>
       {runs.map(r=><div key={r.id}>{r.name} — {new Date(r.created_at).toLocaleString()} <button className="underline" onClick={()=>{

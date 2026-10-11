@@ -1,3 +1,4 @@
+import {assertTrainingSeed} from './integrity';
 import { PhysicsEngine } from '../../../src/PhysicsEngine';
 import { VehicleController } from '../../../src/VehicleController';
 import { AIRCRAFT_PROFILES } from '../../../src/AircraftProfiles';
@@ -10,6 +11,7 @@ export const table=(c:Candidate)=>Array.from({length:stateCount(c)},()=>c.action
 export type Run={explorationSeed:number;trainSeedRange:number[];q:number[][];qWind:number[][];visits:number[][];visitsWind:number[][]};
 export const emptyRun=(c:Candidate):Run=>{const q=table(c),visits=table(c);return {explorationSeed:0,trainSeedRange:[],q,qWind:c.separate?table(c):q,visits,visitsWind:c.separate?table(c):visits};};
 export function episode(seed:number,wind:boolean,mode:'train'|'baseline'|'policy',c:Candidate=REFERENCE,run:Run=emptyRun(c),rng=new SeededRandom(1),epsilon=0){
+ if(mode==='train')assertTrainingSeed(seed);
  const physics=new PhysicsEngine();physics.config={...config};physics.rng=new SeededRandom(seed);physics.studyWindModel={...STUDY_WIND};
  physics.tests={windEnabled:wind,payloadShiftEnabled:false,batterySagEnabled:false,motorOutEnabled:false,missionPreset:'none'};physics.reset();
  const ic=new SeededRandom(seed^0x271828);physics.setInitialConditions(ic.uniform(.5,1.5),ic.uniform(-.2,.2),ic.uniform(-.2,.2));
@@ -45,6 +47,7 @@ export function episode(seed:number,wind:boolean,mode:'train'|'baseline'|'policy
 }
 export type Episode=ReturnType<typeof episode>;
 export function train(c:Candidate,explorationSeed:number,startSeed:number){
+ for(let seed=startSeed;seed<startSeed+c.episodes;seed++)assertTrainingSeed(seed);
  const run=emptyRun(c);run.explorationSeed=explorationSeed;run.trainSeedRange=[startSeed,startSeed+c.episodes-1];const rng=new SeededRandom(explorationSeed);
  for(let i=0;i<c.episodes;i++)episode(startSeed+i,i%2===1,'train',c,run,rng,.3-.27*i/(c.episodes-1));return run;
 }
@@ -52,6 +55,7 @@ export function train(c:Candidate,explorationSeed:number,startSeed:number){
 export function restore(c:Candidate,run:Run){if(!c.separate){run.qWind=run.q;run.visitsWind=run.visits;}return run;}
 export type Pair={explorationSeed:number;baseline:Episode;policy:Episode};
 export function evaluate(c:Candidate,runs:Run[],ranges:number[][],includeWind:boolean){
+ for(const [lo,hi] of ranges)for(const run of runs){const [a,b]=run.trainSeedRange;if(!(hi<a||lo>b))throw Error('Evaluation overlaps actual training bank');}
  const pairs:Pair[]=[],before=JSON.stringify(runs);
  const baseline=new Map<string,Episode>();
  for(const wind of includeWind?[false,true]:[false])for(let seed=ranges[Number(wind)][0];seed<=ranges[Number(wind)][1];seed++)baseline.set(`${wind}:${seed}`,episode(seed,wind,'baseline',c));

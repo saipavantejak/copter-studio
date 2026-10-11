@@ -39,7 +39,7 @@ function episode(seed:number,wind:boolean,mode:'train'|'baseline'|'policy',epsil
 }
 for(let i=0;i<TRAIN_EPISODES;i++)episode(i+1,i%2===1,'train',.3-(.27*i/(TRAIN_EPISODES-1)));
 const frozen=JSON.stringify(q);
-const evaluations=[];
+const evaluations:{baseline:ReturnType<typeof episode>;policy:ReturnType<typeof episode>}[]=[];
 for(const wind of [false,true])for(let i=0;i<50;i++){
  const seed=100001+i+(wind?1000:0);
  evaluations.push({baseline:episode(seed,wind,'baseline'),policy:episode(seed,wind,'policy')});

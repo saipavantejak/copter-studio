@@ -1,0 +1,55 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+scripts/learning/study/run-study.ts(52,46): error TS7006: Parameter 'c' implicitly has an 'any' type.
+scripts/learning/study/run-study.ts(56,60): error TS7006: Parameter 'c' implicitly has an 'any' type.
+scripts/learning/study/run-study.ts(58,88): error TS7006: Parameter 'c' implicitly has an 'any' type.
+scripts/learning/study/run-study.ts(64,44): error TS7006: Parameter 'c' implicitly has an 'any' type.
+scripts/learning/study/run-study.ts(67,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+scripts/learning/train-residual-legacy.ts(42,7): error TS7034: Variable 'evaluations' implicitly has type 'any[]' in some locations where its type cannot be determined.
+scripts/learning/train-residual-legacy.ts(49,64): error TS7005: Variable 'evaluations' implicitly has an 'any[]' type.
+scripts/learning/train-residual-legacy.ts(49,147): error TS7005: Variable 'evaluations' implicitly has an 'any[]' type.
+scripts/learning/verify-audit-artifacts.ts(23,28): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ episodes: number; successes: number; failures: number; nonSuccesses: number; meanAltitudeErrorM: number; meanReward: number; meanSteps: number; successRate95CI: [number, number]; failureRate95CI: [...]; failureReasons: Record<...>; }'.
+  No index signature with a parameter of type 'string' was found on type '{ episodes: number; successes: number; failures: number; nonSuccesses: number; meanAltitudeErrorM: number; meanReward: number; meanSteps: number; successRate95CI: [number, number]; failureRate95CI: [...]; failureReasons: Record<...>; }'.
+scripts/learning/verify-audit-artifacts.ts(31,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+scripts/learning/verify-study.ts(21,53): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ results: { wind: boolean; baseline: { episodes: number; successes: number; failures: number; nonSuccesses: number; meanReward: number; meanAltitudeErrorM: number; meanSteps: number; successRate95CI: [...]; failureRate95CI: [...]; outcomeCounts: Record<...>; }; policy: { ...; }; comparisons: { ...; }; }[]; ... 4 mo...'.
+  No index signature with a parameter of type 'string' was found on type '{ results: { wind: boolean; baseline: { episodes: number; successes: number; failures: number; nonSuccesses: number; meanReward: number; meanAltitudeErrorM: number; meanSteps: number; successRate95CI: [...]; failureRate95CI: [...]; outcomeCounts: Record<...>; }; policy: { ...; }; comparisons: { ...; }; }[]; ... 4 mo...'.
+scripts/learning/verify-study.ts(23,45): error TS7006: Parameter 'c' implicitly has an 'any' type.
+scripts/physics/compare-flight.ts(16,7): error TS7034: Variable 'flights' implicitly has type 'any[]' in some locations where its type cannot be determined.
+scripts/physics/compare-flight.ts(28,8): error TS7034: Variable 'records' implicitly has type 'any[]' in some locations where its type cannot be determined.
+scripts/physics/compare-flight.ts(39,57): error TS7005: Variable 'records' implicitly has an 'any[]' type.
+scripts/physics/compare-flight.ts(43,15): error TS7005: Variable 'flights' implicitly has an 'any[]' type.
+scripts/physics/compare-flight.ts(43,149): error TS7034: Variable 'samples' implicitly has type 'any[]' in some locations where its type cannot be determined.
+scripts/physics/compare-flight.ts(45,113): error TS7005: Variable 'samples' implicitly has an 'any[]' type.
+scripts/physics/compare-flight.ts(45,130): error TS7005: Variable 'samples' implicitly has an 'any[]' type.
+server/gymBridge.ts(18,44): error TS7016: Could not find a declaration file for module 'ws'. '/workspace/scratch/e865dd4b9f08/copter-studio/node_modules/ws/wrapper.mjs' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/ws` if it exists or add a new declaration (.d.ts) file containing `declare module 'ws';`
+src/BenchmarkAudit.ts(7,12): error TS18048: 's.efficiencySampleCount' is possibly 'undefined'.
+src/CloudHistory.tsx(27,111): error TS18047: 'cloudDatabase' is possibly 'null'.
+src/CloudHistory.tsx(31,29): error TS18047: 'cloudDatabase' is possibly 'null'.
+src/CloudHistory.tsx(35,29): error TS18047: 'cloudDatabase' is possibly 'null'.
+src/CloudHistory.tsx(39,40): error TS18047: 'cloudDatabase' is possibly 'null'.
+src/CloudHistory.tsx(39,162): error TS18047: 'cloudDatabase' is possibly 'null'.
+src/__tests__/integration-v3.test.ts(51,14): error TS2532: Object is possibly 'undefined'.
+src/__tests__/learning.test.ts(17,61): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(50,39): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(50,41): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(51,31): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(53,40): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(53,146): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(54,22): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(81,35): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(82,29): error TS7006: Parameter 'v' implicitly has an 'any' type.
+src/__tests__/learning.test.ts(82,31): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/__tests__/residual-evaluation.test.ts(12,55): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Episode'.
+  No index signature with a parameter of type 'string' was found on type 'Episode'.
+src/__tests__/study-protocol.test.ts(11,95): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Candidate'.
+  No index signature with a parameter of type 'string' was found on type 'Candidate'.
+src/__tests__/study-protocol.test.ts(11,118): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Candidate'.
+  No index signature with a parameter of type 'string' was found on type 'Candidate'.
+src/agent/CloudJobs.tsx(15,73): error TS2322: Type 'unknown' is not assignable to type 'string | ArrayBuffer | Blob | FormData | ReadableStream<Uint8Array<ArrayBufferLike>> | File | Record<...> | undefined'.
+src/aggregateAnalytics.ts(4,17): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/calibration/CalibrationBinding.ts(16,112): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'CalibrationRecord'.
+  No index signature with a parameter of type 'string' was found on type 'CalibrationRecord'.
+src/calibration/CalibrationBinding.ts(16,129): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'CalibrationRecord'.
+  No index signature with a parameter of type 'string' was found on type 'CalibrationRecord'.
+src/main.tsx(2,26): error TS7016: Could not find a declaration file for module 'react-dom/client'. '/workspace/scratch/e865dd4b9f08/copter-studio/node_modules/react-dom/client.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom/client';`

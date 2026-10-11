@@ -47,8 +47,8 @@ describe('Production integration regressions',()=>{
     try{
       const stats=await new EpisodeRunner().run(agent,{numEpisodes:1,maxStepsPerEpisode:1000,randomizeIC:true,icAltRange:[.5,1.5],icAttRange:[-.2,.2],physicsConfig:nominal,testModules:{...DEF_TESTS},masterSeed:0,domainRandConfig:{...DEFAULT_DOMAIN_RAND,enabled:true}});
       expect(spy).toHaveBeenCalled();
-      expect(spy.mock.calls.every(c=>typeof c[3]==='object'&&c[3].mass===nominal.mass)).toBe(true);
-      expect(stats.episodes[0].executedConfig.mass).not.toBe(nominal.mass);
+      expect(spy.mock.calls.every(c=>typeof c[3]==='object'&&c[3]?.mass===nominal.mass)).toBe(true);
+      expect(stats.episodes[0].executedConfig!.mass).not.toBe(nominal.mass);
       expect(stats.meanSEC).toBeNull();expect(stats.stdSEC).toBeNull();
     }finally{spy.mockRestore();agent.dispose();}
   });

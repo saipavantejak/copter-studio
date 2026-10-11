@@ -1,9 +1,10 @@
+import type {Episode,Pair} from '../../scripts/learning/study/experiment';
 import { describe,it,expect } from 'vitest';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { measuredTrainingReport as report,rlTrainingReport as rl,predictMeasured,propellerSupport,learningEvidenceContext } from '../learning/MeasuredPrediction';
 import { stateIndex,greedyAction,applyResidual } from '../learning/ResidualPolicy';
-const data=JSON.parse(readFileSync('data/training/reference-measurements.json','utf8'));
+const data=JSON.parse(readFileSync('data/training/reference-measurements.json','utf8')) as {bitcraze:{rows:number[][]};propellers:{id:string;rows:number[][]}[]};
 describe('Measured learning evidence boundaries',()=>{
  it('pins dataset and keeps every held-out row out of training',()=>{
   expect(createHash('sha256').update(readFileSync('data/training/reference-measurements.json')).digest('hex')).toBe(report.datasetSha256);
@@ -14,7 +15,7 @@ describe('Measured learning evidence boundaries',()=>{
  it('recomputes held-out errors from source measurements, not report claims',()=>{
   for(const model of report.supervised){
    const bench=model.id==='bitcraze-2015-bench';
-   const rows=bench?data.bitcraze.rows:data.propellers.find(p=>p.id===model.id).rows;
+   const rows=bench?data.bitcraze.rows:data.propellers.find(p=>p.id===model.id)!.rows;
    for(const [target,fit] of Object.entries(model.targets)){
     if(!fit)continue;
     const errors=report.testIndices.map(i=>{
@@ -46,10 +47,10 @@ describe('Measured learning evidence boundaries',()=>{
   expect(rl.promoted).toBe(false);expect(rl.physicalValidation).toBe(false);
   // Independence is disjointness, not numeric ordering of seed ranges.
   expect(rl.evaluationSeedRanges.every(([start,end])=>end<rl.trainSeedRange[0]||start>rl.trainSeedRange[1])).toBe(true);
-  const policy=JSON.parse(readFileSync('public/learning/residual-policy.json','utf8'));
+  const policy=JSON.parse(readFileSync('public/learning/residual-policy.json','utf8')) as {visits:number[][];q:number[][];results:{wind:boolean;baseline:{successes:number};policy:{successes:number}}[];evaluations:Pair[];runs:{explorationSeed:number}[];evaluationSeedRanges:number[][];trainingSeedCount:number};
   expect(policy.visits.flat().reduce((a,b)=>a+b,0)).toBeGreaterThan(0);
   expect(policy.q.flat().some(v=>v!==0)).toBe(true);
-  for(const result of policy.results)for(const mode of ['baseline','policy']){
+  for(const result of policy.results)for(const mode of ['baseline','policy'] as const){
    const eps=policy.evaluations.filter(e=>e[mode].wind===result.wind&&(mode==='policy'||e.explorationSeed===policy.runs[0].explorationSeed)).map(e=>e[mode]);
    expect(eps.filter(e=>e.successful).length).toBe(result[mode].successes);
    const bank=policy.evaluationSeedRanges[Number(result.wind)];
@@ -75,10 +76,10 @@ describe('Neural power experiment integrity',()=>{
   expect(energy.bestValidationEpoch).toBeLessThanOrEqual(energy.epochsRun);
  });
  it('reproduces exported neural predictions in TypeScript and enforces domain limits',()=>{
-  const summaries=JSON.parse(readFileSync('data/training/energy-flight-summaries.json','utf8'));
+  const summaries=JSON.parse(readFileSync('data/training/energy-flight-summaries.json','utf8')) as {records:{flightId:number;features:number[]}[]};
   let supported=0;
   for(const row of energy.testPredictions){
-   const f=summaries.records.find(r=>r.flightId===row.flightId).features;
+   const f=summaries.records.find(r=>r.flightId===row.flightId)!.features;
    const outOfRange=f.some((v,i)=>v<energy.trainingFeatureRanges[i][0]||v>energy.trainingFeatureRanges[i][1]);
    if(row.outsideTrainingSupport||outOfRange){expect(()=>predictCruisePower('matrice-100-author-cruise',f,'neural')).toThrow();continue;}
    supported++;

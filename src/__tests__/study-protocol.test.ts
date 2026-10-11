@@ -8,7 +8,7 @@ describe('Pre-registered study invariants (no simulator/controller execution)',(
   expect(CANDIDATES.map(c=>c.id)).toEqual(['a','b','c','d','e','f']);
   const expected=[['errorCuts'],['tilt'],['actions'],['hold'],['separate'],['episodes','decay']];
   CANDIDATES.forEach((c,i)=>{
-   const changed=Object.keys(REFERENCE).filter(k=>!['id','label'].includes(k)&&JSON.stringify(c[k])!==JSON.stringify(REFERENCE[k]));
+   const changed=(Object.keys(REFERENCE) as (keyof typeof REFERENCE)[]).filter(k=>!['id','label'].includes(k)&&JSON.stringify(c[k])!==JSON.stringify(REFERENCE[k]));
    expect(changed).toEqual(expected[i]);
   });
  });
