@@ -332,7 +332,7 @@ export const ModelLoader = ({
           onClick={handleLoadDemo}
           disabled={status === 'loading' || status === 'measuring'}
           className="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-canvas disabled:text-muted text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-          title="Load Official Demo Model (88% Crash Rate)"
+          title="Load example model (performance unverified)"
         >
           {status === 'loading' ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <Cpu className="w-4 h-4" />}
           Demo Model

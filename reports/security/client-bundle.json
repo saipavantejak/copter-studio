@@ -1,20 +1,22 @@
 {
   "status": "PASS",
   "command": "python scripts/security/check-client-bundle.py",
-  "sourceCommit": "a0d79df93fc49f54fe1a66a993537d823ff4f15f",
+  "sourceCommit": "afd3a4784ca2b6de7bc97fd59a76bae452268c85",
   "sourceHashes": {
-    "scripts/security/check-client-bundle.py": "bb8257008e1cdea612f9ab45e13e6dae5295f1251ee616e2c9435c3397edb34d",
-    "vite.config.ts": "926065d5c39a4e1c2e28744e512cae5f714c5ff5d8c66d2817ff4fe488945960",
-    "src/geminiClient.ts": "cc9051567fc416e1a2ec909a7a99b3912b19f8fba4ecaadd1f9e26fc7cb40efb",
+    "scripts/security/check-client-bundle.py": "baeb2afbab7740fa85f30d174c4cc395fb130a828a6002be02e9796abf033b6f",
+    "vite.config.ts": "f15d58b80eaaa31a48b9285c0ddc8ec4311c3ac0e5c6277144f7f615b15219db",
+    "src/geminiClient.ts": "31b9d1cfd9caaf12883aa7bdb08af20258c77ecddc266730769d424699511c51",
     "server/geminiGateway.ts": "9f269eb516d012d8aa45ae9a21ca8732ef281d80adf835e77fa6b8fa93dd51e5",
     "api/gemini.ts": "9d4a93a9cbc52892fba9e89f54a0d97537ff205c7ef65b4dd68d1b7e7aaa21a0",
-    "package-lock.json": "851cce6faf121974e45fb7f2224a8a9c83a684570c6438763275225131c6b2f4"
+    "package-lock.json": "0704ebd3da291dea0759bc7918443ff12ea411224f8f0b99a2ef3e9d61973465"
   },
   "filesScanned": 19,
   "syntheticKeyNames": [
     "GEMINI_API_KEY",
     "VITE_GEMINI_API_KEY",
-    "VITE_GOOGLE_API_KEY"
+    "VITE_GOOGLE_API_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "VITE_SUPABASE_SERVICE_ROLE_KEY"
   ],
   "leaks": [],
   "scope": "Actual Vite build canary test, including accidentally VITE-prefixed Gemini/Google keys. No real key is printed or embedded by the test."

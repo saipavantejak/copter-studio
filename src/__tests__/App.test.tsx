@@ -86,16 +86,19 @@ Object.defineProperty(window, 'matchMedia', {
 describe('App — Integration Tests', () => {
   beforeEach(() => {
     localStorageMock.clear();
+    vi.spyOn(HTMLCanvasElement.prototype,'getContext').mockReturnValue(null);
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('renders WelcomeOverlay on mount', () => {
     render(<App />);
     expect(screen.getByText('INITIALISE MISSION')).toBeTruthy();
+    expect(document.querySelector('header')?.parentElement?.getAttribute('inert')).not.toBeNull();
     expect(screen.getByRole('link',{name:'Log in / Sign up'}).getAttribute('href')).toBe('?view=account');
     // Both WelcomeOverlay and header render "COPTER STUDIO" text
     const copterTexts = screen.getAllByText(/COPTER/);
@@ -113,6 +116,8 @@ describe('App — Integration Tests', () => {
     await waitFor(() => {
       expect(screen.queryByText('INITIALISE MISSION')).toBeNull();
       expect(screen.getByText('Simulation')).toBeTruthy();
+      expect(screen.getByRole('button',{name:/Start Simulation/})).toBeDisabled();
+      expect(screen.getByText(/WebGL is unavailable/)).toBeTruthy();
     });
   });
 

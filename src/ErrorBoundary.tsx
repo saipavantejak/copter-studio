@@ -16,6 +16,7 @@ interface Props {
   children: React.ReactNode;
   /** Compact single-line fallback for narrow panels (default false = full card) */
   compact?: boolean;
+  onError?: (error:Error)=>void;
 }
 
 interface State {
@@ -35,6 +36,7 @@ export class PanelErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error, errorInfo });
+    this.props.onError?.(error);
     // Surface to console so it shows in dev tools
     console.error(`[ErrorBoundary: ${this.props.name}]`, error, errorInfo.componentStack);
   }

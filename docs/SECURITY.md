@@ -17,9 +17,9 @@ These are security-boundary defects, not changes to physics or policy results.
 No real API key was observed in the inspected client output. The actual build
 regression uses synthetic canaries, not the production secret. The reachable
 local git history pattern scan reports **PASS**:
-502 text blobs across 77
+584 text blobs across 82
 reachable commits, 0 Google-key-shaped findings;
-9 binary blobs were excluded. See
+11 binary blobs were excluded. See
 [history-key-scan.json](../reports/security/history-key-scan.json).
 
 No observed exposure indicates rotation is required on this evidence. This is
@@ -79,7 +79,7 @@ accidentally VITE-prefixed provider keys, scans every output file and fails
 if any canary is present. No real key is emitted by the checker.
 
 Scan: **PASS**, 19 files, 0 canary leaks.
-Execution source: `a0d79df93fc49f54fe1a66a993537d823ff4f15f`; relevant SHA-256 hashes are recorded
+Execution source: `afd3a4784ca2b6de7bc97fd59a76bae452268c85`; relevant SHA-256 hashes are recorded
 in [client-bundle.json](../reports/security/client-bundle.json).
 
 ```bash

@@ -23,7 +23,7 @@ export interface ChatOptions {
 
 export interface GeminiClient {
   chat(opts: ChatOptions): { send(message: string): Promise<string> };
-  isAvailable(): Promise<boolean>;
+  isConfigured(): Promise<boolean>;
 }
 
 // ── REST payload builder ──────────────────────────────────────────────────────
@@ -99,16 +99,13 @@ export function createGeminiClient(): GeminiClient {
       };
     },
 
-    async isAvailable(): Promise<boolean> {
+    async isConfigured(): Promise<boolean> {
       if (isAirGapped()) return false;
       try {
-        const resp = await fetch(PROXY_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'gemini-2.5-flash', payload: { contents: [{ role: 'user', parts: [{ text: 'ping' }] }] } }),
-        });
-        // Only successful HTTP responses indicate availability.
-        return resp.ok;
+        const resp = await fetch('/api/gemini-status',{signal:AbortSignal.timeout(5000)});
+        if(!resp.ok)return false;
+        const data:unknown=await resp.json();
+        return !!data&&typeof data==='object'&&'configured' in data&&data.configured===true;
       } catch {
         return false;
       }

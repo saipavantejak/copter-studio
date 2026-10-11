@@ -133,3 +133,10 @@
 .welcome-wash {
  background: radial-gradient(ellipse at 75% 15%, #93c57220, transparent 55%), radial-gradient(ellipse at 10% 85%, #a8c3a018, transparent 50%);
 }
+
+/* Measured narrow-screen overflow: navigation occupies a bounded full row. */
+@media (max-width: 768px) {
+ header .responsive-tab-bar { order: 3; flex: 1 1 100%; max-width: 100%; }
+ header h1 + p { max-width: 240px; white-space: normal; }
+ header .max-w-\[1800px\] { min-width: 0; }
+}

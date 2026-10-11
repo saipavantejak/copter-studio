@@ -11,7 +11,7 @@
 //   • All v11 physics/telemetry/crash logic is unchanged
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Grid, Box, Cylinder } from '@react-three/drei';
+import { OrbitControls, Grid, Box, Cylinder } from '@react-three/drei';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { PhysicsEngine, PhysicsConfig, TestModules, DroneState } from './PhysicsEngine';
@@ -35,6 +35,7 @@ interface DroneSimProps {
   comparisonMode: boolean;
   resetTrigger?: number;
   paused?: boolean;
+  onContextLost?: ()=>void;
 }
 
 // ── Rotor layout helpers ──────────────────────────────────────────────────────
@@ -348,7 +349,7 @@ const DroneModel = ({
 export const DroneSim = ({
   agentRef, pdAgentRef, onTelemetryUpdate, onCrash,
   onMetricsUpdate, onReset, onActionUpdate, onNoisyStateUpdate,
-  config, tests, sensorCfg, comparisonMode, resetTrigger, paused,
+  config, tests, sensorCfg, comparisonMode, resetTrigger, paused, onContextLost,
 }: DroneSimProps) => {
   const physicsRef      = useRef(new PhysicsEngine());
   const ghostPhysicsRef = useRef(new PhysicsEngine());
@@ -390,7 +391,7 @@ export const DroneSim = ({
 
   return (
     <div className="w-full h-full relative bg-surface">
-      <Canvas shadows camera={{ position: [2, 2, 3], fov: 50 }}>
+      <Canvas onCreated={({gl})=>{gl.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();onContextLost?.();},{once:true});}} shadows camera={{ position: [2, 2, 3], fov: 50 }}>
         <color attach="background" args={['#F7F6F0']} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5,10,5]} intensity={1.2} castShadow
@@ -419,7 +420,7 @@ export const DroneSim = ({
           <meshStandardMaterial color="#556B2F" emissive="#556B2F" emissiveIntensity={0.3} />
         </mesh>
         <OrbitControls makeDefault />
-        <Environment preset="city" />
+
       </Canvas>
 
       {/* Telemetry HUD removed — App.tsx glassmorphism overlay replaces it */}

@@ -1,3 +1,4 @@
+import geminiStatus from './api/gemini-status';
 // vite.config.ts — v11
 // Key security change: GEMINI_API_KEY (no VITE_ prefix) stays server-side only.
 // A custom middleware intercepts POST /api/gemini and proxies to the Gemini REST API
@@ -16,6 +17,7 @@ import {handleGemini} from './server/geminiGateway';
 
 function geminiProxyPlugin(): Plugin {
   return {name:'gemini-proxy',configureServer(server){
+    server.middlewares.use('/api/gemini-status',(req,res)=>{geminiStatus(req,res);});
     server.middlewares.use('/api/analytics',(req,res)=>{void handleAnalytics(req,res);});
     server.middlewares.use('/api/gemini',(req,res)=>{void handleGemini(req,res);});
   }};

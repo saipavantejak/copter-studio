@@ -1,3 +1,5 @@
+import {useState} from 'react';
+import {hasWebGL} from '../webglSupport';
 import {recordAggregate} from '../aggregateAnalytics';
 // SimulationTab.tsx — Extracted from App.tsx
 // Contains: 3-panel layout (config | 3D viewport | Aether AI)
@@ -33,6 +35,8 @@ export function SimulationTab() {
     handleRunSimulation,
   } = useAppContext();
 
+  const [webglAvailable,setWebglAvailable]=useState(hasWebGL);
+  const disableRenderer=()=>{setWebglAvailable(false);setSimStarted(false);};
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(max-width: 1024px)');
 
@@ -40,6 +44,7 @@ export function SimulationTab() {
   // Both prompt the user with window.confirm before mutating sim state, so an
   // accidental click while editing config doesn't kick off / kill a run.
   const handleStartSimulation = () => {
+    if(!webglAvailable)return;
     const ok = window.confirm(
       `Start simulation with this configuration?\n\n` +
       `  • Drone:   ${config.droneType}\n` +
@@ -81,19 +86,22 @@ export function SimulationTab() {
         </button>
       </div>
       <div className="absolute inset-0">
-        <PanelErrorBoundary name="3D Simulation">
+        {webglAvailable ? <PanelErrorBoundary name="3D Simulation" onError={disableRenderer}>
           <DroneSim agentRef={agentRef} pdAgentRef={pdAgentRef}
             onTelemetryUpdate={setTelemetry} onCrash={setCrashData}
             onMetricsUpdate={handleMetricsUpdate} onReset={handleReset}
             onActionUpdate={setLastAction} onNoisyStateUpdate={setNoisyState}
             config={config} tests={tests} sensorCfg={sensorCfg}
             comparisonMode={comparisonMode} resetTrigger={simResetTrigger}
-            paused={!simStarted || activeTab !== 'simulation'} />
-        </PanelErrorBoundary>
+            paused={!simStarted || activeTab !== 'simulation'} onContextLost={disableRenderer} />
+        </PanelErrorBoundary> : <div data-webgl-unavailable role="status" className="h-full flex flex-col justify-center items-center p-4 text-center">
+          <p>WebGL is unavailable. Interactive rendering is disabled.</p>
+          <p>Open Benchmark to run headless controller evaluation, or try a browser with WebGL enabled.</p>
+        </div>}
       </div>
       {!simStarted && (
         <div id="start-sim-area" className="absolute inset-0 z-10 flex items-center justify-center bg-canvas/70 backdrop-blur-sm">
-          <button onClick={handleStartSimulation}
+          <button disabled={!webglAvailable} onClick={handleStartSimulation}
             className="group flex flex-col items-center gap-3 px-8 py-5 bg-emerald-600/90 hover:bg-emerald-500 rounded-2xl shadow-2xl shadow-emerald-500/20 transition-all hover:scale-105">
             <Play className="w-10 h-10 text-white group-hover:scale-110 transition-transform" />
             <span className="text-white font-bold text-sm tracking-wide">Start Simulation</span>

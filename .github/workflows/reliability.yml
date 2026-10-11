@@ -36,12 +36,15 @@ jobs:
           python scripts/physics/render-report.py --check
       - run: npm run lint
       - run: npm run type-check:server
-      - run: npm run test:coverage
+      - run: npm run test:coverage -- --reporter=default --reporter=json --outputFile=/tmp/copter-ci-tests.json
+      - run: python scripts/quality/check-current.py /tmp/copter-ci-tests.json
       - run: npm run build
       - name: Ensure server and mistakenly VITE-prefixed API keys stay out of client output
         run: python scripts/security/check-client-bundle.py --check
       - name: Check recorded security claims
         run: python scripts/security/render-report.py --check
+      - name: Check continuation evidence and every reported source row
+        run: python scripts/quality/render-status.py --check
       - name: Check scoped stop report against retained evidence
         run: python scripts/product/render-stop-report.py --check
       - run: npm run ci:reliability

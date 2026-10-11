@@ -6,7 +6,7 @@ AI planning assistant. [Live demo](https://copterstudios.com) ·
 
 ## Results at a glance
 
-**211 software tests pass** in the recorded reliability run
+**223 software tests pass** in the recorded reliability run
 (`reports/reliability-v3.json`); CI reruns tests, type checks, build and independent
 claim verification. The live site runs the baseline controller. Changes on this
 branch are local and have not been deployed.
@@ -88,7 +88,7 @@ A capture generator is provided instead of an invented screenshot or recording:
 
 ```sh
 npm run build
-npx playwright install chromium
+npx playwright-core install chromium
 node scripts/product/capture-demo.mjs
 ```
 

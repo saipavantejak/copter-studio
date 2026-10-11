@@ -14,7 +14,7 @@ try {
  await page.waitForTimeout(5000);
  await page.getByRole('button',{name:/INITIALISE MISSION/i}).click();
  await page.waitForTimeout(5000);
- const start=page.getByRole('button',{name:'Start Simulation',exact:true});
+ const start=page.getByRole('button',{name:/Start Simulation/});
  if(await start.isEnabled())await start.click();
  await page.waitForTimeout(30000);
  await page.getByRole('button',{name:'Benchmark',exact:true}).click();

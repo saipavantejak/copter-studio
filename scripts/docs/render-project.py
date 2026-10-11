@@ -106,7 +106,7 @@ A capture generator is provided instead of an invented screenshot or recording:
 
 ```sh
 npm run build
-npx playwright install chromium
+npx playwright-core install chromium
 node scripts/product/capture-demo.mjs
 ```
 

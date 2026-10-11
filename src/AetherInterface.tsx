@@ -276,7 +276,7 @@ export const AetherInterface = ({
   const chatHistory      = useRef<ChatMessage[]>([]);
 
   // Check proxy availability once on mount
-  useEffect(() => { geminiClient.isAvailable().then(setGeminiOnline); }, []);
+  useEffect(() => { geminiClient.isConfigured().then(setGeminiOnline); }, []);
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView?.({ behavior:'smooth' }); }, [messages]);
 
@@ -520,15 +520,16 @@ export const AetherInterface = ({
 
         {/* Input area */}
         <div className="p-3 border-t border-line shrink-0">
+          <p role="status" className="text-xs text-muted mb-2">{geminiOnline?'Cloud AI configured; provider availability is unverified.':'Cloud AI unavailable; local planning remains available.'}</p>
           <div className="flex gap-2">
             <input
-              value={input} onChange={e=>setInput(e.target.value)}
+              aria-label="Message Aether" value={input} onChange={e=>setInput(e.target.value)}
               onKeyDown={e=>e.key==='Enter'&&!e.shiftKey&&handleSend()}
               placeholder={isParsing?'Parsing…':'Ask or say "run a 7kg bicopter in wind"…'}
               disabled={isLoading||isParsing}
               className="flex-1 bg-surface border border-line-strong rounded-lg px-3 py-2 text-xs text-ink placeholder:text-muted focus:outline-none focus:border-emerald-500 transition-colors disabled:opacity-50"
             />
-            <button onClick={handleSend} disabled={!input.trim()||isLoading||isParsing}
+            <button aria-label="Send message" onClick={handleSend} disabled={!input.trim()||isLoading||isParsing}
               className="w-8 h-8 bg-emerald-600 hover:bg-emerald-500 disabled:bg-canvas disabled:text-muted text-white rounded-lg flex items-center justify-center transition-colors shrink-0">
               <Send className="w-3.5 h-3.5" />
             </button>

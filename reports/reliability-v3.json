@@ -1,12 +1,12 @@
 {
   "simulatorVersion": "reliability-v3",
-  "date": "2026-10-10",
+  "date": "2026-10-11",
   "scope": "Current-checkout headless software regression; simulation only; no physical validation",
   "physicalValidation": false,
-  "unitTestsPassed": 211,
+  "unitTestsPassed": 223,
   "provenance": {
-    "command": "node --import tsx scripts/audit-reliability.ts --date=2026-10-10",
-    "sourceCommit": "a0d79df93fc49f54fe1a66a993537d823ff4f15f",
+    "command": "node --import tsx scripts/audit-reliability.ts --date=2026-10-11",
+    "sourceCommit": "afd3a4784ca2b6de7bc97fd59a76bae452268c85",
     "note": "Regenerated current-checkout software regression. Previous dated reports remain in git history; historical test counts are not asserted for this checkout."
   },
   "catalogEpisodes": 1050,

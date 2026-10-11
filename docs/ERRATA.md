@@ -196,3 +196,45 @@ rigid-body primitive floor; uncovered UI and bridge code remains visible rather
 than excluded to inflate coverage. This is a coverage floor, not full coverage.
 The previous stop report is now explicitly historical, avoiding stale status
 claims as work continues.
+
+## Browser defects verified without Lighthouse
+
+The isolated baseline browser check demonstrated narrow-screen overflow,
+workspace controls not marked inert behind the welcome screen, and an enabled
+start action when WebGL creation failed. It also caught an uncaught remote HDR
+asset fetch failure in the scene. The fix bounds mobile navigation, isolates
+hidden workspace controls, probes renderer support and disables unsupported
+starts, handles context loss, and uses existing local lights instead of remote
+HDR lighting. Remote font loading was removed in favor of the existing system
+font fallback after observed network failures. No simulator equations, reward,
+success criterion, promotion gate or controller parameters were changed.
+
+The availability check previously sent a paid provider ping on mount; with an
+unavailable optional proxy this generated a startup error response. It now
+fetches configuration metadata without contacting the provider. The visible
+status distinguishes configuration from verified availability and tells the
+user local planning remains available. The metadata endpoint returns no secret.
+Aether message controls now have explicit accessible names. During test repair,
+the start-button query was corrected to account for its actual accessible name,
+which also includes configuration text; the capture script was corrected too.
+No experimental score is affected. Local browser evidence and final software
+checks are recorded separately from historical Lighthouse failure evidence.
+
+The earlier preview/browser environment failure was fixed by launching both
+inside one command network. Chromium archive extraction used ownership changes
+disabled to work around the sandbox filesystem's chown restriction. This is
+an environment workaround, not a product performance measurement. Lighthouse
+was not run in this continuation.
+
+## Unqualified example-model and wind labels
+
+Source review found an example-model tooltip with a hard-coded crash-rate
+number and a dashboard wind range without a linked executable measurement.
+Those are unsupported display assertions, not verified discrepancies against
+a supplied result artifact. The labels now state that example performance and
+the general UI wind model are unvalidated. No example score was invented or
+result artifact edited; study wind and controller physics are unchanged.
+
+A verification invocation briefly used Node for a Python script and failed
+before executing it. It was rerun with Python and the copied-resume drift test
+passed. This tooling error affected no metric or seed bank.

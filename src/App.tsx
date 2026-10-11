@@ -45,10 +45,10 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-canvas text-ink font-sans selection:bg-emerald-500/30">
       {/* ── MAIN APPLICATION UI ──────────────────────────────────────── */}
-      <div className={`flex flex-col h-screen transition-opacity duration-1000 ${(isStarted || isExiting) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div inert={!(isStarted || isExiting)} aria-hidden={!(isStarted || isExiting)} className={`flex flex-col h-screen transition-opacity duration-1000 ${(isStarted || isExiting) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         <header className="border-b border-line bg-surface/50 backdrop-blur-xl sticky top-0 z-50">
           <div className="max-w-[1800px] mx-auto px-4 h-14 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-3 min-w-0 max-w-full shrink-0">
               <img src="/logo-dark.png" className="h-8 w-auto object-contain" alt="Copter Studios" />
               <div>
                 <h1 className="font-bold text-sm tracking-tight text-ink">COPTER STUDIOS</h1>

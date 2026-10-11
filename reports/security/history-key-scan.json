@@ -1,9 +1,9 @@
 {
-  "sourceCommit": "04272d1d4f2f34da3951dc97709fe834120caea1",
+  "sourceCommit": "afd3a4784ca2b6de7bc97fd59a76bae452268c85",
   "command": "python scripts/security/audit-history.py",
-  "reachableCommits": 77,
-  "textBlobsScanned": 502,
-  "binaryBlobsExcluded": 9,
+  "reachableCommits": 82,
+  "textBlobsScanned": 584,
+  "binaryBlobsExcluded": 11,
   "signature": "AIza followed by 35 Google-key characters",
   "findings": [],
   "status": "PASS",

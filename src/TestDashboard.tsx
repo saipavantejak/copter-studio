@@ -127,7 +127,7 @@ export const TestDashboard = ({ config, setConfig, tests, setTests, sensorCfg, s
         <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Test Modules</h3>
         <div className="space-y-2">
           {[
-            ['windEnabled','Wind & Turbulence','Stochastic gusts 0–40 mph', Wind, false],
+            ['windEnabled','Wind & Turbulence','Uncalibrated synthetic wind; separate from the study benchmark', Wind, false],
             ['payloadShiftEnabled','Payload Dynamics','CoG shift ±10%', Box, false],
             ['batterySagEnabled','Battery Endurance','Voltage sag curve', Battery, false],
             ['motorOutEnabled','Failure Mode','Motor-out / servo jam', AlertTriangle, true],

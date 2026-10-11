@@ -2,7 +2,7 @@
   "status": "PASS",
   "scope": "Deliberately corrupted copied resume claim rejected; no real claim or result changed.",
   "command": "node scripts/learning/verify-study-independent.mjs",
-  "sourceCommit": "a2f2d6779996ca8b72c005260768f353a5478ae1",
+  "sourceCommit": "afd3a4784ca2b6de7bc97fd59a76bae452268c85",
   "expectedExitCode": 1,
   "actualExitCode": 1,
   "detectedFailures": [
