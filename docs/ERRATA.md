@@ -152,3 +152,13 @@ no candidate, but excludes binary and unreachable data and cannot certify
 unknown key formats or external deployments. Documentation now distinguishes
 absence of observed exposure from proof a real key never existed. No study
 metric is affected.
+
+## Overview and interview claims centralized
+
+The old README mixed illustrative inputs with empirical results. Its maintained
+overview and interview/resume files are now rendered and checked from recorded
+artifacts, physics source expressions and independently recomputed worked
+arithmetic. Comparison intervals are labelled as intervals of differences,
+not invented confidence intervals of absolute controller means. The demo is
+an executable capture script, not claimed recorded footage. Study scores,
+physics and the deployment remain unchanged.

@@ -20,6 +20,8 @@ jobs:
       - run: npm ci
       - name: Independently check recorded study metrics and generated claims
         run: node scripts/learning/verify-study-independent.mjs
+      - name: Check generated project overview, interview and resume
+        run: python scripts/docs/render-project.py --check
       - name: Check regenerated numeric inventory
         run: python scripts/learning/check-inventory.py
       - name: Prove numeric claim drift is rejected

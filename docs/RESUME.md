@@ -1,0 +1,1 @@
+Built and audited a simulation-only Q-learning controller study with 3 training seeds; the selected candidate reduced held-out mean altitude error from 0.0257 to 0.0218 m in calm and from 0.0280 to 0.0235 m in mild synthetic wind. The live application retains the baseline controller; physical-flight validation and wind-robustness gains are not claimed.
