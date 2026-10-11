@@ -56,59 +56,22 @@ for path in sorted(list((ROOT/'reports').glob('*.json')) + (list((ROOT/'reports/
 for name in ['public/learning/residual-policy.json','src/learning/rl-summary.json']:
  old=json.loads(HEAD(name))
  for pointer,value,kind in leaves(old):
-  add(original,value,name+'@'+BASE+pointer,lookup(legacy,pointer),'MATCH',commands['reports/rl-legacy-reproduction.json'],'Historical reproduction, not current test outcome')
+  add(original,value,name+'@'+BASE+pointer,lookup(legacy,pointer),'MATCH' if match(value,lookup(legacy,pointer)) else 'MISMATCH',commands['reports/rl-legacy-reproduction.json'],'Historical reproduction, not current test outcome')
  for pointer,value,kind in leaves(load(name)):
   add(final,value,name+pointer,value,'RECORDED INPUT' if kind=='metadata' else 'RECORDED VALUE',commands[name],'Inventory only; independent reported-metric checks are in reports/integrity/independent-verifier.json')
 
 def doc_expected(line,path,old):
- """Classify full numeric-bearing lines; source values are recomputed, not copied claims."""
- if re.match(r'^\s*\d+\. ',line):return 'Ordered instruction number; no experimental claim','MATCH','README instruction ordering'
- if path=='README.md':
-  if 'Node.js' in line:
-   return 'Locked jsdom engines: '+str(lock['packages']['node_modules/jsdom']['engines'])+ '; plugin-react: '+str(lock['packages']['node_modules/@vitejs/plugin-react']['engines']), 'MISMATCH — CORRECTED' if old else 'MATCH','package-lock.json'
-  if 'npm 9+' in line:return 'npm 9+ is an authored installation recommendation, not a measured result','NOT AN EMPIRICAL CLAIM','README installation recommendation'
-  if 'crash threshold' in line:return '100 episodes; 0.3 threshold on (1-successRate), not crashRate','MISMATCH — CORRECTED','package.json; scripts/ci-benchmark.ts'
-  if 'ci:benchmark:strict' in line:return '100 episodes; 0.3 mission non-success threshold','MATCH','package.json; scripts/ci-benchmark.ts'
-  if 'ci:benchmark`' in line:return 'Default numEpisodes=50','MATCH','scripts/ci-benchmark.ts'
-  if '3000' in line:return 'dev command --port=3000','MATCH','package.json'
-  if '8765' in line:return 'PORT=8765; environment registration still required','MATCH','server/gymBridge.ts; illustrative example'
-  if 'total_timesteps' in line:return '100_000 is an illustrative requested training budget, not an executed PPO score','NOT AN EMPIRICAL CLAIM','README code example'
-  if 'width=' in line:return '200 CSS/layout pixels, authored input','NOT AN EMPIRICAL CLAIM','README layout input'
-  if 'zero dependencies' in line:return 'MAVLink bridge imports Node dgram and local PhysicsEngine; no external direct bridge imports','MATCH','server/mavlinkHILBridge.ts'
-  if 'Gemini' in line:return 'Configured provider model identifier gemini-2.5-flash','MATCH','api/gemini.ts; vite.config.ts'
-  if any(x in line for x in ['TypeScript','TensorFlow','Three.js','Frontend','Build |','React-']):
-   names=['typescript','react','@tensorflow/tfjs','three','tailwindcss','vite'];return '; '.join(n+'='+lock['packages']['node_modules/'+n]['version'] for n in names),'MATCH','package-lock.json (declared major/minor family)'
-  return 'Implementation/model/package identifier or instruction label, not a numerical ML result','NOT AN EMPIRICAL CLAIM','Referenced implementation in repository'
- if line.startswith('# '):return 'Authored release label; not a performance result','NOT AN EMPIRICAL CLAIM','Document release identifier'
- if 'From repository root' in line:return 'Pinned numpy/scipy/sklearn support Python >=3.11; Node engines as above','MISMATCH — CORRECTED' if old else 'MATCH','scripts/learning/requirements.txt; package-lock.json'
- if 'SHA-256' in line and 'processed rows' not in line:return 'SHA-256 is a checksum algorithm identifier; dataset checksum verified by training','MATCH','scripts/learning/train_measured.py'
- if '**Supervised:**' in line:
-  actual=sum(len(p['rows']) for p in source['propellers'])+len(source['bitcraze']['rows']);return f"{actual} source rows; {bench['trainRows']} training; {bench['heldOutRows']} holdout",'MATCH','python scripts/learning/train_measured.py'
- if '**Unsupervised:**' in line:return f"{bench['unsupervised']['trainingRows']} training points; {len(bench['unsupervised']['centers'])} clusters",'MATCH','python scripts/learning/train_measured.py'
- if '**Reinforcement learning:**' in line:return '600 training episodes; 100 held-out IC seeds; 200 controller flights in historical run','MATCH','node --import tsx scripts/learning/train-residual-legacy.ts'
- if 'Bitcraze held-out MAE' in line:
-  targets=bench['supervised'][0]['targets'];n=targets['thrustN']['heldOut']['mae'];return f"thrust {n:.12g} N = {n/.00981:.12g} g-force; power {targets['electricalPowerW']['heldOut']['mae']:.12g} W; 2015 is source-year metadata",'MATCH','python scripts/learning/train_measured.py'
- if 'Calm simulation:' in line or 'original single-run result' in line:
-  r=legacy['results'];return str(r),'MATCH','node --import tsx scripts/learning/train-residual-legacy.ts'
- if "Bitcraze's 2015 dataset" in line:
-  rows=source['bitcraze']['rows'];return f"{len(rows)} rows; 43.25 in PWM column={any(r[3]==43.25 for r in rows)}; 100% PWM present={any(r[3]==100 for r in rows)}; 2.x/year are source identifiers",'MATCH','data/training/reference-measurements.json; train_measured.py'
- if "UIUC's subset" in line:return str([len(p['rows']) for p in source['propellers']])+' rows in four source sweeps; Vol.1/retrieval date are attribution metadata','MATCH','data/training/reference-measurements.json'
- if 'Carnegie Mellon' in line:
-  if old:return f"{energy['sourceSamples']} processed rows; {energy['flightRecords']} flights reproduced; 195/14 broader-source quantities and historical HTTP403 cannot be recomputed from subset",'PARTIAL MISMATCH — UNSUPPORTED COUNTS REMOVED','python scripts/learning/train_energy.py'
-  return f"{energy['sourceSamples']} processed rows; {energy['flightRecords']} flights; Matrice100 and checksum are identifiers",'MATCH','python scripts/learning/train_energy.py'
- if 'implements a 6' in line:
-  return f"weights {len(energy['weights']['w1'])}×{len(energy['weights']['w1'][0])} and {len(energy['weights']['w2'])}×{len(energy['weights']['w2'][0])}; gradient check {energy['gradientCheckMaxAbsoluteError']}; flight splits "+str({k:len(v) for k,v in energy['splitFlightIds'].items()}),'MATCH','python scripts/learning/train_energy.py'
- if 'Training ran 605' in line:
-  u=energy['uncertainty'];return f"epochs {energy['epochsRun']}; best {energy['bestValidationEpoch']}; initial {energy['initialUntrainedTest']['maeW']}; final {energy['test']['maeW']}; ridge {energy['ridgeBaseline']['maeW']}; nominal {u['nominalCoverage']}; coverage {u['testCoverage']} ({round(u['testCoverage']*29)}/29); radius {u['absoluteRadiusW']}",'MATCH','python scripts/learning/train_energy.py'
- return 'Implementation/provenance identifier, not an ML result','NOT AN EMPIRICAL CLAIM','Referenced repository source'
+ """Unparsed authored claims cannot earn MATCH from a classifier template."""
+ return 'No machine extraction/comparison registered for this authored line','UNVERIFIED','Manual review required; not a checked numeric claim'
 
 for path in ['README.md','scripts/learning/README.md']:
  for rows,old,text in [(original,True,HEAD(path)),(final,False,(ROOT/path).read_text())]:
   generated=False
   for i,line in enumerate(text.splitlines(),1):
    if '<!-- BEGIN GENERATED ML EVALUATION -->' in line:generated=True
+   if '<!-- END GENERATED ML EVALUATION -->' in line:generated=False
    if not re.search(r'\d',line):continue
-   if generated:
+   if generated and not old:
     add(rows,line,path+f':{i}',line,'MATCH','python scripts/learning/render-evaluation-report.py --check','Exact generated line checked against current artifacts; underlying numeric leaves audited separately')
    else:
     expected,status,cmd=doc_expected(line,path,old);add(rows,line,path+('@'+BASE if old else '')+f':{i}',expected,status,cmd,'Full line groups every numeric token, including nonmetric inputs/identifiers')

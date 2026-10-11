@@ -131,3 +131,14 @@ agreement and retains physicalValidation=false. It changes no original physics,
 Q-learning result or policy. The software test count increased after adding
 invariant tests; reliability reports and generated study docs were regenerated
 with their committed scripts rather than edited manually.
+
+## Classifier assurance repair in this continuation
+
+The remaining literal classifier branches have been removed. Authored numeric
+lines without a machine extractor now receive UNVERIFIED, never MATCH. Current
+generated blocks retain MATCH only after exact renderer checks against artifact
+values; historical lines do not inherit that assurance. Generated-block tracking
+now ends at its closing marker, preventing trailing authored text from silently
+receiving MATCH. Historical residual-file comparisons now actually compare the
+claim with the reproduction before assigning status. This fixes inventory
+assurance, not an experimental score; no result JSON was edited.
