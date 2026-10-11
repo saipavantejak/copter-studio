@@ -142,3 +142,13 @@ now ends at its closing marker, preventing trailing authored text from silently
 receiving MATCH. Historical residual-file comparisons now actually compare the
 claim with the reproduction before assigning status. This fixes inventory
 assurance, not an experimental score; no result JSON was edited.
+
+## Exposure assurance scope clarified
+
+The earlier synthetic bundle check was not a search of historical commits or
+a test of the deployed production key. A redacted, reproducible Google-key
+signature scan now covers reachable text blobs in local git history. It found
+no candidate, but excludes binary and unreachable data and cannot certify
+unknown key formats or external deployments. Documentation now distinguishes
+absence of observed exposure from proof a real key never existed. No study
+metric is affected.

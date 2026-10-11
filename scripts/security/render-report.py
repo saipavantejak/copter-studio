@@ -3,6 +3,7 @@ import argparse,json,pathlib,re
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
 p=json.loads((ROOT/'reports/security/client-bundle.json').read_text());s=(ROOT/'server/geminiGateway.ts').read_text()
+history=json.loads((ROOT/'reports/security/history-key-scan.json').read_text())
 body=int(re.search(r'MAX_BODY_BYTES=(\d+)',s)[1]);limit,window,keys=map(int,re.search(r'createLimiter\(limit=(\d+),windowMs=(\d+),maxKeys=(\d+)',s).groups());tokens=int(re.search(r'maxOutputTokens:(\d+)',s)[1]);timeout=int(re.search(r'AbortSignal.timeout\((\d+)\)',s)[1])
 value=f'''# Gemini and Aether security audit
 
@@ -17,6 +18,33 @@ The earlier Vite and Gym implementations accepted arbitrary model/payload
 values, read unbounded bodies and forwarded upstream errors. The Gym proxy
 lacked rate limiting. Independent copies of the proxy had drifted apart.
 These are security-boundary defects, not changes to physics or policy results.
+
+## Key exposure and rotation decision
+
+No real API key was observed in the inspected client output. The actual build
+regression uses synthetic canaries, not the production secret. The reachable
+local git history pattern scan reports **{history['status']}**:
+{history['textBlobsScanned']} text blobs across {history['reachableCommits']}
+reachable commits, {len(history['findings'])} Google-key-shaped findings;
+{history['binaryBlobsExcluded']} binary blobs were excluded. See
+[history-key-scan.json](../reports/security/history-key-scan.json).
+
+No observed exposure indicates rotation is required on this evidence. This is
+not proof that a real key never appeared anywhere: the signature scan cannot
+certify external clones, unreachable history, binary data, deployed environment
+or keys in an unknown format. No provider key validity was tested. If exposure
+is independently known, revoke that key. No real key is printed by the scan.
+
+## Physics evidence, separate from security
+
+The separately preregistered diagnostic uses the public IDSIA
+nanodrone-sysid-benchmark Crazyflie Brushless Melon flight trajectories.
+[The generated comparison](../reports/physics/comparison.md) reports position,
+velocity, quaternion-angle and body-rate RMSE for every flight, with descriptive
+flight-bootstrap intervals. Longer-horizon errors are large; this does not
+validate the simulator. The original brushed reference is different from the
+logged aircraft; actuator, drag, battery, sensor and controller dynamics are
+bypassed in this comparison. physicalValidation=false remains unchanged.
 
 ## Implemented boundaries
 

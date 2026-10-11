@@ -12,6 +12,33 @@ values, read unbounded bodies and forwarded upstream errors. The Gym proxy
 lacked rate limiting. Independent copies of the proxy had drifted apart.
 These are security-boundary defects, not changes to physics or policy results.
 
+## Key exposure and rotation decision
+
+No real API key was observed in the inspected client output. The actual build
+regression uses synthetic canaries, not the production secret. The reachable
+local git history pattern scan reports **PASS**:
+502 text blobs across 77
+reachable commits, 0 Google-key-shaped findings;
+9 binary blobs were excluded. See
+[history-key-scan.json](../reports/security/history-key-scan.json).
+
+No observed exposure indicates rotation is required on this evidence. This is
+not proof that a real key never appeared anywhere: the signature scan cannot
+certify external clones, unreachable history, binary data, deployed environment
+or keys in an unknown format. No provider key validity was tested. If exposure
+is independently known, revoke that key. No real key is printed by the scan.
+
+## Physics evidence, separate from security
+
+The separately preregistered diagnostic uses the public IDSIA
+nanodrone-sysid-benchmark Crazyflie Brushless Melon flight trajectories.
+[The generated comparison](../reports/physics/comparison.md) reports position,
+velocity, quaternion-angle and body-rate RMSE for every flight, with descriptive
+flight-bootstrap intervals. Longer-horizon errors are large; this does not
+validate the simulator. The original brushed reference is different from the
+logged aircraft; actuator, drag, battery, sensor and controller dynamics are
+bypassed in this comparison. physicalValidation=false remains unchanged.
+
 ## Implemented boundaries
 
 All entry points now use `server/geminiGateway.ts`: Vercel `api/gemini.ts`,

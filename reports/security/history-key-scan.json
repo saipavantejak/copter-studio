@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "04272d1d4f2f34da3951dc97709fe834120caea1",
+  "command": "python scripts/security/audit-history.py",
+  "reachableCommits": 77,
+  "textBlobsScanned": 502,
+  "binaryBlobsExcluded": 9,
+  "signature": "AIza followed by 35 Google-key characters",
+  "findings": [],
+  "status": "PASS",
+  "limitations": [
+    "Pattern scan, not proof no secret of any possible format ever existed.",
+    "Only locally reachable git history; unreferenced objects, external clones, deployed environment and provider key validity were not inspected.",
+    "Binary blobs excluded; no secret values emitted."
+  ]
+}
