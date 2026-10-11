@@ -1,3 +1,4 @@
+import {recordAggregate} from '../aggregateAnalytics';
 // AppContext.tsx — Centralized state management for Copter Studios
 // Extracted from App.tsx to enable tab-level component decomposition.
 
@@ -154,6 +155,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [simStarted, setSimStarted] = useState(false);
 
   const handleStartMission = useCallback(() => {
+    recordAggregate('workspace_open');
     setIsExiting(true);
     setTimeout(() => {
       setIsStarted(true);

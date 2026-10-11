@@ -1,3 +1,4 @@
+import {recordAggregate} from './aggregateAnalytics';
 import {CloudHistory} from './CloudHistory';
 // App.tsx — v12 refactored
 // Reduced from 724 lines to ~85 lines.
@@ -63,6 +64,8 @@ function AppContent() {
                 </button>
               ))}
             </div>
+            {/* Explicit user feedback opens a public issue, without an automatic message. */}
+            <a href="https://github.com/saipavantejak/copter-studio/issues/new" onClick={()=>recordAggregate('feedback_open')} target="_blank" rel="noopener noreferrer" className="text-xs">Feedback</a>
             {/* Status */}
             <div className="flex items-center gap-3 text-xs font-mono text-muted shrink-0">
               {bestFlight && (

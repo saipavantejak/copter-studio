@@ -11,10 +11,12 @@ import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import type { Plugin } from 'vite';
 
+import {handleAnalytics} from './server/aggregateAnalytics';
 import {handleGemini} from './server/geminiGateway';
 
 function geminiProxyPlugin(): Plugin {
   return {name:'gemini-proxy',configureServer(server){
+    server.middlewares.use('/api/analytics',(req,res)=>{void handleAnalytics(req,res);});
     server.middlewares.use('/api/gemini',(req,res)=>{void handleGemini(req,res);});
   }};
 }

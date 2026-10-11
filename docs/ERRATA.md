@@ -162,3 +162,18 @@ arithmetic. Comparison intervals are labelled as intervals of differences,
 not invented confidence intervals of absolute controller means. The demo is
 an executable capture script, not claimed recorded footage. Study scores,
 physics and the deployment remain unchanged.
+
+## Aggregate collection implemented without a usage claim
+
+Collection was absent. An opt-in, default-disabled endpoint now accepts only
+a bounded event enum and atomically increments UTC daily totals. Cookies,
+referrers, identity and arbitrary fields are excluded from analytic payloads;
+no raw event record is stored. Anonymous database reads/writes are denied and
+the service credential remains server-side. SQL behavior is tested locally;
+hosted deployment and API configuration remain unverified. No adoption number
+was inferred and no live database was changed.
+
+During implementation, the simulation counter was initially placed before the
+confirmation dialog. It was moved after confirmation before finalizing this
+task, so canceled clicks are not counted as simulation starts. Collection was
+disabled and no live numbers were affected.

@@ -78,6 +78,7 @@ The physics primitives are shared by browser, worker and Node evaluation.
 Aether proposes a bounded plan; local validation and user approval precede
 execution. Gemini credentials stay server-side. Optional cloud failures do not
 change the study result or authorize hardware actions.
+[Analytics and privacy](docs/PRIVACY.md) ·
 [Security and key exposure evidence](docs/SECURITY.md) ·
 [Interview guide](docs/INTERVIEW.md) · [Errata](docs/ERRATA.md).
 

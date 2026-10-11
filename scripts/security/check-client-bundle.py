@@ -2,7 +2,7 @@
 import argparse,hashlib,json,os,pathlib,subprocess,tempfile
 parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true',help='Check fresh build without replacing recorded evidence');args=parser.parse_args()
 ROOT=pathlib.Path(__file__).resolve().parents[2]
-canaries={name:'COPTER_SYNTHETIC_SECRET_'+name+'_NEVER_SHIP' for name in ['GEMINI_API_KEY','VITE_GEMINI_API_KEY','VITE_GOOGLE_API_KEY']}
+canaries={name:'COPTER_SYNTHETIC_SECRET_'+name+'_NEVER_SHIP' for name in ['GEMINI_API_KEY','VITE_GEMINI_API_KEY','VITE_GOOGLE_API_KEY','SUPABASE_SERVICE_ROLE_KEY','VITE_SUPABASE_SERVICE_ROLE_KEY']}
 sourceCommit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 sourceHashes={}
 for name in ['scripts/security/check-client-bundle.py','vite.config.ts','src/geminiClient.ts','server/geminiGateway.ts','api/gemini.ts','package-lock.json']:

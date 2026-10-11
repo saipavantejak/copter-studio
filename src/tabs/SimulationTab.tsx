@@ -1,3 +1,4 @@
+import {recordAggregate} from '../aggregateAnalytics';
 // SimulationTab.tsx — Extracted from App.tsx
 // Contains: 3-panel layout (config | 3D viewport | Aether AI)
 
@@ -47,6 +48,7 @@ export function SimulationTab() {
       `  • Battery: ${config.batteryVoltage} V`
     );
     if (!ok) return;
+    recordAggregate('simulation_start');
     setSimStarted(true);
     // Hard reset so each launch begins from a known state
     setTimeout(() => setSimResetTrigger(t => t + 1), 50);
